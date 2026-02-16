@@ -9,20 +9,21 @@ const baseConfig: NextConfig = {
         protocol: 'https',
         hostname: 'api.slingacademy.com',
         port: ''
-      },
-      {
-        protocol: 'https',
-        hostname: 'img.clerk.com',
-        port: ''
-      },
-      {
-        protocol: 'https',
-        hostname: 'clerk.com',
-        port: ''
       }
     ]
   },
-  transpilePackages: ['geist']
+  transpilePackages: ['geist'],
+  serverExternalPackages: ['node-appwrite'],
+  experimental: {
+    serverActions: {
+      allowedOrigins: [
+        'localhost:3000',
+        '*.app.github.dev',
+        '*.github.dev',
+        '*.preview.app.github.dev'
+      ]
+    }
+  }
 };
 
 let configWithPlugins = baseConfig;

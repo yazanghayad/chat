@@ -1,6 +1,7 @@
 import {
   IconAlertTriangle,
   IconArrowRight,
+  IconBook,
   IconCheck,
   IconChevronLeft,
   IconChevronRight,
@@ -79,5 +80,6 @@ export const Icons = {
   pro: IconCrown,
   exclusive: IconStar,
   account: IconUserCircle,
-  profile: IconUser
+  profile: IconUser,
+  knowledge: IconBook
 };
