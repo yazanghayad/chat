@@ -18,9 +18,18 @@ const baseConfig: NextConfig = {
     serverActions: {
       allowedOrigins: [
         'localhost:3000',
+        'localhost:3001',
         '*.app.github.dev',
         '*.github.dev',
-        '*.preview.app.github.dev'
+        '*.preview.app.github.dev',
+        '*.githubpreview.dev',
+        // Explicit codespace hostname
+        ...(process.env.CODESPACE_NAME
+          ? [
+              `${process.env.CODESPACE_NAME}-3000.app.github.dev`,
+              `${process.env.CODESPACE_NAME}-3001.app.github.dev`
+            ]
+          : [])
       ]
     }
   }

@@ -30,7 +30,7 @@ export async function getCurrentTenantAction(): Promise<{
 
     if (result.documents.length > 0) {
       return {
-        tenant: result.documents[0] as unknown as Tenant,
+        tenant: JSON.parse(JSON.stringify(result.documents[0])) as Tenant,
         error: null
       };
     }
@@ -50,7 +50,7 @@ export async function getCurrentTenantAction(): Promise<{
     );
 
     return {
-      tenant: tenant as unknown as Tenant,
+      tenant: JSON.parse(JSON.stringify(tenant)) as Tenant,
       error: null
     };
   } catch (err) {

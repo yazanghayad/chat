@@ -2,8 +2,9 @@
 
 > **Projekt:** AI-driven kundsupport-agent med admin-dashboard  
 > **Startdatum:** 2026-02-15  
+> **Uppdaterad:** 2026-02-16  
 > **Baserat på:** Next.js 16 + Shadcn dashboard-template  
-> **Status:** Planering
+> **Status:** Implementation (Backend ~90% klar, Frontend ~20%)
 
 ---
 
@@ -38,76 +39,92 @@ Projektet utgår från det befintliga **next-shadcn-dashboard-starter**-template
 
 ## 3. Projektfaser och milstolpar
 
-### Fas 0 – Förberedelse (vecka 1)
+### Fas 0 – Förberedelse (vecka 1) ✅
 
-- [ ] Sätta upp Appwrite-instans (Cloud eller self-hosted)
-- [ ] Konfigurera environment-variabler (`.env.local`)
-- [ ] Ta bort Clerk-beroenden med cleanup-script (`node __CLEANUP__/scripts/cleanup.js clerk`)
-- [ ] Verifiera att template bygger utan Clerk
+- [x] Sätta upp Appwrite-instans (Cloud eller self-hosted)
+- [x] Konfigurera environment-variabler (`env.example.txt` uppdaterad med alla nycklar)
+- [x] Ta bort Clerk-beroenden med cleanup-script (`node __CLEANUP__/scripts/cleanup.js clerk`)
+- [x] Verifiera att template bygger utan Clerk
 
-**Milstolpe:** Rent projekt utan Clerk, redo för Appwrite-integration.
+**Milstolpe:** ✅ Rent projekt utan Clerk, redo för Appwrite-integration.
 
-### Fas 1 – Autentisering & Multi-tenancy (vecka 2–3)
+### Fas 1 – Autentisering & Multi-tenancy (vecka 2–3) ⚠️ ~95%
 
-- [ ] Installera `appwrite` och `node-appwrite` SDK:er
-- [ ] Implementera Appwrite client (`src/lib/appwrite/client.ts`)
-- [ ] Implementera server-side client med admin/session (`src/lib/appwrite/server.ts`)
-- [ ] Bygga login/signup server actions (`src/features/auth/actions/`)
-- [ ] Skapa middleware för route-skydd (`src/middleware.ts`)
-- [ ] Skapa `tenants`-collection i Appwrite med tenant-modell
-- [ ] Implementera `useTenant()` hook för klient-sidan
-- [ ] Implementera tenant-scoped dokument-helpers (`getTenantDocuments`, `createTenantDocument`)
+- [x] Installera `appwrite` och `node-appwrite` SDK:er
+- [x] Implementera Appwrite client (`src/lib/appwrite/client.ts`)
+- [x] Implementera server-side client med admin/session (`src/lib/appwrite/server.ts`)
+- [x] Bygga login/signup server actions (`src/features/auth/actions/`)
+- [ ] ~~Skapa middleware för route-skydd (`src/middleware.ts`)~~ **BORTTAGEN – behöver återskapas**
+- [x] Skapa `tenants`-collection i Appwrite med tenant-modell
+- [x] Implementera `useTenant()` hook för klient-sidan
+- [x] Implementera tenant-scoped dokument-helpers (`getTenantDocuments`, `createTenantDocument`)
+- [x] _Bonus:_ Team management med RBAC + audit logging (`src/features/auth/actions/team-management.ts`)
+- [x] _Bonus:_ Appwrite Teams-integration (`src/lib/appwrite/teams.ts`)
 
-**Milstolpe:** Fungerande inloggning, registrering och tenant-isolering.
+**Milstolpe:** ⚠️ Auth och tenant-isolering fungerar. **Saknas: route-skydd via middleware.**
 
-### Fas 2 – Databasschema (vecka 3–4)
+### Fas 2 – Databasschema (vecka 3–4) ✅
 
 Skapa collections i Appwrite Console (databas: `support-ai-prod`):
 
-- [ ] `tenants` – namn, plan, config, apiKey, userId
-- [ ] `knowledge_sources` – tenantId, type, url, fileId, status, version, metadata
-- [ ] `conversations` – tenantId, channel, status, userId, metadata, resolvedAt
-- [ ] `messages` – conversationId, role, content, confidence, citations, metadata
-- [ ] `policies` – tenantId, name, type, mode, config, enabled, priority
-- [ ] `audit_events` – tenantId, eventType, userId, payload, createdAt
-- [ ] Sätta upp index för alla collections
-- [ ] Konfigurera permissions (document-level tenant isolation)
+- [x] `tenants` – namn, plan, config, apiKey, userId
+- [x] `knowledge_sources` – tenantId, type, url, fileId, status, version, metadata
+- [x] `conversations` – tenantId, channel, status, userId, metadata, resolvedAt
+- [x] `messages` – conversationId, role, content, confidence, citations, metadata
+- [x] `policies` – tenantId, name, type, mode, config, enabled, priority
+- [x] `audit_events` – tenantId, eventType, userId, payload, createdAt
+- [x] `procedures` – tenantId, name, trigger, steps, enabled _(Fin.ai-tillägg)_
+- [x] `data_connectors` – tenantId, provider, auth, config _(Fin.ai-tillägg)_
+- [x] `test_scenarios` – tenantId, name, messages, expectedOutcome _(Fin.ai-tillägg)_
+- [x] `content_suggestions` – tenantId, topic, frequency, suggestedContent _(Fin.ai-tillägg)_
+- [x] Sätta upp index för alla collections
+- [x] Konfigurera permissions (document-level tenant isolation)
+- [x] Automatiserat setup-script (`scripts/setup-appwrite-db.mjs` – 280 rader)
+- [x] Komplett TypeScript-typer (`src/types/appwrite.ts` – 214 rader)
 
-**Milstolpe:** Komplett databasschema med multi-tenant-isolering.
+**Milstolpe:** ✅ Komplett databasschema med multi-tenant-isolering + setup-automatisering.
 
-### Fas 3 – Knowledge Ingestion (vecka 4–5)
+### Fas 3 – Knowledge Ingestion (vecka 4–5) ✅
 
-- [ ] Bygga `source-uploader.tsx` komponent (drag & drop, PDF/DOCX/URL)
-- [ ] Implementera filuppladdning till Appwrite Storage
-- [ ] Skapa API-route för bakgrunds-embedding (`/api/embeddings/route.ts`)
-- [ ] Integrera text-extraktion (pdf-parse, mammoth)
-- [ ] Implementera chunking-logik (recursive text splitter)
-- [ ] Koppla ihop med Pinecone – upsert med tenant namespace
-- [ ] Bygga `source-list.tsx` med status-visning (processing/ready/failed)
-- [ ] Stödja URL-ingestion (scraping + chunking)
+- [x] Bygga `source-uploader.tsx` komponent (drag & drop, PDF/DOCX/URL)
+- [x] Implementera filuppladdning till Appwrite Storage
+- [x] Skapa API-route för bakgrunds-embedding (`/api/embeddings/route.ts`)
+- [x] Integrera text-extraktion (pdf-parse, mammoth, cheerio)
+- [x] Implementera chunking-logik (recursive text splitter med overlap)
+- [x] Koppla ihop med Pinecone – upsert med tenant namespace
+- [x] Bygga `source-list.tsx` med status-visning (processing/ready/failed)
+- [x] Stödja URL-ingestion (scraping + chunking)
+- [x] _Bonus:_ Manuell textkälla med direkt embedding (`manual-source.ts`)
+- [x] _Bonus:_ Versionshantering med rollback (`version-management.ts`)
+- [x] _Bonus:_ Export/import av kunskapsbaser (`export-import.ts`)
+- [x] _Bonus:_ Inngest bakgrundsjobb för chunking (`src/lib/inngest/functions.ts`)
 
-**Milstolpe:** Man kan ladda upp dokument och de indexeras automatiskt i vektordatabasen.
+**Milstolpe:** ✅ Komplett knowledge ingestion med versioning och export/import.
 
-### Fas 4 – AI Orchestrator & RAG-pipeline (vecka 5–7)
+### Fas 4 – AI Orchestrator & RAG-pipeline (vecka 5–7) ✅
 
-- [ ] Implementera `vectorSearch()` – embedding av query + Pinecone-sök
-- [ ] Bygga LLM-client (`src/lib/ai/llm.ts`) med streaming-stöd
-- [ ] Implementera orchestrator-flöde:
+- [x] Implementera `vectorSearch()` – embedding av query + Pinecone-sök
+- [x] Bygga LLM-client (`src/lib/ai/llm.ts`) med streaming-stöd
+- [x] Implementera orchestrator-flöde:
   1. Pre-policy check
   2. RAG retrieval
   3. Konfidens-kontroll (threshold 0.7)
   4. LLM-generering med kontext
   5. Post-policy check
   6. Spara meddelande och citations
-- [ ] Skapa policy-engine (`validatePolicy`) med stöd för:
+- [x] Skapa policy-engine (`validatePolicy`) med stöd för:
   - Topic filter
   - PII filter
   - Tone/längd-kontroller
-- [ ] Bygga `sendMessageAction()` server action
+- [x] Bygga `sendMessageAction()` server action
+- [x] _Bonus:_ Procedure executor med state machine + dry-run (`procedure-executor.ts` – 655 rader)
+- [x] _Bonus:_ Simulation engine för testning (`simulation-engine.ts`)
+- [x] _Bonus:_ Semantisk cache med Redis hash (`semantic-cache.ts`)
+- [x] _Bonus:_ Streaming SSE endpoint (`/api/chat/stream/route.ts`)
 
-**Milstolpe:** End-to-end AI-svar med RAG och policy-kontroller.
+**Milstolpe:** ✅ End-to-end AI-svar med RAG, policy-kontroller, procedures och caching.
 
-### Fas 5 – Dashboard-vyer (vecka 7–9)
+### Fas 5 – Dashboard-vyer (vecka 7–9) 🔴 ~20%
 
 Utnyttja befintliga template-komponenter (sidebar, data tables, charts):
 
@@ -115,102 +132,227 @@ Utnyttja befintliga template-komponenter (sidebar, data tables, charts):
   - `conversation-list.tsx`
   - `message-thread.tsx`
   - Filter: status (active/resolved/escalated), kanal, datum
-- [ ] **Knowledge** – sources-hantering med uploader
+  - Dashboard-sida: `src/app/dashboard/conversations/page.tsx`
+- [x] **Knowledge** – sources-hantering med uploader _(klar med drag & drop + versioning)_
 - [ ] **Policies** – policy-editor med on/off, prioritet, konfiguration
+  - Dashboard-sida: `src/app/dashboard/policies/page.tsx`
 - [ ] **Analytics** – resolution rate, confidence distribution, volym
   - Återanvänd Recharts från template
   - `resolution-chart.tsx`, `overview-cards.tsx`
-- [ ] **Settings** – tenant-konfiguration (plan, kanaler, LLM-modell)
-- [ ] Uppdatera navigation i `nav-config.ts`
+  - Dashboard-sida: `src/app/dashboard/analytics/page.tsx`
+- [ ] **Procedures** – visuell procedure-editor (steg, branching)
+  - Dashboard-sida: `src/app/dashboard/procedures/page.tsx`
+- [ ] **Connectors** – data connector-hantering (Shopify, Stripe, etc.)
+  - Dashboard-sida: `src/app/dashboard/connectors/page.tsx`
+- [ ] **Testing** – simulations-runner för test-scenarion
+  - Dashboard-sida: `src/app/dashboard/testing/page.tsx`
+- [ ] **Settings** – tenant-konfiguration (plan, kanaler, LLM-modell, API-nycklar)
+  - Dashboard-sida: `src/app/dashboard/settings/page.tsx`
+- [ ] Uppdatera navigation i `nav-config.ts` med alla nya sidor
+
+> **Backend-actions finns redan** för policies, procedures, connectors, testing och analytics.
+> Det som saknas är **UI-komponenterna och dashboard-sidorna**.
 
 **Milstolpe:** Komplett admin-dashboard med alla vyer.
 
-### Fas 6 – Chat Widget & Realtime (vecka 9–11)
+### Fas 6 – Chat Widget & Realtime (vecka 9–11) ⚠️ ~60%
 
-- [ ] Bygga embeddbar chat-widget (React-komponent)
+- [x] Bygga API-endpoint för chat (`/api/chat/message/route.ts` – API-key auth)
+- [x] Bygga streaming SSE endpoint (`/api/chat/stream/route.ts`)
+- [ ] Bygga embeddbar chat-widget (React-komponent för slutkunder)
 - [ ] Implementera Appwrite Realtime-prenumeration för nya meddelanden
-- [ ] Skapa `/api/chat/message/route.ts` endpoint (API-key auth för tenants)
-- [ ] Implementera webhook för e-post-ingestion (`/api/webhooks/email/route.ts`)
+- [x] Implementera webhook för e-post-ingestion (`/api/webhooks/email/route.ts`)
+- [x] _Bonus:_ WhatsApp-kanal via Twilio (`/api/webhooks/whatsapp/route.ts` + adapter)
+- [x] _Bonus:_ SMS-kanal via Twilio (`/api/webhooks/sms/route.ts` + adapter)
+- [x] _Bonus:_ Channel adapter-arkitektur (`base-adapter.ts`, `email-adapter.ts`, etc.)
+- [x] _Bonus:_ Twilio signaturverifiering (`twilio-verify.ts`)
+- [x] _Bonus:_ Agent handover endpoint (`/api/conversations/handover/route.ts`)
 - [ ] Widget: loading states, typing indicator, felhantering
 - [ ] Testa cross-origin embedding (iframe / script-tag)
 
-**Milstolpe:** Fungerande live-chat widget med realtidsuppdateringar.
+**Milstolpe:** ⚠️ API-endpoints och kanaler klara. **Saknas: embeddbar widget + Realtime.**
 
-### Fas 7 – Kvalitet & Lansering (vecka 11–13)
+### Fas 7 – Kvalitet & Lansering (vecka 11–13) ⚠️ ~20%
 
 - [ ] End-to-end tester (Playwright)
 - [ ] Komponent-tester (Vitest + React Testing Library)
 - [ ] Säkerhetsgranskning (OWASP top 10, tenant-isolering)
 - [ ] Performance-optimering (caching, edge functions)
-- [ ] Sentry-konfiguration för error tracking
+- [x] Sentry-konfiguration för error tracking (server + klient + global error boundary)
 - [ ] Dokumentation (API-docs, deployment guide)
 - [ ] Deploy till Vercel + Appwrite Cloud
+- [ ] ~~Middleware~~ → **Behöver återskapas** (`src/middleware.ts` – borttagen)
 
 **Milstolpe:** Produktionsklar MVP.
 
 ---
 
-## 4. Projektstruktur (mål)
+## 3b. Fin.ai Flywheel – Utökade funktioner (implementerade i backend)
+
+Utöver den ursprungliga planen har backend-stöd implementerats för Fin.ai:s "Flywheel"-koncept:
+
+### Train ✅ Backend klar
+- [x] Procedures CRUD (`src/features/procedures/actions/procedure-crud.ts`)
+- [x] Procedure executor med state machine + dry-run (`src/lib/ai/procedure-executor.ts`)
+- [x] Data Connectors CRUD med krypterade credentials (`src/features/connectors/actions/connector-crud.ts`)
+- [x] Krypteringsmodul AES-256-GCM (`src/lib/encryption/index.ts`)
+- [ ] UI: Procedure-editor med visuell stegbyggare
+- [ ] UI: Connector-konfigurering
+
+### Test ✅ Backend klar
+- [x] Test Scenarios CRUD (`src/features/testing/actions/scenario-crud.ts`)
+- [x] Simulation engine (`src/lib/ai/simulation-engine.ts`)
+- [x] Simulate API-endpoint (`src/app/api/simulate/route.ts`)
+- [ ] UI: Simulation runner med resultatvy
+
+### Deploy ✅ Backend klar
+- [x] Web Chat API (message + streaming)
+- [x] Email-kanal (adapter + webhook)
+- [x] WhatsApp-kanal (adapter + webhook + Twilio-verifiering)
+- [x] SMS-kanal (adapter + webhook)
+- [ ] Embeddbar widget-komponent
+- [ ] Appwrite Realtime
+
+### Analyze ✅ Backend klar
+- [x] Analytics engine med metrics-aggregering (`src/lib/analytics/analytics-engine.ts`)
+- [x] Content gap detector med AI-förslag (`src/lib/analytics/gap-detector.ts`)
+- [x] Content Suggestions CRUD (`src/features/analytics/actions/suggestion-crud.ts`)
+- [x] Cron-jobb för gap detection (`src/app/api/cron/detect-gaps/route.ts`)
+- [ ] UI: Analytics dashboard
+- [ ] UI: Content suggestions med approve/dismiss
+
+### Infrastruktur ✅
+- [x] Rate limiting per tenant + IP (`src/lib/rate-limit/`)
+- [x] Redis-cache via Upstash (`src/lib/cache/`)
+- [x] Semantisk cache (`src/lib/cache/semantic-cache.ts`)
+- [x] Audit logging (`src/lib/audit/logger.ts`)
+- [x] HTML-sanering (`src/lib/sanitize/index.ts`)
+- [x] Inngest bakgrundsjobb (`src/lib/inngest/`)
+- [x] Health-check endpoint (`src/app/api/health/route.ts`)
+- [x] API-nyckelrotation (`src/app/api/tenant/api-key/route.ts`)
+- [x] Tenant settings API (`src/app/api/tenant/settings/route.ts`)
+
+---
+
+## 4. Projektstruktur (aktuell)
 
 ```
 src/
 ├── app/
-│   ├── (auth)/
-│   │   ├── login/
-│   │   └── signup/
-│   ├── (dashboard)/
+│   ├── auth/
+│   │   ├── sign-in/                     # Login-sida
+│   │   └── sign-up/                     # Registrering
+│   ├── dashboard/
 │   │   ├── layout.tsx                   # Sidebar + header
-│   │   ├── page.tsx                     # Overview (analytics)
-│   │   ├── conversations/               # Conversation inbox
-│   │   ├── knowledge/                   # Knowledge sources
-│   │   ├── policies/                    # Policy configuration
-│   │   ├── analytics/                   # Resolution metrics
-│   │   └── settings/                    # Tenant settings
+│   │   ├── overview/                    # Dashboard overview (template)
+│   │   ├── knowledge/page.tsx           # ✅ Knowledge sources
+│   │   ├── conversations/               # ❌ SAKNAS
+│   │   ├── policies/                    # ❌ SAKNAS
+│   │   ├── analytics/                   # ❌ SAKNAS
+│   │   ├── procedures/                  # ❌ SAKNAS
+│   │   ├── connectors/                  # ❌ SAKNAS
+│   │   ├── testing/                     # ❌ SAKNAS
+│   │   └── settings/                    # ❌ SAKNAS
 │   └── api/
-│       ├── chat/message/route.ts        # Chat endpoint (widget)
-│       ├── webhooks/email/route.ts      # Email ingestion
-│       └── embeddings/route.ts          # Background embedding
+│       ├── chat/
+│       │   ├── message/route.ts         # ✅ Chat endpoint (API-key auth)
+│       │   └── stream/route.ts          # ✅ SSE streaming
+│       ├── embeddings/route.ts          # ✅ Background embedding
+│       ├── simulate/route.ts            # ✅ Test simulation
+│       ├── conversations/
+│       │   └── handover/route.ts        # ✅ Agent handover
+│       ├── tenant/
+│       │   ├── api-key/route.ts         # ✅ API-nyckelrotation
+│       │   └── settings/route.ts        # ✅ Tenant config
+│       ├── knowledge/
+│       │   ├── export/route.ts          # ✅ Knowledge export
+│       │   └── import/route.ts          # ✅ Knowledge import
+│       ├── analytics/                   # Analytics API
+│       ├── cron/
+│       │   └── detect-gaps/route.ts     # ✅ Gap detection cron
+│       ├── health/route.ts              # ✅ System health check
+│       ├── inngest/route.ts             # ✅ Inngest webhook
+│       └── webhooks/
+│           ├── email/route.ts           # ✅ Email ingestion
+│           ├── whatsapp/route.ts        # ✅ Twilio WhatsApp
+│           └── sms/route.ts             # ✅ Twilio SMS
 │
 ├── features/
-│   ├── auth/actions/                    # Login, logout, signup
+│   ├── auth/actions/                    # ✅ Login, logout, signup, tenant, teams
 │   ├── conversation/
-│   │   ├── components/                  # conversation-list, message-thread
-│   │   ├── actions/                     # send-message, escalate
-│   │   └── schemas/                     # Zod schemas
+│   │   ├── actions/send-message.ts      # ✅ Send message action
+│   │   ├── schemas/                     # ✅ Zod schemas
+│   │   └── components/                  # ❌ SAKNAS (list, thread)
 │   ├── knowledge/
-│   │   ├── components/                  # source-uploader, source-list
-│   │   └── actions/                     # ingest-url, upload-file
-│   ├── policy/
-│   │   ├── components/                  # policy-editor
-│   │   └── actions/                     # update-policy
-│   └── analytics/
-│       ├── components/                  # resolution-chart
-│       └── utils/                       # metrics
+│   │   ├── actions/                     # ✅ upload, ingest-url, manual, versions, export
+│   │   ├── components/                  # ✅ source-uploader, source-list, page-client
+│   │   └── schemas/                     # ✅ Zod schemas
+│   ├── policies/
+│   │   └── actions/policy-crud.ts       # ✅ CRUD + audit
+│   ├── procedures/
+│   │   └── actions/procedure-crud.ts    # ✅ CRUD
+│   ├── connectors/
+│   │   └── actions/connector-crud.ts    # ✅ CRUD + encryption
+│   ├── testing/
+│   │   └── actions/scenario-crud.ts     # ✅ CRUD + simulation
+│   ├── analytics/
+│   │   └── actions/suggestion-crud.ts   # ✅ Content suggestions
+│   └── overview/                        # Template analytics
 │
 ├── lib/
 │   ├── appwrite/
-│   │   ├── client.ts                    # Browser client
-│   │   ├── server.ts                    # Server client (admin + session)
-│   │   └── collections.ts              # Tenant-scoped helpers
-│   └── ai/
-│       ├── orchestrator.ts              # RAG + policy pipeline
-│       ├── retrieval.ts                 # Pinecone vector search
-│       └── llm.ts                       # OpenAI/Azure client
+│   │   ├── client.ts                    # ✅ Browser client
+│   │   ├── server.ts                    # ✅ Server client (admin + session)
+│   │   ├── collections.ts              # ✅ Collection ID:er
+│   │   ├── constants.ts                # ✅ Env-baserade konstanter
+│   │   ├── teams.ts                    # ✅ Team management
+│   │   └── tenant-helpers.ts           # ✅ Tenant-scoped CRUD
+│   ├── ai/
+│   │   ├── orchestrator.ts              # ✅ RAG + policy pipeline (722 rader)
+│   │   ├── retrieval.ts                 # ✅ Pinecone vector search
+│   │   ├── llm.ts                       # ✅ OpenAI client + streaming
+│   │   ├── policy-engine.ts             # ✅ Pre/post policy validation
+│   │   ├── procedure-executor.ts        # ✅ Multi-step procedures (655 rader)
+│   │   ├── simulation-engine.ts         # ✅ Test simulations
+│   │   ├── extraction.ts               # ✅ PDF/DOCX/URL extraction
+│   │   └── chunking.ts                 # ✅ Recursive text splitter
+│   ├── channels/
+│   │   ├── base-adapter.ts             # ✅ Abstract channel adapter
+│   │   ├── email-adapter.ts            # ✅ Email channel
+│   │   ├── whatsapp-adapter.ts         # ✅ WhatsApp channel
+│   │   ├── sms-adapter.ts             # ✅ SMS channel
+│   │   └── twilio-verify.ts           # ✅ Twilio signature verification
+│   ├── analytics/
+│   │   ├── analytics-engine.ts         # ✅ Metrics aggregering
+│   │   └── gap-detector.ts            # ✅ Content gap AI
+│   ├── audit/logger.ts                 # ✅ Append-only audit log
+│   ├── cache/
+│   │   ├── redis.ts                    # ✅ Upstash Redis
+│   │   └── semantic-cache.ts           # ✅ Query hash cache
+│   ├── encryption/index.ts             # ✅ AES-256-GCM
+│   ├── inngest/
+│   │   ├── client.ts                   # ✅ Inngest client
+│   │   └── functions.ts               # ✅ Background jobs
+│   ├── rate-limit/
+│   │   ├── index.ts                    # ✅ Per-tenant rate limiting
+│   │   └── middleware.ts              # ✅ Rate limit wrapper
+│   └── sanitize/index.ts              # ✅ DOMPurify sanering
 │
 ├── hooks/
-│   └── use-tenant.ts                    # Tenant context hook
+│   └── use-tenant.ts                    # ✅ Client-side tenant context
 │
-└── types/
-    ├── conversation.ts
-    ├── knowledge.ts
-    └── policy.ts
+├── types/
+│   └── appwrite.ts                     # ✅ Alla entitetstyper (214 rader)
+│
+└── middleware.ts                        # ❌ BORTTAGEN – behöver återskapas
 ```
 
 ---
 
-## 5. Appwrite – Databasschema
+## 5. Appwrite – Databasschema ✅
 
-**Databas:** `support-ai-prod`
+**Databas:** `support-ai-prod`  
+**Setup-script:** `scripts/setup-appwrite-db.mjs` (idempotent, skapar alla collections + index)
 
 ### 5.1 Collections
 
@@ -222,6 +364,10 @@ src/
 | `messages` | conversationId, role, content, confidence, citations, metadata | `conversationId_idx` |
 | `policies` | tenantId, name, type, mode, config, enabled, priority | `tenantId_enabled_idx` |
 | `audit_events` | tenantId, eventType, userId, payload, createdAt | `tenantId_eventType_createdAt_idx` |
+| `procedures` | tenantId, name, description, trigger, steps, enabled, version | `tenantId_idx` |
+| `data_connectors` | tenantId, provider, name, auth (krypterad), config, enabled | `tenantId_idx` |
+| `test_scenarios` | tenantId, name, messages, expectedOutcome | `tenantId_idx` |
+| `content_suggestions` | tenantId, topic, frequency, exampleQueries, suggestedContent, status | `tenantId_status_idx` |
 
 ### 5.2 Permissions (multi-tenant isolation)
 
@@ -245,6 +391,28 @@ APPWRITE_API_KEY=<server-api-key>
 # AI / LLM
 OPENAI_API_KEY=sk-...
 PINECONE_API_KEY=<pinecone-key>
+PINECONE_INDEX=<index-name>
+
+# Cache / Rate Limiting
+UPSTASH_REDIS_REST_URL=https://...
+UPSTASH_REDIS_REST_TOKEN=...
+
+# Background Jobs
+INNGEST_EVENT_KEY=...
+INNGEST_SIGNING_KEY=...
+
+# Channels (valfritt)
+TWILIO_ACCOUNT_SID=...
+TWILIO_AUTH_TOKEN=...
+TWILIO_WHATSAPP_NUMBER=...
+TWILIO_SMS_NUMBER=...
+SMTP_HOST=...
+SMTP_PORT=587
+SMTP_USER=...
+SMTP_PASS=...
+
+# Security
+ENCRYPTION_KEY=<64-hex-chars>
 
 # Sentry (valfritt)
 NEXT_PUBLIC_SENTRY_DSN=https://...@ingest.sentry.io/...
@@ -281,24 +449,75 @@ NEXT_PUBLIC_URL=http://localhost:3000
 
 ---
 
-## Appendix A – Nyckelkod (referensimplementation)
+## Appendix A – Nyckelkod (implementationsstatus)
 
-Detaljerade kodexempel för varje modul finns i separata filer under respektive `src/`-katalog när de implementeras. Se fas 1–6 ovan för vilka filer som ska skapas.
+| Modul | Fil | Status | Rader |
+|---|---|---|---|
+| Appwrite Client | `src/lib/appwrite/client.ts` | ✅ | 21 |
+| Appwrite Server | `src/lib/appwrite/server.ts` | ✅ | 48 |
+| Auth Actions | `src/features/auth/actions/login.ts` | ✅ | – |
+| Team Management | `src/features/auth/actions/team-management.ts` | ✅ | 268 |
+| Middleware | `src/middleware.ts` | ❌ Borttagen | – |
+| Tenant Helpers | `src/lib/appwrite/tenant-helpers.ts` | ✅ | 129 |
+| Tenant Hook | `src/hooks/use-tenant.ts` | ✅ | – |
+| Vector Search | `src/lib/ai/retrieval.ts` | ✅ | 157 |
+| LLM Client | `src/lib/ai/llm.ts` | ✅ | 233 |
+| Orchestrator | `src/lib/ai/orchestrator.ts` | ✅ | 722 |
+| Policy Engine | `src/lib/ai/policy-engine.ts` | ✅ | 340 |
+| Procedure Executor | `src/lib/ai/procedure-executor.ts` | ✅ | 655 |
+| Simulation Engine | `src/lib/ai/simulation-engine.ts` | ✅ | 252 |
+| Text Extraction | `src/lib/ai/extraction.ts` | ✅ | 85 |
+| Chunking | `src/lib/ai/chunking.ts` | ✅ | 81 |
+| Email Adapter | `src/lib/channels/email-adapter.ts` | ✅ | 251 |
+| WhatsApp Adapter | `src/lib/channels/whatsapp-adapter.ts` | ✅ | 211 |
+| SMS Adapter | `src/lib/channels/sms-adapter.ts` | ✅ | 189 |
+| Analytics Engine | `src/lib/analytics/analytics-engine.ts` | ✅ | 318 |
+| Gap Detector | `src/lib/analytics/gap-detector.ts` | ✅ | 282 |
+| Rate Limiter | `src/lib/rate-limit/index.ts` | ✅ | 188 |
+| Semantic Cache | `src/lib/cache/semantic-cache.ts` | ✅ | 144 |
+| Encryption | `src/lib/encryption/index.ts` | ✅ | 147 |
+| Audit Logger | `src/lib/audit/logger.ts` | ✅ | 102 |
+| Sanitizer | `src/lib/sanitize/index.ts` | ✅ | 107 |
+| Knowledge Upload | `src/features/knowledge/actions/upload-file.ts` | ✅ | 151 |
+| Knowledge Version | `src/features/knowledge/actions/version-management.ts` | ✅ | 312 |
+| Knowledge Export | `src/features/knowledge/actions/export-import.ts` | ✅ | 337 |
+| Source Uploader UI | `src/features/knowledge/components/source-uploader.tsx` | ✅ | 214 |
+| Source List UI | `src/features/knowledge/components/source-list.tsx` | ✅ | 272 |
+| Procedures CRUD | `src/features/procedures/actions/procedure-crud.ts` | ✅ | 268 |
+| Connectors CRUD | `src/features/connectors/actions/connector-crud.ts` | ✅ | 377 |
+| Policies CRUD | `src/features/policies/actions/policy-crud.ts` | ✅ | 264 |
+| Testing CRUD | `src/features/testing/actions/scenario-crud.ts` | ✅ | 302 |
+| Suggestions CRUD | `src/features/analytics/actions/suggestion-crud.ts` | ✅ | 167 |
+| DB Setup Script | `scripts/setup-appwrite-db.mjs` | ✅ | 280 |
+| Inngest Functions | `src/lib/inngest/functions.ts` | ✅ | 223 |
+| Health Check | `src/app/api/health/route.ts` | ✅ | 189 |
 
-Sammanfattning av centrala moduler:
+---
 
-| Modul | Fil | Beskrivning |
-|---|---|---|
-| Appwrite Client | `src/lib/appwrite/client.ts` | Browser-side Appwrite SDK |
-| Appwrite Server | `src/lib/appwrite/server.ts` | Server-side admin + session clients |
-| Auth Actions | `src/features/auth/actions/login.ts` | Login, logout server actions |
-| Middleware | `src/middleware.ts` | Route-skydd (redirect om ej inloggad) |
-| Tenant Helpers | `src/lib/appwrite/collections.ts` | `getTenantDocuments`, `createTenantDocument` |
-| Tenant Hook | `src/hooks/use-tenant.ts` | Client-side tenant context |
-| Vector Search | `src/lib/ai/retrieval.ts` | Pinecone query med tenant namespace |
-| LLM Client | `src/lib/ai/llm.ts` | OpenAI/Azure generering |
-| Orchestrator | `src/features/conversation/actions/send-message.ts` | RAG-pipeline server action |
-| File Upload | `src/features/knowledge/actions/upload-file.ts` | Appwrite Storage upload + trigger embedding |
-| Embedding Job | `src/app/api/embeddings/route.ts` | Bakgrunds-chunking och Pinecone upsert |
-| Chat Widget | `widget/src/chat-widget.tsx` | Embeddbar Realtime-chat |
-| Dashboard | `src/app/(dashboard)/page.tsx` | Analytics med Recharts |
+## Appendix B – Nästa steg (prioritetsordning)
+
+Baserat på nuvarande status behövs följande för MVP:
+
+### Prio 1 – Kritiska blockerare
+1. **Återskapa `src/middleware.ts`** – route-skydd för dashboard
+2. **Uppdatera `nav-config.ts`** – lägg till alla nya sidor
+
+### Prio 2 – Dashboard UI (Fas 5)
+3. **Conversations-sida** – inbox, meddelandetråd, filter
+4. **Policies-sida** – lista, editor, toggle
+5. **Analytics-sida** – metrics-kort, grafer, gap-lista
+6. **Settings-sida** – tenant-config, API-nyckel, team
+
+### Prio 3 – Fin.ai UI
+7. **Procedures-sida** – stegbyggare, trigger-konfiguration
+8. **Connectors-sida** – provider-val, auth-konfiguration
+9. **Testing-sida** – scenarios, simulation runner
+
+### Prio 4 – Widget & Realtime (Fas 6)
+10. ~~**Embeddbar chat-widget**~~ ✅ – standalone vanilla JS (6.8kb), SSE streaming, configurable via data-attributes
+11. ~~**Appwrite Realtime**~~ ✅ – `useRealtime` hook, live messages + conversation updates
+
+### Prio 5 – Kvalitet (Fas 7)
+12. **Tester** – Vitest + Playwright
+13. **Dokumentation**
+14. **Deploy-pipeline**

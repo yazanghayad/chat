@@ -287,15 +287,16 @@ export async function runScenarioAction(
 // ---------------------------------------------------------------------------
 
 function parseScenarioDoc(doc: TestScenario): TestScenario {
+  const plain = JSON.parse(JSON.stringify(doc));
   return {
-    ...doc,
+    ...plain,
     messages:
-      typeof doc.messages === 'string'
-        ? JSON.parse(doc.messages)
-        : doc.messages,
+      typeof plain.messages === 'string'
+        ? JSON.parse(plain.messages)
+        : plain.messages,
     expectedOutcome:
-      typeof doc.expectedOutcome === 'string'
-        ? JSON.parse(doc.expectedOutcome)
-        : doc.expectedOutcome
+      typeof plain.expectedOutcome === 'string'
+        ? JSON.parse(plain.expectedOutcome)
+        : plain.expectedOutcome
   };
 }

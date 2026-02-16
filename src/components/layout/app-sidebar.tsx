@@ -33,12 +33,40 @@ import { useFilteredNavItems } from '@/hooks/use-nav';
 import {
   IconBell,
   IconChevronRight,
-  IconChevronsDown
+  IconChevronsDown,
+  IconSearch
 } from '@tabler/icons-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import * as React from 'react';
 import { Icons } from '../icons';
+import { OrgSwitcher } from '../org-switcher';
+import { useTenant } from '@/hooks/use-tenant';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+
+function UserAvatar() {
+  const { tenant } = useTenant();
+  const initials = (tenant?.name ?? 'U').slice(0, 1).toUpperCase();
+  return (
+    <Avatar className='h-8 w-8'>
+      <AvatarFallback className='bg-primary/20 text-primary text-xs'>
+        {initials}
+      </AvatarFallback>
+    </Avatar>
+  );
+}
+
+function UserName() {
+  const { tenant, loading } = useTenant();
+  const name = loading ? '…' : (tenant?.name ?? 'User');
+  const plan = tenant?.plan ?? 'trial';
+  return (
+    <>
+      <span className='truncate text-sm font-medium'>{name}</span>
+      <span className='text-muted-foreground truncate text-xs'>{plan}</span>
+    </>
+  );
+}
 
 export default function AppSidebar() {
   const pathname = usePathname();
@@ -51,9 +79,11 @@ export default function AppSidebar() {
 
   return (
     <Sidebar collapsible='icon'>
-      <SidebarHeader />
+      <SidebarHeader className='h-16 shrink-0 justify-center py-0'>
+        <OrgSwitcher />
+      </SidebarHeader>
       <SidebarContent className='overflow-x-hidden'>
-        <SidebarGroup>
+        <SidebarGroup className='pt-4'>
           <SidebarGroupLabel>Overview</SidebarGroupLabel>
           <SidebarMenu>
             {itemsToShow.map((item) => {
@@ -115,13 +145,22 @@ export default function AppSidebar() {
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
+            <SidebarMenuButton tooltip='Search'>
+              <IconSearch className='h-4 w-4' />
+              <span>Search</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton
                   size='lg'
                   className='data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground'
                 >
-                  <span className='truncate'>Account</span>
+                  <UserAvatar />
+                  <div className='grid flex-1 text-left text-sm leading-tight'>
+                    <UserName />
+                  </div>
                   <IconChevronsDown className='ml-auto size-4' />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>

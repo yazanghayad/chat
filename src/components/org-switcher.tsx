@@ -1,43 +1,40 @@
 'use client';
 
-import { GalleryVerticalEnd } from 'lucide-react';
 import {
   SidebarMenu,
   SidebarMenuButton,
-  SidebarMenuItem,
-  useSidebar
+  SidebarMenuItem
 } from '@/components/ui/sidebar';
-import { useTenant } from '@/hooks/use-tenant';
 
 export function OrgSwitcher() {
-  const { state } = useSidebar();
-  const { tenant, loading } = useTenant();
-
-  const displayName = tenant?.name ?? 'Workspace';
-
   return (
     <SidebarMenu>
       <SidebarMenuItem>
         <SidebarMenuButton
-          size='lg'
-          className='data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground'
+          size='sm'
+          className='data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground overflow-visible group-data-[collapsible=icon]:!size-auto group-data-[collapsible=icon]:!p-1'
         >
-          <div className='bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 shrink-0 items-center justify-center rounded-lg'>
-            <GalleryVerticalEnd className='size-4' />
-          </div>
-          <div
-            className={`grid flex-1 text-left text-sm leading-tight transition-all duration-200 ease-in-out ${
-              state === 'collapsed'
-                ? 'invisible max-w-0 overflow-hidden opacity-0'
-                : 'visible max-w-full opacity-100'
-            }`}
-          >
-            <span className='truncate font-medium'>
-              {loading ? 'Loading…' : displayName}
-            </span>
-            <span className='text-muted-foreground truncate text-xs'>
-              {tenant?.plan ?? 'trial'}
-            </span>
+          <div className='flex shrink-0 items-center justify-center'>
+            {/* Full text logo — visible when expanded */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src='/logo_sweo.svg?v=2'
+              alt='SWEO'
+              className='h-8 w-auto group-data-[collapsible=icon]:hidden dark:invert'
+            />
+            {/* Small molecule icon — visible when collapsed */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src='/logo-icon-light.svg'
+              alt='SWEO'
+              className='hidden h-7 w-7 group-data-[collapsible=icon]:block dark:!hidden'
+            />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src='/logo-icon-dark.svg'
+              alt='SWEO'
+              className='!hidden h-7 w-7 dark:group-data-[collapsible=icon]:!block'
+            />
           </div>
         </SidebarMenuButton>
       </SidebarMenuItem>

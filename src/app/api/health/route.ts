@@ -2,7 +2,7 @@
  * GET /api/health
  *
  * Health check endpoint for monitoring.
- * Checks connectivity to core services (Appwrite, Pinecone, Redis, OpenAI).
+ * Checks connectivity to core services (Appwrite, Redis, AI provider).
  *
  * No authentication required.
  *
@@ -12,7 +12,7 @@
  *   timestamp: ISO string,
  *   version: string,
  *   uptime: number,
- *   services: { appwrite, pinecone, redis, openai }
+ *   services: { appwrite, redis, openai }
  * }
  */
 
@@ -67,29 +67,6 @@ async function checkAppwrite(): Promise<ServiceCheck> {
   }
 }
 
-async function checkPinecone(): Promise<ServiceCheck> {
-  const start = Date.now();
-  try {
-    if (!process.env.PINECONE_API_KEY) {
-      return { status: 'unconfigured' };
-    }
-
-    const { Pinecone } = await import('@pinecone-database/pinecone');
-    const pc = new Pinecone({ apiKey: process.env.PINECONE_API_KEY });
-    const indexName = process.env.PINECONE_INDEX ?? 'support-ai';
-    const index = pc.index(indexName);
-
-    await withTimeout(index.describeIndexStats(), 3000);
-    return { status: 'ok', latencyMs: Date.now() - start };
-  } catch (err) {
-    return {
-      status: 'error',
-      latencyMs: Date.now() - start,
-      error: err instanceof Error ? err.message : 'Unknown error'
-    };
-  }
-}
-
 async function checkRedis(): Promise<ServiceCheck> {
   const start = Date.now();
   try {
@@ -116,12 +93,12 @@ async function checkRedis(): Promise<ServiceCheck> {
 async function checkOpenAI(): Promise<ServiceCheck> {
   const start = Date.now();
   try {
-    if (!process.env.OPENAI_API_KEY) {
+    if (!process.env.OPENAI_API_KEY && !process.env.NVIDIA_API_KEY) {
       return { status: 'unconfigured' };
     }
 
-    const { default: OpenAI } = await import('openai');
-    const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+    const { getAIClient } = await import('@/lib/ai/client');
+    const client = getAIClient();
     await withTimeout(client.models.list(), 3000);
     return { status: 'ok', latencyMs: Date.now() - start };
   } catch (err) {
@@ -138,14 +115,13 @@ async function checkOpenAI(): Promise<ServiceCheck> {
 // ---------------------------------------------------------------------------
 
 export async function GET() {
-  const [appwrite, pinecone, redis, openai] = await Promise.all([
+  const [appwrite, redis, openai] = await Promise.all([
     checkAppwrite(),
-    checkPinecone(),
     checkRedis(),
     checkOpenAI()
   ]);
 
-  const services = { appwrite, pinecone, redis, openai };
+  const services = { appwrite, redis, openai };
 
   // Determine overall status
   let status: 'healthy' | 'degraded' | 'unhealthy' = 'healthy';
@@ -155,7 +131,7 @@ export async function GET() {
     status = 'unhealthy';
   } else {
     // Optional service errors → degraded
-    const optionalServices = [pinecone, redis, openai];
+    const optionalServices = [redis, openai];
     const anyError = optionalServices.some((s) => s.status === 'error');
     if (anyError) {
       status = 'degraded';

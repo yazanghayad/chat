@@ -1,51 +1,36 @@
 /**
- * Vector search – Pinecone integration with OpenAI embeddings.
+ * Vector search – NVIDIA embeddings + Appwrite storage.
  *
- * Each tenant gets its own namespace in the Pinecone index to ensure
- * multi-tenant data isolation.
+ * Stores embedding vectors as JSON in Appwrite's `vectors` collection.
+ * Performs cosine similarity search in-process after fetching all tenant
+ * vectors. Designed for small-to-medium knowledge bases (< 50k chunks).
+ *
+ * No Pinecone or any external vector DB required.
  */
 
-import { Pinecone } from '@pinecone-database/pinecone';
-import OpenAI from 'openai';
+import { Query } from 'node-appwrite';
+import { getAIClient, getEmbeddingModel } from './client';
+import { createAdminClient } from '@/lib/appwrite/server';
+import { APPWRITE_DATABASE } from '@/lib/appwrite/constants';
+import { COLLECTION } from '@/lib/appwrite/collections';
 
 // ---------------------------------------------------------------------------
-// Singletons (reused across requests in the same process)
+// Embedding dimensions (NVIDIA nv-embedqa-e5-v5 = 1024)
 // ---------------------------------------------------------------------------
 
-let _pinecone: Pinecone | null = null;
-let _openai: OpenAI | null = null;
-
-function getPinecone(): Pinecone {
-  if (!_pinecone) {
-    _pinecone = new Pinecone({
-      apiKey: process.env.PINECONE_API_KEY ?? ''
-    });
-  }
-  return _pinecone;
-}
-
-function getOpenAI(): OpenAI {
-  if (!_openai) {
-    _openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY ?? '' });
-  }
-  return _openai;
-}
-
-const EMBEDDING_MODEL = 'text-embedding-3-large';
-const EMBEDDING_DIMENSIONS = 3072;
-const INDEX_NAME = process.env.PINECONE_INDEX ?? 'support-ai';
+const EMBEDDING_DIMENSIONS = 1024;
 
 // ---------------------------------------------------------------------------
-// Embeddings
+// Embeddings (NVIDIA API – OpenAI-compatible)
 // ---------------------------------------------------------------------------
 
 /**
- * Generate an embedding vector for the given text using OpenAI.
+ * Generate an embedding vector for the given text.
  */
 export async function generateEmbedding(text: string): Promise<number[]> {
-  const openai = getOpenAI();
-  const response = await openai.embeddings.create({
-    model: EMBEDDING_MODEL,
+  const client = getAIClient();
+  const response = await client.embeddings.create({
+    model: getEmbeddingModel(),
     input: text,
     dimensions: EMBEDDING_DIMENSIONS
   });
@@ -56,9 +41,9 @@ export async function generateEmbedding(text: string): Promise<number[]> {
  * Generate embeddings for multiple texts in a single API call.
  */
 export async function generateEmbeddings(texts: string[]): Promise<number[][]> {
-  const openai = getOpenAI();
-  const response = await openai.embeddings.create({
-    model: EMBEDDING_MODEL,
+  const client = getAIClient();
+  const response = await client.embeddings.create({
+    model: getEmbeddingModel(),
     input: texts,
     dimensions: EMBEDDING_DIMENSIONS
   });
@@ -68,7 +53,7 @@ export async function generateEmbeddings(texts: string[]): Promise<number[][]> {
 }
 
 // ---------------------------------------------------------------------------
-// Pinecone upsert
+// Appwrite vector storage
 // ---------------------------------------------------------------------------
 
 export interface ChunkVector {
@@ -84,42 +69,78 @@ export interface ChunkVector {
 }
 
 /**
- * Upsert chunk vectors into Pinecone under a tenant namespace.
+ * Upsert chunk vectors into Appwrite under a tenant.
  */
 export async function upsertVectors(
   tenantId: string,
   vectors: ChunkVector[]
 ): Promise<void> {
-  const pinecone = getPinecone();
-  const index = pinecone.index(INDEX_NAME);
-  const ns = index.namespace(tenantId);
+  const { databases } = await createAdminClient();
 
-  // Pinecone supports up to 100 vectors per upsert call
-  const BATCH_SIZE = 100;
+  // Batch writes – parallelize within each batch
+  const BATCH_SIZE = 25;
   for (let i = 0; i < vectors.length; i += BATCH_SIZE) {
     const batch = vectors.slice(i, i + BATCH_SIZE);
-    await ns.upsert({
-      records: batch as Parameters<typeof ns.upsert>[0]['records']
-    });
+    await Promise.all(
+      batch.map((v) =>
+        databases.createDocument(
+          APPWRITE_DATABASE,
+          COLLECTION.VECTORS,
+          v.id.replace(/[^a-zA-Z0-9._-]/g, '_').slice(0, 36),
+          {
+            tenantId,
+            vectorId: v.id,
+            sourceId: String(v.metadata.sourceId ?? ''),
+            text: String(v.metadata.text ?? '').slice(0, 10000),
+            embedding: JSON.stringify(v.values),
+            metadata: JSON.stringify(v.metadata)
+          }
+        )
+      )
+    );
   }
 }
 
 /**
- * Delete all vectors for a specific source (by metadata filter or prefix).
+ * Delete all vectors for a specific knowledge source.
  */
 export async function deleteVectorsBySource(
   tenantId: string,
   sourceId: string
 ): Promise<void> {
-  const pinecone = getPinecone();
-  const index = pinecone.index(INDEX_NAME);
-  const ns = index.namespace(tenantId);
+  const { databases } = await createAdminClient();
 
-  await ns.deleteMany({ filter: { sourceId } });
+  let cursor: string | undefined;
+  // eslint-disable-next-line no-constant-condition
+  while (true) {
+    const queries = [
+      Query.equal('tenantId', tenantId),
+      Query.equal('sourceId', sourceId),
+      Query.limit(100)
+    ];
+    if (cursor) queries.push(Query.cursorAfter(cursor));
+
+    const batch = await databases.listDocuments(
+      APPWRITE_DATABASE,
+      COLLECTION.VECTORS,
+      queries
+    );
+
+    if (batch.documents.length === 0) break;
+
+    await Promise.all(
+      batch.documents.map((doc) =>
+        databases.deleteDocument(APPWRITE_DATABASE, COLLECTION.VECTORS, doc.$id)
+      )
+    );
+
+    if (batch.documents.length < 100) break;
+    cursor = batch.documents[batch.documents.length - 1].$id;
+  }
 }
 
 // ---------------------------------------------------------------------------
-// Pinecone query (used later in Fas 4, but exposed here)
+// Vector search (cosine similarity)
 // ---------------------------------------------------------------------------
 
 export interface SearchResult {
@@ -129,7 +150,7 @@ export interface SearchResult {
 }
 
 /**
- * Query the vector index for the most relevant chunks.
+ * Query tenant vectors for the most relevant chunks via cosine similarity.
  */
 export async function vectorSearch(
   tenantId: string,
@@ -138,19 +159,62 @@ export async function vectorSearch(
 ): Promise<SearchResult[]> {
   const queryEmbedding = await generateEmbedding(query);
 
-  const pinecone = getPinecone();
-  const index = pinecone.index(INDEX_NAME);
-  const ns = index.namespace(tenantId);
+  // Fetch all tenant vectors from Appwrite
+  const { databases } = await createAdminClient();
+  const allDocs: Array<{
+    vectorId: string;
+    embedding: string;
+    metadata: string;
+  }> = [];
 
-  const results = await ns.query({
-    vector: queryEmbedding,
-    topK,
-    includeMetadata: true
+  let cursor: string | undefined;
+  // eslint-disable-next-line no-constant-condition
+  while (true) {
+    const queries = [Query.equal('tenantId', tenantId), Query.limit(100)];
+    if (cursor) queries.push(Query.cursorAfter(cursor));
+
+    const batch = await databases.listDocuments(
+      APPWRITE_DATABASE,
+      COLLECTION.VECTORS,
+      queries
+    );
+
+    for (const doc of batch.documents) {
+      allDocs.push(doc as unknown as (typeof allDocs)[0]);
+    }
+
+    if (batch.documents.length < 100) break;
+    cursor = batch.documents[batch.documents.length - 1].$id;
+  }
+
+  if (allDocs.length === 0) return [];
+
+  // Score each vector by cosine similarity
+  const scored = allDocs.map((doc) => {
+    const embedding: number[] = JSON.parse(doc.embedding);
+    const score = cosineSimilarity(queryEmbedding, embedding);
+    const metadata: Record<string, unknown> = JSON.parse(doc.metadata);
+    return { id: doc.vectorId, score, metadata };
   });
 
-  return (results.matches ?? []).map((m) => ({
-    id: m.id,
-    score: m.score ?? 0,
-    metadata: (m.metadata as Record<string, unknown>) ?? {}
-  }));
+  // Sort descending by score and return top K
+  scored.sort((a, b) => b.score - a.score);
+  return scored.slice(0, topK);
+}
+
+// ---------------------------------------------------------------------------
+// Cosine similarity
+// ---------------------------------------------------------------------------
+
+function cosineSimilarity(a: number[], b: number[]): number {
+  let dot = 0;
+  let normA = 0;
+  let normB = 0;
+  for (let i = 0; i < a.length; i++) {
+    dot += a[i] * b[i];
+    normA += a[i] * a[i];
+    normB += b[i] * b[i];
+  }
+  const denom = Math.sqrt(normA) * Math.sqrt(normB);
+  return denom === 0 ? 0 : dot / denom;
 }

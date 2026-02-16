@@ -258,10 +258,14 @@ export async function toggleProcedureAction(
 // ---------------------------------------------------------------------------
 
 function parseProcedureDoc(doc: Procedure): Procedure {
+  const plain = JSON.parse(JSON.stringify(doc));
   return {
-    ...doc,
+    ...plain,
     trigger:
-      typeof doc.trigger === 'string' ? JSON.parse(doc.trigger) : doc.trigger,
-    steps: typeof doc.steps === 'string' ? JSON.parse(doc.steps) : doc.steps
+      typeof plain.trigger === 'string'
+        ? JSON.parse(plain.trigger)
+        : plain.trigger,
+    steps:
+      typeof plain.steps === 'string' ? JSON.parse(plain.steps) : plain.steps
   };
 }

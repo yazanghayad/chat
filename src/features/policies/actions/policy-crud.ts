@@ -256,8 +256,10 @@ export async function deletePolicyAction(
 // ---------------------------------------------------------------------------
 
 function parsePolicyDoc(doc: Policy): Policy {
+  const plain = JSON.parse(JSON.stringify(doc));
   return {
-    ...doc,
-    config: typeof doc.config === 'string' ? JSON.parse(doc.config) : doc.config
+    ...plain,
+    config:
+      typeof plain.config === 'string' ? JSON.parse(plain.config) : plain.config
   };
 }

@@ -15,7 +15,6 @@ import type {
   Message,
   ContentSuggestion
 } from '@/types/appwrite';
-import OpenAI from 'openai';
 import { logAuditEventAsync } from '@/lib/audit/logger';
 
 // ---------------------------------------------------------------------------
@@ -245,16 +244,9 @@ function cosineSimilarity(a: number[], b: number[]): number {
 // Draft article generation via LLM
 // ---------------------------------------------------------------------------
 
-let _openai: OpenAI | null = null;
-function getOpenAI(): OpenAI {
-  if (!_openai) {
-    _openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY ?? '' });
-  }
-  return _openai;
-}
-
 async function generateDraftArticle(cluster: QueryCluster): Promise<string> {
-  const openai = getOpenAI();
+  const { getAIClient, getDefaultModel } = await import('@/lib/ai/client');
+  const openai = getAIClient();
 
   const exampleQuestions = cluster.queries
     .slice(0, 5)
@@ -262,7 +254,7 @@ async function generateDraftArticle(cluster: QueryCluster): Promise<string> {
     .join('\n');
 
   const response = await openai.chat.completions.create({
-    model: 'gpt-4o',
+    model: getDefaultModel(),
     messages: [
       {
         role: 'system',

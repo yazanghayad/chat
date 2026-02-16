@@ -207,7 +207,7 @@ async function processManualContent(
       }
     }
 
-    // 3. Upsert into Pinecone
+    // 3. Upsert vectors into Appwrite
     await upsertVectors(tenantId, allVectors);
 
     // 4. Mark as ready

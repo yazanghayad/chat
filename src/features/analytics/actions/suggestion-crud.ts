@@ -156,11 +156,12 @@ export async function dismissSuggestionAction(
 // ---------------------------------------------------------------------------
 
 function parseSuggestionDoc(doc: ContentSuggestion): ContentSuggestion {
+  const plain = JSON.parse(JSON.stringify(doc));
   return {
-    ...doc,
+    ...plain,
     exampleQueries:
-      typeof doc.exampleQueries === 'string'
-        ? JSON.parse(doc.exampleQueries)
-        : doc.exampleQueries
+      typeof plain.exampleQueries === 'string'
+        ? JSON.parse(plain.exampleQueries)
+        : plain.exampleQueries
   };
 }

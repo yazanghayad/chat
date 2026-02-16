@@ -254,6 +254,21 @@ async function setupContentSuggestions() {
   await idx(C, 'tenantId_status_idx', 'key', ['tenantId', 'status']);
 }
 
+// ── Vectors ────────────────────────────────────────────────────────────────────
+async function setupVectors() {
+  const C = 'vectors';
+  await ensureCollection(C, 'Vectors');
+  await attr('string',   C, 'tenantId',   { required: true, size: 64 });
+  await attr('string',   C, 'vectorId',   { required: true, size: 255 });
+  await attr('string',   C, 'sourceId',   { required: true, size: 64 });
+  await attr('longtext', C, 'text');                   // chunk text (up to 10k chars)
+  await attr('longtext', C, 'embedding');               // JSON array of floats (1024-d)
+  await attr('longtext', C, 'metadata');                // JSON object
+  await waitForAttributes(C);
+  await idx(C, 'tenantId_idx',          'key', ['tenantId']);
+  await idx(C, 'tenantId_sourceId_idx', 'key', ['tenantId', 'sourceId']);
+}
+
 // ── Main ─────────────────────────────────────────────────────────────────────
 async function main() {
   console.log('Setting up Appwrite database…\n');
@@ -269,6 +284,7 @@ async function main() {
   await setupDataConnectors();
   await setupTestScenarios();
   await setupContentSuggestions();
+  await setupVectors();
 
   console.log('\n✅ All collections, attributes, and indexes created.');
 }

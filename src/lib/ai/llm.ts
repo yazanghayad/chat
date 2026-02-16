@@ -5,21 +5,8 @@
  * AI responses from the RAG-augmented context.
  */
 
-import OpenAI from 'openai';
 import type { ChatCompletionMessageParam } from 'openai/resources/chat/completions';
-
-// ---------------------------------------------------------------------------
-// Singleton
-// ---------------------------------------------------------------------------
-
-let _openai: OpenAI | null = null;
-
-function getOpenAI(): OpenAI {
-  if (!_openai) {
-    _openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY ?? '' });
-  }
-  return _openai;
-}
+import { getAIClient, getDefaultModel } from './client';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -145,11 +132,11 @@ export async function generateCompletion(
   context: RAGContext,
   options: LLMCompletionOptions = {}
 ): Promise<LLMResponse> {
-  const openai = getOpenAI();
+  const openai = getAIClient();
   const messages = buildMessages(context, options);
 
   const response = await openai.chat.completions.create({
-    model: options.model ?? 'gpt-4o',
+    model: options.model ?? getDefaultModel(),
     messages,
     max_tokens: options.maxTokens ?? 1024,
     temperature: options.temperature ?? 0.3
@@ -180,11 +167,11 @@ export async function* generateStreamingCompletion(
   context: RAGContext,
   options: LLMCompletionOptions = {}
 ): AsyncGenerator<LLMStreamChunk> {
-  const openai = getOpenAI();
+  const openai = getAIClient();
   const messages = buildMessages(context, options);
 
   const stream = await openai.chat.completions.create({
-    model: options.model ?? 'gpt-4o',
+    model: options.model ?? getDefaultModel(),
     messages,
     max_tokens: options.maxTokens ?? 1024,
     temperature: options.temperature ?? 0.3,

@@ -11,5 +11,6 @@ export const COLLECTION = {
   PROCEDURES: 'procedures',
   DATA_CONNECTORS: 'data_connectors',
   TEST_SCENARIOS: 'test_scenarios',
-  CONTENT_SUGGESTIONS: 'content_suggestions'
+  CONTENT_SUGGESTIONS: 'content_suggestions',
+  VECTORS: 'vectors'
 } as const;

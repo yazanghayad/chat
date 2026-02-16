@@ -8,6 +8,7 @@ import type { Metadata, Viewport } from 'next';
 import { cookies } from 'next/headers';
 import NextTopLoader from 'nextjs-toploader';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
+import { ChatBotWidget } from '@/features/chatbot';
 import '../styles/globals.css';
 
 const META_THEME_COLORS = {
@@ -16,8 +17,11 @@ const META_THEME_COLORS = {
 };
 
 export const metadata: Metadata = {
-  title: 'Next Shadcn',
-  description: 'Basic dashboard with Next.js and Shadcn'
+  title: 'SWEO AI',
+  description: 'AI-powered customer support platform',
+  icons: {
+    icon: '/logo_sweo.svg'
+  }
 };
 
 export const viewport: Viewport = {
@@ -67,6 +71,7 @@ export default async function RootLayout({
             <Providers activeThemeValue={themeToApply}>
               <Toaster />
               {children}
+              <ChatBotWidget />
             </Providers>
           </ThemeProvider>
         </NuqsAdapter>

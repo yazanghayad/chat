@@ -24,7 +24,7 @@ interface EmbeddingJobBody {
  * POST /api/embeddings
  *
  * Background embedding job: extracts text from a file or URL, chunks it,
- * generates embeddings via OpenAI, and upserts them into Pinecone.
+ * generates embeddings via NVIDIA/OpenAI, and upserts them into Appwrite.
  *
  * Updates the knowledge_source status to 'ready' or 'failed'.
  */
@@ -110,7 +110,7 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // 4. Upsert into Pinecone (tenant namespace)
+    // 4. Upsert vectors into Appwrite (tenant-scoped)
     await upsertVectors(tenantId, allVectors);
 
     // 5. Update source status to 'ready'

@@ -1,7 +1,6 @@
 import KBar from '@/components/kbar';
 import AppSidebar from '@/components/layout/app-sidebar';
 import Header from '@/components/layout/header';
-import { IconRail } from '@/components/layout/icon-rail';
 import { InfoSidebar } from '@/components/layout/info-sidebar';
 import { InfobarProvider } from '@/components/ui/infobar';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
@@ -28,9 +27,6 @@ export default async function DashboardLayout({
   return (
     <KBar>
       <div className='flex h-screen overflow-hidden'>
-        {/* Intercom-style icon rail */}
-        <IconRail />
-
         {/* Context sidebar + main content */}
         <SidebarProvider defaultOpen={defaultOpen}>
           <InfobarProvider defaultOpen={false}>

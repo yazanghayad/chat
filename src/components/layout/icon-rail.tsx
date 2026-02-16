@@ -4,8 +4,11 @@ import { cn } from '@/lib/utils';
 import {
   BarChart3,
   BookOpen,
+  CreditCard,
+  Folder,
   LayoutGrid,
   MessageSquare,
+  Radio,
   Search,
   Settings,
   Sparkles,
@@ -64,6 +67,24 @@ const topItems: RailItem[] = [
     label: 'Contacts',
     href: '/dashboard/contacts',
     matchPrefix: '/dashboard/contacts'
+  },
+  {
+    icon: Radio,
+    label: 'Channels',
+    href: '/dashboard/settings/channels/messenger',
+    matchPrefix: '/dashboard/settings/channels'
+  },
+  {
+    icon: Folder,
+    label: 'Workspace',
+    href: '/dashboard/workspace/general',
+    matchPrefix: '/dashboard/workspace'
+  },
+  {
+    icon: CreditCard,
+    label: 'Billing',
+    href: '/dashboard/billing',
+    matchPrefix: '/dashboard/billing'
   }
 ];
 
@@ -111,6 +132,25 @@ export function IconRail() {
   return (
     <TooltipProvider delayDuration={0}>
       <aside className='bg-sidebar border-sidebar-border flex h-screen w-14 flex-col items-center border-r py-3'>
+        {/* Logo – molecule icon, light/dark variants */}
+        <Link
+          href='/dashboard/overview'
+          className='mb-2 flex h-10 w-10 shrink-0 items-center justify-center'
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src='/logo-icon-light.svg'
+            alt='SWEO'
+            className='h-8 w-8 dark:hidden'
+          />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src='/logo-icon-dark.svg'
+            alt='SWEO'
+            className='hidden h-8 w-8 dark:block'
+          />
+        </Link>
+
         {/* Top section — main nav */}
         <nav className='flex flex-1 flex-col items-center gap-1'>
           {topItems.map((item) => (

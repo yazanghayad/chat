@@ -26,7 +26,12 @@ export async function listSourcesAction(
       ]
     );
 
-    return { success: true, sources: result.documents };
+    return {
+      success: true,
+      sources: result.documents.map(
+        (d) => JSON.parse(JSON.stringify(d)) as KnowledgeSource
+      )
+    };
   } catch (err) {
     console.error('listSourcesAction error:', err);
     return {
@@ -59,7 +64,7 @@ export async function deleteSourceAction(
       return { success: false, error: 'Access denied' };
     }
 
-    // Delete vectors from Pinecone
+    // Delete vectors from Appwrite
     try {
       await deleteVectorsBySource(tenantId, sourceId);
     } catch (err) {

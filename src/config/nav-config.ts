@@ -3,10 +3,13 @@ import { NavItem } from '@/types';
 /**
  * Navigation configuration
  * Used by sidebar and Cmd+K bar.
+ *
+ * Primary navigation is the IconRail (src/components/layout/icon-rail.tsx).
+ * This sidebar config provides secondary/sub-navigation within each section.
  */
 export const navItems: NavItem[] = [
   {
-    title: 'Dashboard',
+    title: 'Overview',
     url: '/dashboard/overview',
     icon: 'dashboard',
     isActive: false,
@@ -14,10 +17,26 @@ export const navItems: NavItem[] = [
     items: []
   },
   {
-    title: 'Product',
-    url: '/dashboard/product',
-    icon: 'product',
-    shortcut: ['p', 'p'],
+    title: 'Inbox',
+    url: '/dashboard/inbox',
+    icon: 'conversations',
+    shortcut: ['i', 'i'],
+    isActive: false,
+    items: []
+  },
+  {
+    title: 'AI & Automation',
+    url: '/dashboard/ai',
+    icon: 'sparkles',
+    shortcut: ['a', 'i'],
+    isActive: false,
+    items: []
+  },
+  {
+    title: 'Reports',
+    url: '/dashboard/reports',
+    icon: 'analytics',
+    shortcut: ['r', 'r'],
     isActive: false,
     items: []
   },
@@ -27,28 +46,74 @@ export const navItems: NavItem[] = [
     icon: 'knowledge',
     shortcut: ['k', 's'],
     isActive: false,
-    items: []
+    items: [
+      { title: 'Sources', url: '/dashboard/knowledge' },
+      { title: 'Policies', url: '/dashboard/policies' },
+      { title: 'Procedures', url: '/dashboard/procedures' },
+      { title: 'Connectors', url: '/dashboard/connectors' },
+      { title: 'Testing', url: '/dashboard/testing' }
+    ]
   },
   {
-    title: 'Kanban',
-    url: '/dashboard/kanban',
-    icon: 'kanban',
-    shortcut: ['k', 'k'],
+    title: 'Team',
+    url: '/dashboard/contacts',
+    icon: 'users',
+    shortcut: ['c', 'c'],
     isActive: false,
     items: []
   },
   {
-    title: 'Account',
-    url: '#',
-    icon: 'account',
-    isActive: true,
+    title: 'Channels',
+    url: '/dashboard/settings/channels/messenger',
+    icon: 'conversations',
+    isActive: false,
     items: [
-      {
-        title: 'Login',
-        shortcut: ['l', 'l'],
-        url: '/',
-        icon: 'login'
-      }
+      { title: 'Messenger', url: '/dashboard/settings/channels/messenger' },
+      { title: 'Email', url: '/dashboard/settings/channels/email' },
+      { title: 'Phone', url: '/dashboard/settings/channels/phone' },
+      { title: 'WhatsApp', url: '/dashboard/settings/channels/whatsapp' },
+      { title: 'SMS', url: '/dashboard/settings/channels/sms' }
     ]
+  },
+  {
+    title: 'Workspace',
+    url: '/dashboard/workspace/general',
+    icon: 'workspace',
+    isActive: false,
+    items: [
+      { title: 'General', url: '/dashboard/workspace/general' },
+      { title: 'Teammates', url: '/dashboard/workspace/teammates' },
+      { title: 'Security', url: '/dashboard/workspace/security' },
+      { title: 'Brands', url: '/dashboard/workspace/brands' },
+      { title: 'Multilingual', url: '/dashboard/workspace/multilingual' }
+    ]
+  },
+  {
+    title: 'Billing',
+    url: '/dashboard/billing',
+    icon: 'billing',
+    isActive: false,
+    items: []
+  },
+  {
+    title: 'Settings',
+    url: '/dashboard/settings',
+    icon: 'settings',
+    shortcut: ['s', 's'],
+    isActive: false,
+    items: [
+      { title: 'General', url: '/dashboard/settings/general' },
+      { title: 'Security', url: '/dashboard/settings/security' },
+      { title: 'Team', url: '/dashboard/settings/team' },
+      { title: 'Customization', url: '/dashboard/settings/customization' },
+      { title: 'API Tokens', url: '/dashboard/settings/api-tokens' }
+    ]
+  },
+  {
+    title: 'Documentation',
+    url: '/docs',
+    icon: 'knowledge',
+    isActive: false,
+    items: []
   }
 ];

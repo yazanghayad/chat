@@ -347,17 +347,18 @@ export async function testConnectorAction(
 // ---------------------------------------------------------------------------
 
 function parseConnectorDoc(doc: DataConnector): DataConnector {
+  const plain = JSON.parse(JSON.stringify(doc));
   const parsed = {
-    ...doc,
-    auth: typeof doc.auth === 'string' ? JSON.parse(doc.auth) : doc.auth,
+    ...plain,
+    auth: typeof plain.auth === 'string' ? JSON.parse(plain.auth) : plain.auth,
     config:
-      typeof doc.config === 'string'
-        ? JSON.parse(doc.config)
-        : (doc.config ?? {}),
+      typeof plain.config === 'string'
+        ? JSON.parse(plain.config)
+        : (plain.config ?? {}),
     endpoints:
-      typeof doc.endpoints === 'string'
-        ? JSON.parse(doc.endpoints)
-        : (doc.endpoints ?? [])
+      typeof plain.endpoints === 'string'
+        ? JSON.parse(plain.endpoints)
+        : (plain.endpoints ?? [])
   };
 
   // Decrypt credentials if encryption is configured
