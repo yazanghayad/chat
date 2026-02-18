@@ -578,8 +578,6 @@ export function InboxDetailPanel({
   const [conversation, setConversation] = useState<Conversation | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const isDemo = conversationId.startsWith('demo-');
-
   /* Editable state */
   const [assignee, setAssignee] = useState('Yazan Ghayad');
   const [teamInbox, setTeamInbox] = useState('Unassigned');
@@ -600,47 +598,25 @@ export function InboxDetailPanel({
   const [notes, setNotes] = useState('');
 
   const load = useCallback(async () => {
-    if (isDemo) {
-      setLoading(false);
-      return;
-    }
     setLoading(true);
     const res = await getConversationAction(conversationId, tenantId);
     if (res.success && res.conversation) {
       setConversation(res.conversation as Conversation);
     }
     setLoading(false);
-  }, [conversationId, tenantId, isDemo]);
+  }, [conversationId, tenantId]);
 
   useEffect(() => {
     load();
   }, [load]);
 
-  /* Set AI title from conversation or demo */
+  /* Set AI title from conversation */
   useEffect(() => {
-    const channelLabels: Record<string, string> = {
-      web: 'Messenger',
-      messenger: 'Messenger',
-      email: 'Email',
-      whatsapp: 'WhatsApp',
-      sms: 'Phone & SMS',
-      phone: 'Phone & SMS',
-      voice: 'Voice'
-    };
-    const key = isDemo
-      ? conversationId.replace('demo-', '')
-      : (conversation?.channel ?? 'web');
-    setAiTitle(
-      isDemo
-        ? `Install ${channelLabels[key] ?? 'Messenger'}`
-        : (conversation?.userId ?? 'Unknown')
-    );
-  }, [conversationId, isDemo, conversation]);
+    setAiTitle(conversation?.userId ?? 'Unknown');
+  }, [conversationId, conversation]);
 
   /* Copilot context */
-  const channelKey = isDemo
-    ? conversationId.replace('demo-', '')
-    : (conversation?.channel ?? 'web');
+  const channelKey = conversation?.channel ?? 'web';
   const copilotContext = {
     channel: channelKey,
     status: conversation?.status ?? 'active',
@@ -763,7 +739,7 @@ export function InboxDetailPanel({
                 <div className='flex items-center justify-between py-1'>
                   <span className='text-muted-foreground text-[11px]'>ID</span>
                   <span className='font-mono text-[10px] font-medium'>
-                    {isDemo ? '21547307699173' : conversationId.slice(0, 16)}
+                    {conversationId.slice(0, 16)}
                   </span>
                 </div>
                 <EditableRow
@@ -1031,7 +1007,10 @@ export function InboxDetailPanel({
 
         {/* ═══ COPILOT TAB ═══ */}
         <TabsContent value='copilot' className='mt-0 flex-1 overflow-hidden'>
-          <CopilotChat conversationContext={copilotContext} />
+          <CopilotChat
+            key={conversationId}
+            conversationContext={copilotContext}
+          />
         </TabsContent>
       </Tabs>
     </div>

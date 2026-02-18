@@ -38,7 +38,28 @@ export const navItems: NavItem[] = [
     icon: 'analytics',
     shortcut: ['r', 'r'],
     isActive: false,
-    items: []
+    items: [
+      { title: 'Overview', url: '/dashboard/reports' },
+      { title: 'Conversations', url: '/dashboard/reports/conversations' },
+      {
+        title: 'First response time',
+        url: '/dashboard/reports/first-response'
+      },
+      { title: 'Resolution time', url: '/dashboard/reports/resolution-time' },
+      { title: 'Customer satisfaction', url: '/dashboard/reports/csat' },
+      {
+        title: 'SWEO AI performance',
+        url: '/dashboard/reports/fin-performance'
+      },
+      {
+        title: 'Fin deflection rate',
+        url: '/dashboard/reports/fin-deflection'
+      },
+      { title: 'Knowledge gaps', url: '/dashboard/reports/knowledge-gaps' },
+      { title: 'Team performance', url: '/dashboard/reports/team-performance' },
+      { title: 'Busiest hours', url: '/dashboard/reports/busiest-hours' },
+      { title: 'Channels overview', url: '/dashboard/reports/channels' }
+    ]
   },
   {
     title: 'Knowledge',

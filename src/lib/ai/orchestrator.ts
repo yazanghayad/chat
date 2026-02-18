@@ -661,7 +661,10 @@ async function ensureConversation(
       status: 'active',
       userId: userId ?? null,
       metadata: JSON.stringify({}),
-      resolvedAt: null
+      resolvedAt: null,
+      firstResponseAt: null,
+      csatScore: null,
+      assignedTo: null
     }
   );
 
@@ -671,6 +674,7 @@ async function ensureConversation(
 /**
  * Save a message to the messages collection.
  * Messages are scoped by conversationId, not tenantId.
+ * When the first assistant reply is saved, sets firstResponseAt on the conversation.
  */
 async function saveMessage(
   conversationId: string,
@@ -694,6 +698,27 @@ async function saveMessage(
       metadata: JSON.stringify({})
     }
   );
+
+  // Track first response time
+  if (role === 'assistant') {
+    try {
+      const conv = await databases.getDocument(
+        APPWRITE_DATABASE,
+        COLLECTION.CONVERSATIONS,
+        conversationId
+      );
+      if (!(conv as unknown as Conversation).firstResponseAt) {
+        await databases.updateDocument(
+          APPWRITE_DATABASE,
+          COLLECTION.CONVERSATIONS,
+          conversationId,
+          { firstResponseAt: new Date().toISOString() }
+        );
+      }
+    } catch {
+      // Non-critical – don't fail the message save
+    }
+  }
 
   return doc.$id;
 }

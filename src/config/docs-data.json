@@ -1,0 +1,1407 @@
+[
+  {
+    "slug": "getting-started",
+    "title": "Kom igång",
+    "icon": "arrowRight",
+    "description": "Skapa konto, konfigurera workspace och anslut din första kanal.",
+    "articles": [
+      {
+        "slug": "introduction",
+        "title": "Introduktion till SWEO AI",
+        "description": "En överblick av plattformen och hur du snabbt kommer igång.",
+        "sections": [
+          {
+            "id": "overview",
+            "title": "Översikt",
+            "content": "<p>SWEO AI är en AI-driven kundsupportplattform som automatiskt besvarar ärenden via <strong>webbchatt, e-post, WhatsApp, SMS och telefoni</strong>. Plattformen har en Intercom-liknande <a href='/dashboard/inbox'>Inbox</a> där ditt team hanterar alla konversationer, och en inbyggd <strong>AI Copilot</strong> som hjälper mänskliga agenter att svara snabbare.</p><p>Alla funktioner nås via dashboarden:</p><ul><li><a href='/dashboard/overview'>Overview</a> — Realtidsöversikt med grafer och KPI:er</li><li><a href='/dashboard/inbox'>Inbox</a> — Intercom-liknande 4-panel inbox med AI Copilot</li><li><a href='/dashboard/knowledge'>Knowledge Base</a> — Ladda upp PDF, DOCX, TXT, MD, CSV eller crawla URL:er</li><li><a href='/dashboard/ai'>AI &amp; Automation</a> — Konfigurera AI-agentens beteende och automationsregler</li><li><a href='/dashboard/analytics'>Analytics</a> — Resolution rate, confidence, content gaps och AI-förslag</li></ul>"
+          },
+          {
+            "id": "flywheel",
+            "title": "Flywheel-modellen",
+            "content": "<p>SWEO AI bygger på en <strong>Flywheel-modell</strong> med fyra faser som skapar en kontinuerlig förbättringsloop:</p><ol><li><strong>Train</strong> — Mata AI:n med kunskap via <a href='/dashboard/knowledge'>Knowledge Base</a>, definiera regler i <a href='/dashboard/policies'>Policies</a> och automatisera flöden med <a href='/dashboard/procedures'>Procedures</a></li><li><strong>Test</strong> — Kör simulerade konversationer i <a href='/dashboard/testing'>Testing</a> innan du går live. Ange testmeddelanden, förväntat utfall och en confidence-tröskel (standard 0.7)</li><li><strong>Deploy</strong> — Publicera till kanaler: webbwidget, e-post, WhatsApp, SMS, telefoni. Konfigurera under <a href='/dashboard/settings/channels/messenger'>Kanaler</a></li><li><strong>Analyze</strong> — Granska prestanda i <a href='/dashboard/analytics'>Analytics</a> där AI automatiskt identifierar content gaps och föreslår nya artiklar</li></ol><p>Loopen upprepas: Analyze-fasen matar tillbaka insikter till Train-fasen.</p>"
+          },
+          {
+            "id": "core-concepts",
+            "title": "Grundläggande koncept",
+            "content": "<p>Dessa koncept är centrala i SWEO AI:</p><table><thead><tr><th>Koncept</th><th>Beskrivning</th><th>Plats i dashboarden</th></tr></thead><tbody><tr><td><strong>Knowledge Base</strong></td><td>Kunskapskällor (PDF, URL, manuellt) som AI:n söker i via vektorsökning (RAG)</td><td><a href='/dashboard/knowledge'>Knowledge</a></td></tr><tr><td><strong>Policies</strong></td><td>Regler som styr AI:ns beteende: Topic Filter, PII Filter, Tone Control, Length Limit</td><td><a href='/dashboard/policies'>Policies</a></td></tr><tr><td><strong>Procedures</strong></td><td>Multi-steg workflows med triggers (Intent, Keyword, Manual) som AI:n kör automatiskt</td><td><a href='/dashboard/procedures'>Procedures</a></td></tr><tr><td><strong>Connectors</strong></td><td>Tredjepartsintegrationer (Shopify, Stripe, Zendesk, Salesforce, Custom API)</td><td><a href='/dashboard/connectors'>Connectors</a></td></tr><tr><td><strong>AI Copilot</strong></td><td>Inbyggd AI-assistent i Inbox som sammanfattar, översätter, föreslår svar och analyserar sentiment</td><td><a href='/dashboard/inbox'>Inbox → Copilot-fliken</a></td></tr></tbody></table>"
+          },
+          {
+            "id": "quick-start",
+            "title": "Snabbstart på 5 minuter",
+            "content": "<p>Följ dessa steg för att få en fungerande AI-agent:</p><ol><li><strong>Logga in</strong> — Gå till <a href='/auth/sign-in'>Logga in</a> eller <a href='/auth/sign-up'>Skapa konto</a></li><li><strong>Lägg till kunskap</strong> — Gå till <a href='/dashboard/knowledge'>Knowledge</a>, klicka på <em>Add Knowledge Source</em> och ladda upp en PDF eller klistra in en URL</li><li><strong>Skapa en policy</strong> — Gå till <a href='/dashboard/policies'>Policies</a>, klicka <em>Add Policy</em>, välj typ <code>tone</code> och mode <code>pre</code></li><li><strong>Testa</strong> — Gå till <a href='/dashboard/testing'>Testing</a>, skapa ett scenario med exempelmeddelanden och klicka <em>Run</em></li><li><strong>Installera widget</strong> — Gå till <a href='/dashboard/settings'>Settings</a>, kopiera widget-koden och klistra in på din webbplats</li></ol><blockquote><strong>Tips:</strong> Du kan testa din AI-agent direkt via API:t med: <code>curl -X POST /api/chat/message -H 'Authorization: Bearer YOUR_API_KEY' -d '{\"message\": \"Hej, hur returnerar jag en vara?\"}'</code></blockquote>"
+          },
+          {
+            "id": "architecture",
+            "title": "Teknisk arkitektur",
+            "content": "<p>SWEO AI:s AI-pipeline fungerar enligt följande flöde vid varje inkommande meddelande:</p><ol><li><strong>Autentisering</strong> — API-nyckel verifieras (stödjer roterade nycklar med 24h grace period)</li><li><strong>Rate limiting</strong> — Skyddar mot missbruk</li><li><strong>Sanitering</strong> — Indata rensas via <code>sanitizeText()</code></li><li><strong>Pre-generation policies</strong> — Topic filter och PII filter körs <em>innan</em> AI:n svarar</li><li><strong>Vektorsökning (RAG)</strong> — Söker i Knowledge Base via embeddings, returnerar top 5 resultat</li><li><strong>Confidence-check</strong> — Om confidence &lt; 0.7 eskaleras ärendet till mänsklig agent</li><li><strong>LLM-generering</strong> — Svar genereras med kontext från vektorsökning</li><li><strong>Post-generation policies</strong> — Tone och length-regler valideras</li><li><strong>Spara &amp; svara</strong> — Konversation sparas, svar med citations returneras</li></ol><p>Streaming sker via SSE (<code>POST /api/chat/stream</code>) med events: <code>delta</code>, <code>done</code>, <code>error</code>, <code>blocked</code>, <code>escalated</code>.</p>"
+          },
+          {
+            "id": "next-steps",
+            "title": "Nästa steg",
+            "content": "<p>Nu när du har en överblick, rekommenderar vi att du:</p><ul><li>Skapar ditt workspace och bjuder in teamet — se <a href='/docs/getting-started/account-setup'>Skapa konto &amp; workspace</a></li><li>Laddar upp din första kunskapskälla — se <a href='/docs/knowledge/knowledge-sources'>Hantera kunskapskällor</a></li><li>Konfigurerar policies — se <a href='/docs/knowledge/policies'>Policies &amp; Regler</a></li><li>Bygger din första Procedure — se <a href='/docs/ai-automation/procedures'>Procedures – Automatiska workflows</a></li><li>Installerar chattwidgeten — se <a href='/docs/channels/web-messenger'>Web Messenger</a></li></ul><blockquote><strong>Tips:</strong> Använd tangentbordsgenvägar för snabb navigering: <code>D+D</code> för Dashboard, <code>I+I</code> för Inbox, <code>K+S</code> för Knowledge, <code>A+I</code> för AI &amp; Automation.</blockquote>"
+          }
+        ]
+      },
+      {
+        "slug": "account-setup",
+        "title": "Skapa ditt konto & workspace",
+        "description": "Steg-för-steg guide för att registrera dig, bjuda in team och konfigurera workspace.",
+        "sections": [
+          {
+            "id": "create-account",
+            "title": "Skapa konto",
+            "content": "<p>Gå till <a href='/auth/sign-up'>Registrera</a> och skapa ditt konto. Efter registrering omdirigeras du till <a href='/dashboard/overview'>Dashboard Overview</a>.</p><ul><li>Ange din e-postadress och välj ett säkert lösenord</li><li>Redan registrerad? <a href='/auth/sign-in'>Logga in här</a></li></ul>"
+          },
+          {
+            "id": "create-workspace",
+            "title": "Skapa ett workspace",
+            "content": "<p>Ett workspace är din organisations isolerade miljö i SWEO AI. All data (konversationer, knowledge base, policies) är separerade per workspace.</p><p>Skapa ett workspace via <a href='/dashboard/workspace/general'>Workspace → General</a>:</p><ul><li><strong>Namn</strong> — T.ex. <em>Acme Support</em></li><li><strong>Tidszon</strong> — Används för rapporter och SLA-beräkningar</li><li><strong>Språk</strong> — Standardspråk för AI-svaren</li><li><strong>Subdomän</strong> — Unik URL för ditt workspace</li></ul><blockquote><strong>Tips:</strong> Du kan ändra workspace-inställningar när som helst under <a href='/dashboard/settings/general'>Settings → General</a>.</blockquote>"
+          },
+          {
+            "id": "invite-team",
+            "title": "Bjud in teammedlemmar",
+            "content": "<p>Bjud in agenter via <a href='/dashboard/workspace/teammates'>Workspace → Teammates</a>. Ange e-postadress och välj roll.</p><p>Ditt team visas sedan i <a href='/dashboard/contacts'>Team-vyn</a> med status (online/away/busy/offline), aktiva ärenden, lösta idag och snittresponstid.</p>"
+          },
+          {
+            "id": "roles-permissions",
+            "title": "Roller & behörigheter",
+            "content": "<p>SWEO AI har fyra roller som du tilldelar under <a href='/dashboard/contacts'>Team</a>:</p><table><thead><tr><th>Roll</th><th>Behörigheter</th></tr></thead><tbody><tr><td><strong>Admin</strong></td><td>Fullständig kontroll: settings, billing, knowledge, policies, team</td></tr><tr><td><strong>Manager</strong></td><td>Hantera team, se rapporter, konfigurera AI</td></tr><tr><td><strong>Agent</strong></td><td>Hantera ärenden i Inbox, använda AI Copilot</td></tr><tr><td><strong>Developer</strong></td><td>API-tokens, connectors, webhook-konfiguration</td></tr></tbody></table><p>Varje teammedlem visar också: avdelning, titel, plats, språk och skills i <a href='/dashboard/contacts'>Team-panelen</a>.</p>"
+          },
+          {
+            "id": "basic-settings",
+            "title": "Grundinställningar",
+            "content": "<p>Konfigurera under <a href='/dashboard/settings'>Settings</a>:</p><ul><li><strong>API-nyckel</strong> — Kopiera eller rotera din nyckel (gammal nyckel fungerar 24h efter rotation)</li><li><strong>Kanaler</strong> — Slå på/av Web, Email, WhatsApp, SMS, Voice</li><li><strong>AI-modell</strong> — Välj språkmodell</li><li><strong>Confidence-tröskel</strong> — Standard 0.7, ärenden med lägre confidence eskaleras</li><li><strong>System prompt</strong> — Anpassa AI-agentens grundbeteende</li><li><strong>Webhook URL</strong> — Ta emot events om nya ärenden, statusändringar osv.</li><li><strong>Cache TTL</strong> — Hur länge svar cachas</li></ul>"
+          },
+          {
+            "id": "first-channel",
+            "title": "Anslut din första kanal",
+            "content": "<p>Den snabbaste kanalen att komma igång med är <strong>Web Messenger</strong>. Gå till <a href='/dashboard/settings'>Settings</a> och scrolla ner till <em>Widget Installation</em>.</p><p>Kopiera denna kod och klistra in före <code>&lt;/body&gt;</code> på din webbplats:</p><pre><code>&lt;script\n  src=\"https://din-domän.com/api/widget/chat-widget.js\"\n  data-api-key=\"YOUR_API_KEY\"\n  data-api-url=\"https://din-domän.com\"\n  data-title=\"Chat with us\"\n  data-color=\"#6366f1\"\n  data-position=\"right\"\n&gt;&lt;/script&gt;</code></pre><p>Widgeten visas som en 56×56px cirkel längst ner till höger med <code>z-index: 99999</code>. Klicka för att öppna chattpanelen (380px bred).</p><p>Fler kanaler: <a href='/docs/channels/email-channel'>E-post</a>, <a href='/docs/channels/messaging-channels'>WhatsApp &amp; SMS</a>.</p>"
+          }
+        ]
+      },
+      {
+        "slug": "first-ai-agent",
+        "title": "Din första AI-agent på 10 minuter",
+        "description": "Hands-on guide för att snabbt få igång en fungerande AI-agent.",
+        "sections": [
+          {
+            "id": "prerequisites",
+            "title": "Förutsättningar",
+            "content": "<p>Innan du börjar behöver du:</p><ul><li>Ett SWEO AI-konto — <a href='/auth/sign-up'>Registrera dig</a></li><li>Minst en kunskapskälla (t.ex. en FAQ-sida eller en PDF med produktinfo)</li><li>Din API-nyckel (visas under <a href='/dashboard/settings'>Settings</a>)</li></ul>"
+          },
+          {
+            "id": "add-knowledge",
+            "title": "Steg 1: Lägg till kunskap",
+            "content": "<p>Gå till <a href='/dashboard/knowledge'>Knowledge</a>. Du möts av <strong>Add Knowledge Source</strong>-kortet med två flikar:</p><p><strong>Flik 1: File Upload</strong></p><ul><li>Dra och släpp en fil eller klicka för att välja</li><li>Format: <code>.pdf</code>, <code>.docx</code>, <code>.txt</code>, <code>.md</code>, <code>.csv</code></li><li>Max storlek: <strong>20 MB</strong></li></ul><p><strong>Flik 2: URL</strong></p><ul><li>Klistra in en URL, t.ex. <code>https://example.com/docs/getting-started</code></li><li>Klicka <em>Ingest URL</em></li></ul><p>Efter uppladdning syns källan i tabellen med kolumnerna: <strong>Source</strong>, <strong>Type</strong>, <strong>Status</strong> (Processing → Ready/Failed), <strong>Added</strong> och <strong>Delete</strong>. Tabellen uppdateras automatiskt var 5:e sekund medan status är <em>Processing</em>.</p><blockquote><strong>Tips:</strong> Ladda upp din FAQ-sida som första källa — den ger bäst träffar direkt.</blockquote>"
+          },
+          {
+            "id": "set-policies",
+            "title": "Steg 2: Ställ in policies",
+            "content": "<p>Gå till <a href='/dashboard/policies'>Policies</a> och klicka <strong>Add Policy</strong>.</p><p>Fyll i:</p><ul><li><strong>Name</strong> — T.ex. <em>Block competitor mentions</em></li><li><strong>Type</strong> — Välj en av: <code>Topic Filter</code>, <code>PII Filter</code>, <code>Tone Control</code>, <code>Length Limit</code></li><li><strong>Mode</strong> — <code>Pre-generation</code> (filtrerar innan AI svarar) eller <code>Post-generation</code> (validerar efter)</li></ul><p><strong>Exempel på policies att skapa:</strong></p><table><thead><tr><th>Policy</th><th>Typ</th><th>Mode</th><th>Effekt</th></tr></thead><tbody><tr><td>Blockera konkurrentnamn</td><td>Topic Filter</td><td>Pre</td><td>AI svarar inte på frågor om konkurrenter</td></tr><tr><td>Maskera personnummer</td><td>PII Filter</td><td>Post</td><td>E-post, telefon, personnummer maskeras i svar</td></tr><tr><td>Professionell ton</td><td>Tone Control</td><td>Post</td><td>AI skriver formellt och professionellt</td></tr><tr><td>Max 200 tokens</td><td>Length Limit</td><td>Post</td><td>Svar överstiger inte 200 tokens</td></tr></tbody></table><p>Varje policy har en <strong>toggle</strong> för att snabbt aktivera/inaktivera och ett <strong>prioritetsvärde</strong> som avgör ordningen vid konflikter.</p>"
+          },
+          {
+            "id": "test-agent",
+            "title": "Steg 3: Testa agenten",
+            "content": "<p>Gå till <a href='/dashboard/testing'>Testing</a> och klicka <strong>Add Scenario</strong>.</p><p>Fyll i:</p><ul><li><strong>Scenario Name</strong> — T.ex. <em>Refund request flow</em></li><li><strong>User Messages</strong> (ett meddelande per rad):<pre><code>I want a refund\nMy order number is 12345\nYes please process it</code></pre></li><li><strong>Expect resolved</strong> — Slå på om du förväntar dig att AI:n löser ärendet</li><li><strong>Min confidence</strong> — Standard <code>0.7</code> (0–1 skala)</li></ul><p>Klicka <strong>Run</strong> för att köra simuleringen. Resultatbannern visar:</p><ul><li>✅/❌ <strong>Pass/Fail</strong></li><li><strong>Resolution</strong> — Faktiskt vs förväntat</li><li><strong>Confidence</strong> — Faktisk % vs mintröskel</li><li><strong>Turns</strong> — Antal meddelanden i konversationen</li></ul><blockquote><strong>Tips:</strong> Skapa 5–10 scenarion som täcker dina vanligaste kundärenden innan du går live.</blockquote>"
+          },
+          {
+            "id": "deploy-widget",
+            "title": "Steg 4: Publicera widget",
+            "content": "<p>Gå till <a href='/dashboard/settings'>Settings</a> → <strong>Widget Installation</strong>.</p><p>Konfigurera:</p><table><thead><tr><th>Inställning</th><th>Standard</th><th>Alternativ</th></tr></thead><tbody><tr><td>Title</td><td><code>Chat with us</code></td><td>Fritext</td></tr><tr><td>Color</td><td><code>#6366f1</code> (indigo)</td><td>Valfri färg</td></tr><tr><td>Position</td><td>Bottom Right</td><td>Bottom Left</td></tr></tbody></table><p>Klistra in scriptet före <code>&lt;/body&gt;</code>:</p><pre><code>&lt;script\n  src=\"https://din-domän.com/api/widget/chat-widget.js\"\n  data-api-key=\"YOUR_API_KEY\"\n  data-api-url=\"https://din-domän.com\"\n  data-title=\"Hej! Hur kan vi hjälpa?\"\n  data-color=\"#6366f1\"\n  data-position=\"right\"\n&gt;&lt;/script&gt;</code></pre><p>Widgeten genererar ett anonymt användar-ID (<code>anon_xxxxx</code>) som sparas i <code>localStorage</code> under nyckeln <code>__chat_widget_uid</code>.</p>"
+          },
+          {
+            "id": "monitor-results",
+            "title": "Steg 5: Övervaka resultat",
+            "content": "<p>När widgeten är live, övervaka resultaten i realtid:</p><ul><li><a href='/dashboard/overview'>Overview</a> — Area-, bar- och pie-diagram med realtidsdata</li><li><a href='/dashboard/inbox'>Inbox</a> — Se alla inkommande konversationer, status och tilldelade agenter</li><li><a href='/dashboard/analytics'>Analytics</a> → <strong>Overview-fliken</strong>: Resolution Rate, Avg Confidence, Total Conversations, Escalations</li><li><a href='/dashboard/analytics'>Analytics</a> → <strong>AI Suggestions-fliken</strong>: Se content gaps som AI:n har identifierat och godkänn föreslagna artiklar</li><li><a href='/dashboard/reports'>Reports</a> — 10 rapporttyper: Conversations overview, First response time, Resolution time, CSAT, AI performance, Knowledge gaps m.fl.</li></ul><blockquote><strong>Tips:</strong> Granska <strong>AI Suggestions</strong>-fliken i Analytics varje vecka — det är Flywheel-modellens hjärta. AI:n hittar frågor den inte kunde svara på och föreslår nytt kunskapsinnehåll som du kan godkänna med ett klick.</blockquote>"
+          }
+        ]
+      },
+      {
+        "slug": "migration-guide",
+        "title": "Migrera från annan plattform",
+        "description": "Flytta din befintliga kundsupport till SWEO AI från Zendesk, Intercom eller Freshdesk.",
+        "sections": [
+          {
+            "id": "migration-overview",
+            "title": "Migreringsöversikt",
+            "content": "<p>SWEO AI stödjer import av befintlig data via <a href='/dashboard/knowledge'>Knowledge Base</a> och <a href='/dashboard/connectors'>Connectors</a>. Migreringsprocessen:</p><ol><li><strong>Exportera</strong> — Exportera FAQ-artiklar, mallar och kunddata från din nuvarande plattform</li><li><strong>Formatera</strong> — Spara som PDF, DOCX, TXT, MD eller CSV (max 20 MB per fil)</li><li><strong>Importera</strong> — Ladda upp via <a href='/dashboard/knowledge'>Knowledge → File Upload</a></li><li><strong>Koppla data</strong> — Anslut CRM via <a href='/dashboard/connectors'>Connectors</a> (Shopify, Stripe, Zendesk, Salesforce)</li></ol><p>Du kan även importera/exportera hela Knowledge Base som JSON via <code>GET /api/knowledge/export</code> och <code>POST /api/knowledge/import</code>.</p>"
+          },
+          {
+            "id": "from-zendesk",
+            "title": "Migrera från Zendesk",
+            "content": "<p>Steg för att migrera från Zendesk:</p><ol><li>I Zendesk: Gå till <em>Admin → Help Center → Export</em> och ladda ner dina artiklar som HTML eller PDF</li><li>I SWEO AI: Gå till <a href='/dashboard/knowledge'>Knowledge</a> och ladda upp filerna</li><li>Koppla Zendesk som connector: Gå till <a href='/dashboard/connectors'>Connectors</a>, välj provider <code>Zendesk</code>, ange API Key och Base URL</li></ol><blockquote><strong>Tips:</strong> Använd Zendesk-connectorn för att automatiskt synka nya ärenden och kunddata.</blockquote>"
+          },
+          {
+            "id": "from-intercom",
+            "title": "Migrera från Intercom",
+            "content": "<p>Steg för att migrera från Intercom:</p><ol><li>I Intercom: Gå till <em>Settings → Data Management → Export</em></li><li>Exportera artiklar som CSV eller HTML</li><li>I SWEO AI: Ladda upp via <a href='/dashboard/knowledge'>Knowledge → File Upload</a></li><li>Alternativt: Crawla din Intercom Help Center-URL via <a href='/dashboard/knowledge'>Knowledge → URL-fliken</a></li></ol>"
+          },
+          {
+            "id": "from-freshdesk",
+            "title": "Migrera från Freshdesk",
+            "content": "<p>Steg för att migrera från Freshdesk:</p><ol><li>I Freshdesk: Gå till <em>Admin → Knowledge Base → Export</em></li><li>Spara artiklarna som PDF eller DOCX</li><li>I SWEO AI: Ladda upp via <a href='/dashboard/knowledge'>Knowledge → File Upload</a></li></ol><blockquote><strong>Tips:</strong> Om du har en publik Help Center, kan du istället crawla URL:en direkt i Knowledge → URL-fliken.</blockquote>"
+          },
+          {
+            "id": "data-mapping",
+            "title": "Datamappning & import",
+            "content": "<p>Vid bulk-import av data kan du använda API:t:</p><pre><code># Exportera hela knowledge base\ncurl -H 'Authorization: Bearer YOUR_API_KEY' \\\n  GET /api/knowledge/export\n\n# Importera knowledge base från JSON\ncurl -X POST /api/knowledge/import \\\n  -H 'Authorization: Bearer YOUR_API_KEY' \\\n  -H 'Content-Type: application/json' \\\n  -d @knowledge-manifest.json</code></pre><p>JSON-manifestet innehåller alla kunskapskällor med metadata och versionsinformation.</p>"
+          },
+          {
+            "id": "go-live-checklist",
+            "title": "Go-live checklista",
+            "content": "<p>Innan du går live med SWEO AI:</p><ul><li>☐ Minst 3 kunskapskällor uppladdade i <a href='/dashboard/knowledge'>Knowledge</a></li><li>☐ Minst 2 policies konfigurerade i <a href='/dashboard/policies'>Policies</a> (rekommenderat: PII Filter + Tone Control)</li><li>☐ 5+ testscenarier passerat i <a href='/dashboard/testing'>Testing</a></li><li>☐ Widget installerad och testad på staging-sajt</li><li>☐ Inbox-teamet har tillgång och förstår <a href='/dashboard/inbox'>Inbox</a> + AI Copilot</li><li>☐ Eskaleringsregler konfigurerade i <a href='/dashboard/ai'>AI &amp; Automation</a></li><li>☐ <a href='/dashboard/analytics'>Analytics</a> visar data korrekt</li></ul>"
+          }
+        ]
+      }
+    ]
+  },
+    {
+    "slug": "knowledge",
+    "title": "Knowledge Base",
+    "icon": "knowledge",
+    "description": "Kunskapskällor, policies och regler för din AI-agent.",
+    "articles": [
+      {
+        "slug": "knowledge-sources",
+        "title": "Hantera kunskapskällor",
+        "description": "Ladda upp dokument, crawla URL:er och hantera AI-agentens kunskapsinnehåll.",
+        "sections": [
+          {
+            "id": "source-types",
+            "title": "Typer av kunskapskällor",
+            "content": "<p>I <a href='/dashboard/knowledge'>Knowledge</a> kan du mata AI:n med kunskap via tre metoder:</p><table><thead><tr><th>Metod</th><th>Format</th><th>Bäst för</th></tr></thead><tbody><tr><td><strong>File Upload</strong></td><td><code>.pdf</code>, <code>.docx</code>, <code>.txt</code>, <code>.md</code>, <code>.csv</code> (max 20 MB)</td><td>Produktmanualer, FAQ-dokument, prislistor</td></tr><tr><td><strong>URL Crawling</strong></td><td>Vilken webbsida som helst</td><td>Help Center, dokumentationssajter, bloggar</td></tr><tr><td><strong>Manuellt innehåll</strong></td><td>Fritext via API</td><td>Interna policies, specifika svar</td></tr></tbody></table><p>Alla källor visas i en tabell med kolumnerna: <strong>Source</strong> (filnamn/URL), <strong>Type</strong> (file/url/manual), <strong>Status</strong>, <strong>Added</strong> och en <strong>Delete</strong>-knapp.</p>"
+          },
+          {
+            "id": "url-crawling",
+            "title": "URL-crawling i detalj",
+            "content": "<p>Gå till <a href='/dashboard/knowledge'>Knowledge</a> → <strong>Add Knowledge Source</strong> → <strong>URL-fliken</strong>.</p><ol><li>Klistra in webbadressen i fältet, t.ex. <code>https://example.com/docs/getting-started</code></li><li>Klicka <strong>Ingest URL</strong></li><li>SWEO AI hämtar och extraherar texten från sidan</li><li>Texten delas upp i chunks, embeddings genereras och lagras i vektordatabasen</li></ol><p>Status visas i tabellen: <strong>Processing</strong> → <strong>Ready</strong> (eller <strong>Failed</strong> vid fel). Tabellen pollar automatiskt var 5:e sekund under processing.</p><blockquote><strong>Tips:</strong> Crawla din Help Center-startsida för att få in allt innehåll på en gång.</blockquote>"
+          },
+          {
+            "id": "file-upload",
+            "title": "Filuppladdning",
+            "content": "<p>Gå till <a href='/dashboard/knowledge'>Knowledge</a> → <strong>Add Knowledge Source</strong> → <strong>File Upload-fliken</strong>.</p><ul><li><strong>Drag &amp; drop</strong> en fil i uppladdningszonen, eller klicka för att bläddra</li><li>Accepterade format: <code>.pdf</code>, <code>.docx</code>, <code>.txt</code>, <code>.md</code>, <code>.csv</code></li><li>Maximal filstorlek: <strong>20 MB</strong></li></ul><p>Bakom kulisserna sker följande:</p><ol><li>Filen laddas upp till Appwrite Storage via <code>uploadFileAction</code></li><li>En bakgrundsjobb (<code>POST /api/embeddings</code>) triggas</li><li>Texten extraheras, delas i chunks och embeddings genereras</li><li>Resultat lagras i vektordatabasen kopplat till ditt tenant-ID</li></ol><p><strong>Exempel:</strong> Ladda upp <code>product-faq.pdf</code> → status visar <em>Processing</em> → efter ~30 sekunder blir det <em>Ready</em> → din AI kan nu svara på frågor från dokumentet.</p>"
+          },
+          {
+            "id": "manual-content",
+            "title": "Manuellt innehåll",
+            "content": "<p>Du kan lägga till manuellt innehåll via API:t med <code>manualSourceAction</code>. Detta är användbart för specifika svar som inte finns i befintliga dokument.</p><p>Manuellt innehåll kan även skapas via <a href='/dashboard/analytics'>Analytics → AI Suggestions</a>-fliken, där AI:n föreslår artiklar baserat på content gaps. Klicka <strong>Approve &amp; Add</strong> för att lägga till ett AI-genererat förslag direkt i Knowledge Base.</p>"
+          },
+          {
+            "id": "versioning",
+            "title": "Versionshantering",
+            "content": "<p>SWEO AI har inbyggd versionshantering för kunskapskällor via <code>versionManagementAction</code>. När du uppdaterar en källa:</p><ul><li>Den gamla versionen sparas</li><li>Du kan återställa till en tidigare version</li><li>Varje version har en tidsstämpel och en unik versionsnummer</li></ul><blockquote><strong>Tips:</strong> Exportera hela din Knowledge Base som JSON-backup via <code>GET /api/knowledge/export</code> innan stora ändringar.</blockquote>"
+          },
+          {
+            "id": "chunking-embeddings",
+            "title": "Chunking & Embeddings",
+            "content": "<p>När en kunskapskälla laddas upp sker dessa steg automatiskt i bakgrunden via <code>POST /api/embeddings</code>:</p><ol><li><strong>Text extraction</strong> — Text extraheras från PDF/DOCX/HTML</li><li><strong>Chunking</strong> — Texten delas i lagom stora delar för optimal sökning</li><li><strong>Embedding-generering</strong> — Varje chunk konverteras till en numerisk vektor</li><li><strong>Upsert till vektorStore</strong> — Vektorerna lagras i Pinecone med tenant-isolering</li></ol><p>Vid varje kundfråga sker sedan en <strong>vektorsökning</strong> som hittar de <strong>5 mest relevanta</strong> chunks (top_k = 5). Dessa används som kontext i LLM-prompten.</p>"
+          },
+          {
+            "id": "sync-status",
+            "title": "Synkstatus",
+            "content": "<p>Varje källa i <a href='/dashboard/knowledge'>Knowledge-tabellen</a> har en statuskolumn:</p><table><thead><tr><th>Status</th><th>Betydelse</th></tr></thead><tbody><tr><td><strong>Processing</strong></td><td>Texten extraheras, chunks skapas och embeddings genereras</td></tr><tr><td><strong>Ready</strong></td><td>Källan är aktiv och sökbar — AI:n kan använda den</td></tr><tr><td><strong>Failed</strong></td><td>Något gick fel — kontrollera filformatet eller URL:en</td></tr></tbody></table><p>Under <em>Processing</em> pollar tabellen automatiskt var 5:e sekund tills statusen ändras.</p>"
+          },
+          {
+            "id": "best-practices",
+            "title": "Tips & best practices",
+            "content": "<p>Så får du bäst resultat från Knowledge Base:</p><ul><li><strong>Ladda upp FAQ först</strong> — Ger snabbast resultat, tydliga fråga/svar-par matchar bäst</li><li><strong>En källa per ämne</strong> — <code>returer.pdf</code>, <code>frakt.md</code>, <code>priser.docx</code> istället för en gigantisk fil</li><li><strong>Skriv tydliga rubriker</strong> — AI:n hittar bättre med rubriker som <em>\"Hur returnerar jag en vara?\"</em> än <em>\"Sektion 3.2\"</em></li><li><strong>Undvik bilder/tabellbilder</strong> — AI:n läser text, inte bilder. Konvertera tabellbilder till text</li><li><strong>Granska content gaps</strong> — Besök <a href='/dashboard/analytics'>Analytics → AI Suggestions</a> veckovis och godkänn förslag</li><li><strong>Exportera/importera</strong> — Använd <code>/api/knowledge/export</code> och <code>/api/knowledge/import</code> för backup och migreringar</li></ul>"
+          }
+        ]
+      },
+      {
+        "slug": "policies",
+        "title": "Policies & Regler",
+        "description": "Ställ in regler som styr hur AI-agenten beter sig och svarar.",
+        "sections": [
+          {
+            "id": "what-is-policy",
+            "title": "Vad är en policy?",
+            "content": "<p>En <strong>policy</strong> är en regel som styr AI-agentens beteende. Policies konfigureras under <a href='/dashboard/policies'>Policies</a> och tillämpas automatiskt vid varje inkommande meddelande.</p><p>Det finns <strong>4 policytyper</strong> och <strong>2 lägen</strong>:</p><table><thead><tr><th>Typ</th><th>Vad den gör</th></tr></thead><tbody><tr><td><code>Topic Filter</code></td><td>Blockerar ärenden om specifika ämnen (t.ex. konkurrenter, politiska frågor)</td></tr><tr><td><code>PII Filter</code></td><td>Maskerar personuppgifter — e-post, telefonnummer, personnummer</td></tr><tr><td><code>Tone Control</code></td><td>Styr AI:ns ton — formell, informell, professionell</td></tr><tr><td><code>Length Limit</code></td><td>Sätter max antal tokens i AI:ns svar</td></tr></tbody></table><table><thead><tr><th>Läge</th><th>Beskrivning</th></tr></thead><tbody><tr><td><code>Pre-generation</code></td><td>Körs <strong>innan</strong> AI:n genererar ett svar. Blockerar frågan om den bryter mot policyn.</td></tr><tr><td><code>Post-generation</code></td><td>Körs <strong>efter</strong> att svaret genererats. Validerar och filtrerar svaret.</td></tr></tbody></table>"
+          },
+          {
+            "id": "create-policy",
+            "title": "Skapa en policy",
+            "content": "<p>Gå till <a href='/dashboard/policies'>Policies</a> och klicka <strong>Add Policy</strong>.</p><p>Fyll i formuläret:</p><ul><li><strong>Name</strong> — Beskrivande namn, t.ex. <em>Block competitor mentions</em></li><li><strong>Type</strong> — Välj: Topic Filter, PII Filter, Tone Control eller Length Limit</li><li><strong>Mode</strong> — Välj: Pre-generation eller Post-generation</li></ul><p>Efter skapande visas policyn som ett kort med:</p><ul><li><strong>Toggle</strong> — Aktivera/inaktivera med en switch</li><li><strong>Typbadge</strong> — Visar policytypen</li><li><strong>Lägbadge</strong> — Visar pre/post</li><li><strong>Prioritet</strong> — Nummer som avgör ordningen</li><li><strong>Delete</strong> — Ta bort policyn</li></ul>"
+          },
+          {
+            "id": "policy-examples",
+            "title": "Exempelpolicies",
+            "content": "<p>Här är rekommenderade policies att skapa:</p><table><thead><tr><th>Policy</th><th>Typ</th><th>Mode</th><th>Effekt i praktiken</th></tr></thead><tbody><tr><td><strong>Blockera konkurrenter</strong></td><td>Topic Filter</td><td>Pre</td><td>Kund frågar om konkurrent → AI svarar: <em>\"I'm unable to process that request due to our content policies.\"</em></td></tr><tr><td><strong>Maskera PII</strong></td><td>PII Filter</td><td>Post</td><td>Om svaret innehåller <code>john@email.com</code> → maskeras till <code>j***@e***.com</code></td></tr><tr><td><strong>Maximalt 150 tokens</strong></td><td>Length Limit</td><td>Post</td><td>Svar kortas om de överskrider gränsen</td></tr><tr><td><strong>Professionell ton</strong></td><td>Tone Control</td><td>Post</td><td>AI:n skriver aldrig slang eller informellt</td></tr></tbody></table><p>Om en <strong>Pre-generation</strong> policy blockerar frågan svarar AI:n med:<br/><em>\"I'm unable to process that request due to our content policies. Please rephrase your question or contact our support team directly.\"</em></p>"
+          },
+          {
+            "id": "priority",
+            "title": "Policyprioritet & konflikter",
+            "content": "<p>Varje policy har ett <strong>prioritetsvärde</strong> (visas på policykortet). Vid konflikter gäller:</p><ul><li>Lägre nummer = högre prioritet</li><li>Pre-generation policies körs alltid före post-generation</li><li>Om en pre-policy blockerar frågan körs inga post-policies</li></ul><blockquote><strong>Tips:</strong> Sätt PII Filter på prioritet 1 och Topic Filter på prioritet 2 — personuppgifter ska alltid maskeras oavsett ämne.</blockquote>"
+          },
+          {
+            "id": "test-policies",
+            "title": "Testa policies",
+            "content": "<p>Det bästa sättet att testa policies är via <a href='/dashboard/testing'>Testing</a>:</p><ol><li>Skapa ett testscenario med ett meddelande som <em>ska</em> trigga policyn</li><li>Kör simuleringen</li><li>Verifiera att resultatet visar <strong>blocked</strong> (för pre-policies) eller att svaret följer policyn (för post-policies)</li></ol><p>Du kan också testa direkt via API:t:</p><pre><code>curl -X POST /api/chat/stream \\\n  -H 'Authorization: Bearer YOUR_API_KEY' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\"message\": \"Tell me about CompetitorX\"}'</code></pre><p>Om en topic filter blockerar, returneras SSE-event: <code>{\"type\":\"blocked\",\"message\":\"...\"}</code></p>"
+          },
+          {
+            "id": "gdpr-compliance",
+            "title": "GDPR & compliance-policies",
+            "content": "<p>För GDPR-efterlevnad rekommenderar vi att skapa dessa policies:</p><ul><li><strong>PII Filter (Post-generation)</strong> — Maskerar automatiskt e-post, telefonnummer, personnummer i AI-svar</li><li><strong>Topic Filter (Pre-generation)</strong> — Blockera frågor om intern personal, löner, eller konfidentiell information</li></ul><p>Kombinera med inställningarna under <a href='/dashboard/workspace/security'>Workspace → Security</a> för komplett dataskydd.</p>"
+          }
+        ]
+      },
+      {
+        "slug": "content-optimization",
+        "title": "Optimera kunskapsinnehåll",
+        "description": "Förbättra AI-agentens svarsträffsäkerhet genom att strukturera och optimera kunskapskällor.",
+        "sections": [
+          {
+            "id": "content-quality",
+            "title": "Innehållskvalitet",
+            "content": "<p>AI:ns svarskvalitet beror direkt på kvaliteten på dina kunskapskällor i <a href='/dashboard/knowledge'>Knowledge</a>. Tre principer:</p><ol><li><strong>Specifik &gt; generell</strong> — <em>\"Returtiden är 30 dagar\"</em> fungerar bättre än <em>\"Vi har en returpolicy\"</em></li><li><strong>Fråga-svar-format</strong> — AI:n matchar bäst med rubriker som <em>\"Hur returnerar jag?\"</em></li><li><strong>Aktuellt innehåll</strong> — Granska veckovis via <a href='/dashboard/analytics'>Analytics → AI Suggestions</a></li></ol>"
+          },
+          {
+            "id": "writing-for-ai",
+            "title": "Skriv för AI-sökning",
+            "content": "<p>SWEO AI använder <strong>vektorsökning (RAG)</strong> — den hittar de 5 mest semantiskt liknande textchunks. Så optimerar du:</p><ul><li><strong>Använd naturliga frågor som rubriker:</strong> <em>\"Hur lång är leveranstiden?\"</em> istället för <em>\"Leveransinformation\"</em></li><li><strong>Inkludera varianter:</strong> <em>\"Leveranstid / Hur lång tid tar frakt / När kommer mitt paket\"</em></li><li><strong>Ge fullständiga svar:</strong> Varje sektion ska innehålla tillräckligt kontext för att stå på egna ben</li><li><strong>Undvik hänvisningar:</strong> <em>\"Se ovan\"</em> fungerar inte — AI:n ser bara chunks, inte hela dokumentet</li></ul>"
+          },
+          {
+            "id": "faq-structure",
+            "title": "FAQ-strukturering",
+            "content": "<p>Bästa formatet för FAQ-dokument i SWEO AI:</p><pre><code>## Hur returnerar jag en vara?\nDu kan returnera varor inom 30 dagar. Gå till ditt konto,\nvälj ordern och klicka \"Returnera\". Du får en returetikett via e-post.\n\n## Vad kostar frakt?\nStandardfrakt kostar 49 kr. Fri frakt vid köp över 499 kr.\nExpress (nästa dag): 99 kr.\n\n## Hur ändrar jag min beställning?\nKontakta oss inom 1 timme efter beställning.\nEfter det kan vi inte ändra ordern.</code></pre><p>Ladda upp som <code>.md</code> eller <code>.txt</code> via <a href='/dashboard/knowledge'>Knowledge → File Upload</a>.</p>"
+          },
+          {
+            "id": "tagging-categories",
+            "title": "Taggning & kategorier",
+            "content": "<p>Organisera dina kunskapskällor genom att döpa filerna tydligt:</p><ul><li><code>returer-och-byten.pdf</code></li><li><code>frakt-och-leverans.md</code></li><li><code>produktgaranti.docx</code></li><li><code>betalningsmetoder.txt</code></li></ul><p>I <a href='/dashboard/knowledge'>Knowledge-tabellen</a> kan du snabbt se alla källor sorterade efter typ och datum.</p>"
+          },
+          {
+            "id": "multilingual",
+            "title": "Flerspråkigt innehåll",
+            "content": "<p>SWEO AI stödjer flerspråkigt innehåll. Ladda upp kunskapskällor på varje språk du vill stödja. AI:n matchar automatiskt rätt språk baserat på kundens meddelande.</p><p>Konfigurera språkinställningar under <a href='/dashboard/workspace/multilingual'>Workspace → Multilingual</a>.</p><blockquote><strong>Tips:</strong> AI Copilot i <a href='/dashboard/inbox'>Inbox</a> kan översätta meddelanden direkt — klicka <em>Translate to English</em> eller <em>Translate to Swedish</em> i Copilot-fliken.</blockquote>"
+          },
+          {
+            "id": "audit-review",
+            "title": "Granska & underhåll",
+            "content": "<p>Veckovisa underhållsrutiner:</p><ol><li><strong>Granska AI Suggestions</strong> — Gå till <a href='/dashboard/analytics'>Analytics → AI Suggestions</a> och godkänn/avvisa förslag</li><li><strong>Kontrollera synkstatus</strong> — Se till att inga källor har status <em>Failed</em> i <a href='/dashboard/knowledge'>Knowledge</a></li><li><strong>Titta på top topics</strong> — Under <a href='/dashboard/analytics'>Analytics → Overview</a> ser du vilka ämnen som är vanligast</li><li><strong>Uppdatera föråldrat innehåll</strong> — Ta bort gamla källor, ladda upp nya versioner</li></ol>"
+          }
+        ]
+      },
+      {
+        "slug": "snippets-templates",
+        "title": "Snippets & Mallar",
+        "description": "Skapa återanvändbara svarsmallar och snippets för agenter och AI.",
+        "sections": [
+          {
+            "id": "what-are-snippets",
+            "title": "Vad är snippets?",
+            "content": "<p>Snippets är återanvändbara textblock som agenter och AI:n kan använda för att svara snabbt på vanliga frågor. De fungerar som mallar med stöd för dynamiska variabler.</p>"
+          },
+          {
+            "id": "create-snippet",
+            "title": "Skapa en snippet",
+            "content": "<p>Snippets skapas som kunskapskällor i <a href='/dashboard/knowledge'>Knowledge Base</a>. Skriv tydliga fråga-svar-par:</p><pre><code>## Leveransstatus\nHej {{kundnamn}}! Din order #{{ordernummer}} skickades den\n{{leveransdatum}} och beräknas levereras inom 2-3 arbetsdagar.\nSpåra ditt paket här: {{spårningslänk}}</code></pre><p>AI:n kan sedan använda denna snippet som grund för sitt svar och fylla i variablerna med data från <a href='/dashboard/connectors'>Connectors</a>.</p>"
+          },
+          {
+            "id": "dynamic-variables",
+            "title": "Dynamiska variabler",
+            "content": "<p>Variabler skrivs med dubbla klammer: <code>{{variabelnamn}}</code>. Vanliga variabler:</p><table><thead><tr><th>Variabel</th><th>Beskrivning</th><th>Källa</th></tr></thead><tbody><tr><td><code>{{kundnamn}}</code></td><td>Kundens namn</td><td>Konversationsdata</td></tr><tr><td><code>{{ordernummer}}</code></td><td>Aktuellt ordernummer</td><td>Connector (Shopify/Stripe)</td></tr><tr><td><code>{{order.total}}</code></td><td>Orderns totalsumma</td><td>Connector</td></tr><tr><td><code>{{user.email}}</code></td><td>Kundens e-post</td><td>Konversationsdata</td></tr></tbody></table><p>Variabler fylls i automatiskt via <a href='/dashboard/procedures'>Procedures</a> och <a href='/dashboard/connectors'>Connectors</a>.</p>"
+          },
+          {
+            "id": "snippet-categories",
+            "title": "Organisera snippets",
+            "content": "<p>Organisera snippets genom att gruppera dem i separata kunskapskällor:</p><ul><li><code>snippets-returer.md</code> — Alla mallar för returärenden</li><li><code>snippets-frakt.md</code> — Leveransstatus, fraktpriser, förseningar</li><li><code>snippets-betalning.md</code> — Betalningsproblem, fakturor, återbetalningar</li></ul><p>Ladda upp varje fil separat i <a href='/dashboard/knowledge'>Knowledge</a> så att du enkelt kan uppdatera en kategori i taget.</p>"
+          },
+          {
+            "id": "ai-usage",
+            "title": "Hur AI använder snippets",
+            "content": "<p>Vid varje kundfråga sker en <strong>vektorsökning</strong> som hittar de 5 mest relevanta textchunks. Om en snippet matchar frågan använder AI:n den som grund för sitt svar — med rätt variabler ifyllda från kontexten.</p><p>AI:n kan också kombinera information från flera snippets i ett och samma svar om kundens fråga berör flera ämnen.</p><blockquote><strong>Tips:</strong> Testa snippets via <a href='/dashboard/testing'>Testing</a> — skapa scenarion som matchar snipets-ämnen och verifiera att AI:n hittar rätt mall.</blockquote>"
+          },
+          {
+            "id": "import-export",
+            "title": "Importera & exportera",
+            "content": "<p>Exportera och importera hela Knowledge Base (inklusive snippets) via API:</p><pre><code># Exportera\ncurl -H 'Authorization: Bearer YOUR_KEY' \\\n  GET /api/knowledge/export &gt; knowledge-backup.json\n\n# Importera\ncurl -X POST /api/knowledge/import \\\n  -H 'Authorization: Bearer YOUR_KEY' \\\n  -d @knowledge-backup.json</code></pre><p>JSON-manifestet innehåller alla kunskapskällor med metadata, versioner och status.</p>"
+          }
+        ]
+      }
+    ]
+  },
+    {
+    "slug": "ai-automation",
+    "title": "AI & Automation",
+    "icon": "sparkles",
+    "description": "Konfigurera AI-agenten, bygg procedurer och testa innan lansering.",
+    "articles": [
+      {
+        "slug": "procedures",
+        "title": "Procedures – Automatiska workflows",
+        "description": "Bygg multi-step procedurer som AI:n utför automatiskt.",
+        "sections": [
+          {
+            "id": "what-is-procedure",
+            "title": "Vad är en Procedure?",
+            "content": "<p>En <strong>Procedure</strong> är ett multi-steg workflow som AI:n kör automatiskt när en specifik trigger matchar. Procedures konfigureras under <a href='/dashboard/procedures'>Procedures</a>.</p><p>Exempel: När en kund frågar om retur → AI:n hämtar orderdata från Shopify → kontrollerar beloppet → processar returen eller eskalerar till agent.</p><p>Varje procedure har:</p><ul><li><strong>Trigger</strong> — Vad som startar proceduren</li><li><strong>Steg</strong> — En sekvens av åtgärder</li><li><strong>Version</strong> — Varje ändring skapar en ny version</li><li><strong>Enable/Disable toggle</strong> — Aktivera/inaktivera utan att radera</li></ul>"
+          },
+          {
+            "id": "step-types",
+            "title": "Steg-typer",
+            "content": "<p>Varje steg i en Procedure har en typ som bestämmer vad det gör:</p><table><thead><tr><th>Typ</th><th>Beskrivning</th><th>Exempel</th></tr></thead><tbody><tr><td><code>message</code></td><td>Skickar ett meddelande till kunden med en template</td><td><em>\"Your refund of ${{order.total}} has been processed.\"</em></td></tr><tr><td><code>api_call</code></td><td>Anropar ett externt API via en <a href='/dashboard/connectors'>Connector</a></td><td>Shopify: <code>refunds.create</code></td></tr><tr><td><code>data_lookup</code></td><td>Hämtar data från en Connector</td><td>Shopify: <code>orders.get</code> med <code>{{user.email}}</code></td></tr><tr><td><code>conditional</code></td><td>Villkor som grenar till olika steg</td><td><code>{{order.total}} &gt; 100</code> → godkännande krävs</td></tr><tr><td><code>approval</code></td><td>Pausar proceduren tills en agent godkänner</td><td><em>\"Refund over $100 requires approval\"</em></td></tr></tbody></table><p>Steg kan kedjas via <code>nextStep</code>-fältet. Conditional-steg har <code>trueStep</code> och <code>falseStep</code> för branching.</p>"
+          },
+          {
+            "id": "triggers",
+            "title": "Triggers & villkor",
+            "content": "<p>Tre trigger-typer finns i <a href='/dashboard/procedures'>Procedures</a>:</p><table><thead><tr><th>Trigger</th><th>Beskrivning</th><th>Condition-exempel</th></tr></thead><tbody><tr><td><code>Intent</code></td><td>AI:n identifierar kundens avsikt</td><td><code>refund_request</code>, <code>order_status</code></td></tr><tr><td><code>Keyword</code></td><td>Matchar specifika ord i meddelandet</td><td><code>return</code>, <code>cancel order</code></td></tr><tr><td><code>Manual</code></td><td>Startas manuellt av en agent</td><td><code>escalate_to_billing</code></td></tr></tbody></table><p>Condition-fältet anger det specifika villkoret. T.ex. trigger <code>Intent</code> med condition <code>refund_request</code> matchar när AI:n uppfattar att kunden vill ha en retur.</p>"
+          },
+          {
+            "id": "variables",
+            "title": "Variabler & kontext",
+            "content": "<p>Under procedurens körning byggs en kontext med variabler som varje steg kan läsa och skriva:</p><pre><code>// Tillgängliga variabler:\n{{user.email}}       — Kundens e-post\n{{user.name}}        — Kundens namn\n{{order.id}}         — Order-ID från data_lookup\n{{order.total}}      — Orderns totalsumma\n{{order.status}}     — Orderstatus</code></pre><p>Variabler sätts automatiskt av <code>data_lookup</code>-steg via Connectors responseMapping. T.ex. Shopify-connectorn mappar <code>orders[0].id</code> → <code>order.id</code> och <code>orders[0].total_price</code> → <code>order.total</code>.</p>"
+          },
+          {
+            "id": "example-return",
+            "title": "Exempel: Returhantering",
+            "content": "<p>Komplett procedure för returer (5 steg):</p><ol><li><strong>data_lookup</strong> — Hämta order från Shopify med <code>{{user.email}}</code></li><li><strong>conditional</strong> — Om <code>{{order.total}} &gt; 100</code> → godkännande, annars direkt retur</li><li><strong>approval</strong> — (om &gt;100) Agent godkänner i <a href='/dashboard/inbox'>Inbox</a></li><li><strong>api_call</strong> — Skapa retur via Shopify <code>refunds.create</code></li><li><strong>message</strong> — <em>\"Your refund of ${{order.total}} has been processed.\"</em></li></ol><p>Hela flödet körs automatiskt. Kunden behöver bara skicka <em>\"I want a refund\"</em> och AI:n tar hand om resten.</p>"
+          },
+          {
+            "id": "example-order-status",
+            "title": "Exempel: Orderstatus-check",
+            "content": "<p>Enkel 2-stegs procedure:</p><ol><li><strong>data_lookup</strong> — Hämta order från Shopify med <code>{{user.email}}</code></li><li><strong>message</strong> — <em>\"Your order #{{order.id}} is currently {{order.status}}. Total: ${{order.total}}.\"</em></li></ol><p>Trigger: <code>Intent</code> med condition <code>order_status</code>. Kunden frågar <em>\"Where is my order?\"</em> och får svar direkt med data från Shopify.</p>"
+          },
+          {
+            "id": "create-procedure",
+            "title": "Skapa en procedure steg-för-steg",
+            "content": "<p>Gå till <a href='/dashboard/procedures'>Procedures</a> och klicka <strong>Add Procedure</strong>.</p><p>Fyll i formuläret:</p><ul><li><strong>Name</strong> — T.ex. <em>Process Refund</em></li><li><strong>Description</strong> — T.ex. <em>Handles customer refund requests via Shopify</em></li><li><strong>Trigger Type</strong> — Välj: Intent, Keyword eller Manual</li><li><strong>Condition</strong> — T.ex. <em>refund_request</em></li></ul><p>Ett första steg skapas automatiskt:</p><pre><code>{\n  \"id\": \"step_1\",\n  \"type\": \"message\",\n  \"config\": { \"template\": \"Hello, how can I help?\" }\n}</code></pre><p>Proceduren visas som ett kort med: toggle, namn, trigger-badge, version-badge (<code>v1</code>), antal steg och condition.</p>"
+          },
+          {
+            "id": "debugging",
+            "title": "Felsökning & loggning",
+            "content": "<p>Så felsöker du procedures:</p><ol><li><strong>Testa via Testing</strong> — Skapa ett <a href='/dashboard/testing'>testscenario</a> med meddelanden som ska trigga proceduren</li><li><strong>Kolla Inbox</strong> — Eskalerade/approval-steg visas i <a href='/dashboard/inbox'>Inbox</a></li><li><strong>API-logg</strong> — Streaming-API:t (<code>POST /api/chat/stream</code>) returnerar <code>escalated</code>-event om något gick fel</li><li><strong>Connector-test</strong> — Testa connectors separat under <a href='/dashboard/connectors'>Connectors</a> med <em>Test</em>-knappen</li></ol><blockquote><strong>Tips:</strong> Inaktivera en procedure med toggle istället för att radera den — du kan reaktivera den senare.</blockquote>"
+          }
+        ]
+      },
+      {
+        "slug": "ai-settings",
+        "title": "AI-agentens inställningar",
+        "description": "Konfigurera tonalitet, confidence-trösklar, eskalering och modellval.",
+        "sections": [
+          {
+            "id": "tone",
+            "title": "Tonalitet & personlighet",
+            "content": "<p>Konfigurera AI-agentens personlighet under <a href='/dashboard/ai'>AI &amp; Automation</a> → <strong>SWEO AI Agent-fliken</strong>:</p><ul><li><strong>Agent Name</strong> — Namn som visas för kunder</li><li><strong>Tone</strong> — Professionell, vänlig, informell</li><li><strong>Custom Instructions</strong> — Fritext-instruktioner till AI:n, t.ex. <em>\"Svara alltid på svenska om kunden skriver svenska. Avsluta med att erbjuda mer hjälp.\"</em></li></ul><p>Du kan även finjustera via <strong>System Prompt</strong> under <a href='/dashboard/settings'>Settings</a>. System-prompten styr AI:ns grundbeteende för alla konversationer.</p>"
+          },
+          {
+            "id": "confidence",
+            "title": "Confidence-tröskel",
+            "content": "<p>Confidence-tröskeln (standard: <strong>0.7</strong>) ställs in under <a href='/dashboard/settings'>Settings</a>.</p><p>Så fungerar det:</p><ul><li>Vid varje kundfråga beräknar AI:n en <strong>confidence score</strong> (0.0–1.0)</li><li>Om score ≥ tröskeln → AI svarar automatiskt</li><li>Om score &lt; tröskeln → ärendet eskaleras till mänsklig agent i <a href='/dashboard/inbox'>Inbox</a></li></ul><p>Eskaleringsmeddelandet som kunden ser:<br/><em>\"I'm sorry, I don't have enough information to answer that question confidently. Let me connect you with a human agent who can help.\"</em></p><table><thead><tr><th>Tröskel</th><th>Effekt</th></tr></thead><tbody><tr><td><code>0.9</code></td><td>Hög precision — fler eskaleringar, men svaren är nästan alltid rätt</td></tr><tr><td><code>0.7</code> (standard)</td><td>Balanserad — bra för de flesta situationer</td></tr><tr><td><code>0.5</code></td><td>Aggressiv — AI svarar oftare, men lägre träffsäkerhet</td></tr></tbody></table><blockquote><strong>Tips:</strong> Börja med 0.7, granska eskalerade ärenden i <a href='/dashboard/inbox'>Inbox → Escalated &amp; Handoff</a> efter en vecka, och justera.</blockquote>"
+          },
+          {
+            "id": "escalation",
+            "title": "Eskaleringsregler",
+            "content": "<p>Eskalering sker automatiskt i dessa fall:</p><ul><li>Confidence &lt; tröskeln (0.7)</li><li>En <strong>Pre-generation policy</strong> blockerar frågan</li><li>En <strong>Post-generation policy</strong> underkänner svaret</li><li>En <strong>Procedure</strong> kräver <code>approval</code>-steg</li></ul><p>Eskalerade ärenden visas i <a href='/dashboard/inbox'>Inbox</a> under <strong>SWEO AI Agent → Escalated &amp; Handoff</strong>. Agenter kan även initiera handover via <code>POST /api/conversations/handover</code>.</p><p>Konfigurera automationsregler under <a href='/dashboard/ai'>AI &amp; Automation → Automation-fliken</a>, t.ex. <em>\"Escalate negative sentiment\"</em>.</p>"
+          },
+          {
+            "id": "language",
+            "title": "Språkhantering",
+            "content": "<p>SWEO AI detekterar kundens språk automatiskt och svarar på samma språk. Grundspråk konfigureras under <a href='/dashboard/workspace/multilingual'>Workspace → Multilingual</a>.</p><p>AI Copilot i <a href='/dashboard/inbox'>Inbox</a> har inbyggd översättning:</p><ul><li><strong>Translate to English</strong> — Översätter kundens senaste meddelande till engelska</li><li><strong>Translate to Swedish</strong> — Översätter till svenska</li></ul><p>Se till att ladda upp kunskapskällor på de språk du vill stödja i <a href='/dashboard/knowledge'>Knowledge</a>.</p>"
+          },
+          {
+            "id": "model-selection",
+            "title": "Modellval & prestanda",
+            "content": "<p>Välj AI-modell under <a href='/dashboard/settings'>Settings</a> → <strong>AI Model</strong>. Modellvalet påverkar:</p><ul><li><strong>Svarskvalitet</strong> — Bättre modeller ger mer nyanserade svar</li><li><strong>Svarshastighet</strong> — Snabbare modeller ger kortare latens</li><li><strong>Kostnad</strong> — Avancerade modeller kostar mer per token</li></ul><p>SWEO AI använder OpenAI/Azure-baserade modeller med tenant-isolerad konfiguration.</p>"
+          },
+          {
+            "id": "response-format",
+            "title": "Svarsformattering",
+            "content": "<p>AI:ns svar kan kontrolleras med:</p><ul><li><strong>System Prompt</strong> (<a href='/dashboard/settings'>Settings</a>) — Grundinstruktioner, t.ex. <em>\"Svara i korta stycken. Använd punktlistor för steg.\"</em></li><li><strong>Tone Control policy</strong> (<a href='/dashboard/policies'>Policies</a>) — Styr formell/informell ton (post-generation)</li><li><strong>Length Limit policy</strong> (<a href='/dashboard/policies'>Policies</a>) — Max antal tokens per svar</li></ul><p>Streaming-svar (<code>POST /api/chat/stream</code>) skickar tokens som SSE <code>delta</code>-events, med fullständigt resultat i <code>done</code>-event som inkluderar <code>confidence</code> och <code>citations</code>.</p>"
+          },
+          {
+            "id": "fallback",
+            "title": "Fallback-beteende",
+            "content": "<p>När AI:n inte kan svara (confidence &lt; tröskel) sker följande:</p><ol><li>Kunden ser: <em>\"I'm sorry, I don't have enough information to answer that question confidently. Let me connect you with a human agent who can help.\"</em></li><li>Ärendet eskaleras till <a href='/dashboard/inbox'>Inbox → Escalated &amp; Handoff</a></li><li>SSE-stream skickar event: <code>{\"type\":\"escalated\",\"message\":\"...\",\"conversationId\":\"...\"}</code></li></ol><p>Konfigurerbara fallback-alternativ under <a href='/dashboard/ai'>AI &amp; Automation → SWEO AI Agent</a>.</p>"
+          }
+        ]
+      },
+      {
+        "slug": "testing",
+        "title": "Testa din AI-agent",
+        "description": "Kör simulerade konversationer för att verifiera AI:n innan lansering.",
+        "sections": [
+          {
+            "id": "simulation-runner",
+            "title": "Simulation Runner",
+            "content": "<p><a href='/dashboard/testing'>Testing</a> låter dig köra simulerade konversationer <em>utan</em> att påverka riktiga kunder. Simuleringen kör hela AI-pipeline:n (RAG-sökning, policies, confidence-check) men sparar inte konversationen.</p><p>Max <strong>20 meddelanden</strong> per simulering (begränsning i <code>/api/simulate</code>).</p>"
+          },
+          {
+            "id": "create-scenario",
+            "title": "Skapa testscenarier",
+            "content": "<p>Gå till <a href='/dashboard/testing'>Testing</a> och klicka <strong>Add Scenario</strong>.</p><p>Formuläret:</p><ul><li><strong>Scenario Name</strong> — T.ex. <em>Refund request flow</em></li><li><strong>User Messages</strong> (ett per rad):<pre><code>I want a refund\nMy order number is 12345\nYes please process it</code></pre></li><li><strong>Expect resolved</strong> — Toggle: förväntar du dig att AI:n löser det? (default: på)</li><li><strong>Min confidence</strong> — Lägsta godkända confidence, 0–1, step 0.1 (default: <code>0.7</code>)</li></ul><p>Varje scenario visas som ett kort med: namn, antal meddelanden (badge), \"Expect resolved\"-badge och senaste körningstid.</p>"
+          },
+          {
+            "id": "batch-testing",
+            "title": "Batch-testning",
+            "content": "<p>Kör flera scenarion i följd för att testa brett. Rekommenderade testtyper:</p><table><thead><tr><th>Scenario-typ</th><th>Exempelmeddelanden</th><th>Förväntat</th></tr></thead><tbody><tr><td>FAQ-fråga</td><td><em>\"What's your return policy?\"</em></td><td>Resolved, confidence ≥ 0.8</td></tr><tr><td>Order-fråga</td><td><em>\"Where is my order?\"</em></td><td>Resolved via Procedure</td></tr><tr><td>Off-topic</td><td><em>\"What's the weather?\"</em></td><td>Escalated (confidence &lt; 0.7)</td></tr><tr><td>Policy-test</td><td><em>\"Tell me about CompetitorX\"</em></td><td>Blocked av Topic Filter</td></tr><tr><td>PII-test</td><td><em>\"My SSN is 199001011234\"</em></td><td>PII maskeras i svar</td></tr></tbody></table>"
+          },
+          {
+            "id": "result-analysis",
+            "title": "Resultatanalys",
+            "content": "<p>Efter att du klickar <strong>Run</strong> visas en resultatbanner med:</p><ul><li>✅ <strong>PASS</strong> eller ❌ <strong>FAIL</strong></li><li><strong>Resolution</strong> — Faktiskt utfall vs förväntat (resolved/not)</li><li><strong>Confidence</strong> — Faktisk confidence % vs din min-tröskel</li><li><strong>Turns</strong> — Antal meddelanden i konversationen</li></ul><p>Ett scenario <strong>passerar</strong> om:</p><ol><li>Resolution matchar &quot;Expect resolved&quot;</li><li>Confidence ≥ min confidence-tröskel</li></ol>"
+          },
+          {
+            "id": "regression-testing",
+            "title": "Regressionstester",
+            "content": "<p>Kör dina testscenarier efter varje ändring:</p><ul><li>Ny kunskapskälla uppladdad i <a href='/dashboard/knowledge'>Knowledge</a></li><li>Policy tillagd eller ändrad i <a href='/dashboard/policies'>Policies</a></li><li>Procedure uppdaterad i <a href='/dashboard/procedures'>Procedures</a></li><li>System prompt ändrad i <a href='/dashboard/settings'>Settings</a></li></ul><p>Om ett scenario som tidigare <strong>passerade</strong> nu <strong>failar</strong> har ändringen orsakat en regression.</p>"
+          },
+          {
+            "id": "testing-tips",
+            "title": "Best practices",
+            "content": "<p>Tips för effektiv testning:</p><ul><li><strong>Skapa minst 10 scenarion</strong> innan go-live — täck FAQ, returer, orderstatus, off-topic och PII</li><li><strong>Testa på flera språk</strong> — Om du stödjer svenska och engelska, testa båda</li><li><strong>Inkludera edge cases</strong> — Tomma meddelanden, extremt långa frågor, emojis</li><li><strong>Kör regelbundet</strong> — Kör alla scenarion veckovis, eller efter varje knowledge-ändring</li><li><strong>Justera min confidence per scenario</strong> — FAQ-frågor bör ha 0.8+, komplexa frågor kan ha 0.6</li></ul>"
+          }
+        ]
+      },
+      {
+        "slug": "ai-copilot",
+        "title": "AI Copilot för agenter",
+        "description": "Hur mänskliga agenter kan använda AI Copilot för att svara snabbare och bättre.",
+        "sections": [
+          {
+            "id": "copilot-overview",
+            "title": "Vad är AI Copilot?",
+            "content": "<p>AI Copilot är en inbyggd AI-assistent i <a href='/dashboard/inbox'>Inbox</a> som hjälper mänskliga agenter att svara snabbare. Den finns i <strong>Copilot-fliken</strong> i detaljpanelen till höger om varje konversation.</p><p>Copilot har <strong>6 snabbåtgärder</strong> och ett fritextfält där agenter kan ställa egna frågor.</p>"
+          },
+          {
+            "id": "suggested-replies",
+            "title": "Snabbåtgärder",
+            "content": "<p>Dessa 6 åtgärder finns i Copilot-fliken i <a href='/dashboard/inbox'>Inbox</a>:</p><table><thead><tr><th>Åtgärd</th><th>Vad den gör</th></tr></thead><tbody><tr><td><strong>Summarize</strong></td><td>Sammanfattar hela konversationen koncist</td></tr><tr><td><strong>Translate to English</strong></td><td>Översätter kundens senaste meddelande till engelska</td></tr><tr><td><strong>Translate to Swedish</strong></td><td>Översätter kundens senaste meddelande till svenska</td></tr><tr><td><strong>Suggest Reply</strong></td><td>Föreslår ett professionellt svar baserat på kundens meddelande</td></tr><tr><td><strong>Analyze Sentiment</strong></td><td>Analyserar sentiment och ger ett CX-score 1–10 med förklaring</td></tr><tr><td><strong>Draft Note</strong></td><td>Skapar en intern anteckning som sammanfattar ärendet och nästa steg</td></tr></tbody></table><p>Efter första användningen visas de 3 vanligaste åtgärderna som kompakta pill-knappar ovanför textfältet.</p>"
+          },
+          {
+            "id": "summarize",
+            "title": "Sammanfatta konversationer",
+            "content": "<p>Klicka <strong>Summarize</strong> i Copilot-fliken. Copilot analyserar hela konversationens meddelanden och returnerar en kort sammanfattning.</p><p>Användbart när:</p><ul><li>Du tar över ett ärende från en annan agent</li><li>En lång konversation behöver snabb överblick</li><li>Du ska skriva en intern rapport om ärendet</li></ul>"
+          },
+          {
+            "id": "tone-rewrite",
+            "title": "Suggest Reply & tonalitet",
+            "content": "<p>Klicka <strong>Suggest Reply</strong> — Copilot analyserar kundens senaste meddelande och föreslår ett professionellt svar. Du kan sedan:</p><ul><li>Kopiera och klistra in svaret direkt</li><li>Redigera och anpassa innan du skickar</li><li>Ställa en följdfråga till Copilot i textfältet: <em>\"Gör det kortare\"</em> eller <em>\"Mer formellt tack\"</em></li></ul>"
+          },
+          {
+            "id": "knowledge-lookup",
+            "title": "Fritextfrågor",
+            "content": "<p>Copilots textfält (placeholder: <em>\"Ask Copilot...\"</em>) accepterar valfria frågor. Copilot har tillgång till konversationens kontext (kanal, status, alla meddelanden).</p><p>Exempel på frågor:</p><ul><li><em>\"Vad är vår returpolicy?\"</em></li><li><em>\"Har den här kunden tidigare ärenden?\"</em></li><li><em>\"Skriv ett svar som förklarar fraktpriser\"</em></li></ul><p>Svaret streamas i realtid via SSE från <code>POST /api/copilot</code>.</p>"
+          },
+          {
+            "id": "copilot-settings",
+            "title": "Copilot-inställningar",
+            "content": "<p>Copilot kan konfigureras under <a href='/dashboard/ai'>AI &amp; Automation → Inbox AI-fliken</a>:</p><ul><li><strong>AI Compose</strong> — Toggle: AI föreslår svarsförslag automatiskt</li><li><strong>AI Summarize</strong> — Toggle: Automatiska sammanfattningar av konversationer</li><li><strong>Autofill</strong> — Toggle: AI fyller i ärendeattribut automatiskt</li><li><strong>AI Articles</strong> — Toggle: AI föreslår relevanta kunskapsartiklar</li></ul><p>Varje toggle kan slås av/på individuellt.</p>"
+          }
+        ]
+      },
+      {
+        "slug": "handoff-escalation",
+        "title": "Handoff & Eskalering",
+        "description": "Konfigurera när och hur AI:n lämnar över till mänskliga agenter.",
+        "sections": [
+          {
+            "id": "escalation-triggers",
+            "title": "Eskaleringstriggers",
+            "content": "<p>AI:n eskalerar automatiskt i dessa fall:</p><table><thead><tr><th>Trigger</th><th>SSE-event</th><th>Var i Inbox</th></tr></thead><tbody><tr><td>Confidence &lt; tröskel (0.7)</td><td><code>escalated</code></td><td>Escalated &amp; Handoff</td></tr><tr><td>Pre-generation policy blockerar</td><td><code>blocked</code></td><td>Escalated &amp; Handoff</td></tr><tr><td>Post-generation policy underkänner</td><td><code>escalated</code></td><td>Escalated &amp; Handoff</td></tr><tr><td>Procedure kräver approval</td><td>Visas som pending</td><td>Pending</td></tr><tr><td>Automationsregel (negativ sentiment)</td><td>—</td><td>Enligt regel</td></tr></tbody></table><p>Alla eskalerade ärenden hamnar i <a href='/dashboard/inbox'>Inbox</a> under <strong>SWEO AI Agent → Escalated &amp; Handoff</strong>.</p>"
+          },
+          {
+            "id": "routing-rules",
+            "title": "Routingregler",
+            "content": "<p>Konfigurera routing under <a href='/dashboard/ai'>AI &amp; Automation → Automation-fliken</a>. Exempel på inbyggda regler:</p><ul><li><strong>Auto-assign billing</strong> — Billing-ärenden tilldelas billing-teamet</li><li><strong>Close inactive</strong> — Stäng ärenden utan svar efter X dagar</li><li><strong>Escalate negative sentiment</strong> — AI analyserar sentiment och eskalerar</li></ul><p>Varje regel har en <strong>trigger</strong> (vad som utlöser) och en <strong>action</strong> (vad som händer), plus en toggle för att aktivera/inaktivera.</p>"
+          },
+          {
+            "id": "team-assignment",
+            "title": "Teamtilldelning",
+            "content": "<p>Ärenden kan tilldelas i <a href='/dashboard/inbox'>Inbox</a> via detaljpanelens attributsektion:</p><ul><li><strong>Assigned agent</strong> — Välj agent från teamet</li><li><strong>Status</strong> — Ändra till active/resolved/escalated</li><li><strong>Tags</strong> — Lägg till taggar för kategorisering</li></ul><p>Teammedlemmar med rollen <strong>Agent</strong> eller <strong>Manager</strong> kan hantera tilldelning. Se team-översikten under <a href='/dashboard/contacts'>Team</a>.</p>"
+          },
+          {
+            "id": "sla-management",
+            "title": "SLA-hantering",
+            "content": "<p>SLA (Service Level Agreement) övervakas via <a href='/dashboard/reports'>Reports</a>:</p><ul><li><strong>First response time</strong> — Tid till första svar</li><li><strong>Resolution time</strong> — Tid till ärendet stängs</li><li><strong>CSAT</strong> — Kundnöjdhetspoäng</li></ul><p>Rapporter kan filtreras per datumintervall (7/14/30/90 dagar), tidszon och kategori.</p>"
+          },
+          {
+            "id": "warm-handoff",
+            "title": "Varm handoff med kontext",
+            "content": "<p>Vid handoff till mänsklig agent överförs all kontext automatiskt:</p><ul><li>Hela konversationshistoriken</li><li>AI:ns confidence-score</li><li>Vilken kunskapskälla (citations) som matchade</li><li>Eventuell Procedure som pågick</li></ul><p>Agenten ser allt i <a href='/dashboard/inbox'>Inbox → detaljpanelen</a> och Copilot kan sammanfatta konversationen med ett klick.</p><p>Handover kan även initieras via API: <code>POST /api/conversations/handover</code></p>"
+          },
+          {
+            "id": "after-hours",
+            "title": "Utanför arbetstid",
+            "content": "<p>AI:n svarar 24/7 — den eskalerar till mänskliga agenter som hanterar ärenden under arbetstid. Konfigurera agenternas tillgänglighet under <a href='/dashboard/contacts'>Team</a> (status: online/away/busy/offline).</p><p>Utanför arbetstid händer detta:</p><ul><li>AI:n svarar automatiskt på allt den kan (confidence ≥ tröskel)</li><li>Eskalerade ärenden hamnar i <a href='/dashboard/inbox'>Inbox → Unassigned</a></li><li>Agenter hanterar kön nästa arbetsdag</li></ul>"
+          }
+        ]
+      },
+      {
+        "slug": "prompt-engineering",
+        "title": "Prompt Engineering för support",
+        "description": "Avancerade tekniker för att finslipa AI-agentens beteende med prompts.",
+        "sections": [
+          {
+            "id": "system-prompt",
+            "title": "System-prompt design",
+            "content": "<p>System-prompten konfigureras under <a href='/dashboard/settings'>Settings</a> → <strong>System Prompt</strong>. Den styr AI:ns grundbeteende.</p><p>Bra exempel på system-prompt:</p><pre><code>Du är en kundsupportagent för Acme AB.\nSvara alltid på samma språk som kunden.\nVara vänlig, professionell och koncis.\nOm du inte vet svaret, säg att du kopplar vidare till en kollega.\nAnvänd aldrig teknisk jargong.\nHänvisa inte till konkurrenter.\nAvsluta alltid med: \"Finns det något mer jag kan hjälpa dig med?\"</code></pre>"
+          },
+          {
+            "id": "few-shot-examples",
+            "title": "Few-shot-exempel",
+            "content": "<p>Inkludera fråga-svar-par i dina kunskapskällor i <a href='/dashboard/knowledge'>Knowledge</a> för att ge AI:n exempelbaserad vägledning:</p><pre><code>## Vanliga frågor\n\nKund: Hur returnerar jag en vara?\nAgent: Du kan returnera varor inom 30 dagar.\nGå till Mitt konto → Ordrar → Returnera.\nDu får en returetikett via e-post inom 24h.\n\nKund: Kan jag byta storlek istället?\nAgent: Absolut! Gå till samma sida och välj\n\"Byt storlek\" istället för \"Returnera\".</code></pre><p>AI:n lär sig tonen och strukturen från dessa exempel.</p>"
+          },
+          {
+            "id": "guardrails",
+            "title": "Guardrails & begränsningar",
+            "content": "<p>Kombinera dessa tre mekanismer för robusta guardrails:</p><ol><li><strong>System Prompt</strong> — <em>\"Svara aldrig på medicinska frågor\"</em> (<a href='/dashboard/settings'>Settings</a>)</li><li><strong>Topic Filter Policy</strong> — Blockerar specifika ämnen automatiskt (<a href='/dashboard/policies'>Policies</a>)</li><li><strong>PII Filter Policy</strong> — Maskerar personuppgifter (<a href='/dashboard/policies'>Policies</a>)</li></ol><p>Tillsammans skapar de ett tre-lagers skydd: prompt-level, pre-generation och post-generation.</p>"
+          },
+          {
+            "id": "persona-design",
+            "title": "Persona-design",
+            "content": "<p>Skapa en distinkt persona under <a href='/dashboard/ai'>AI &amp; Automation → SWEO AI Agent</a>:</p><ul><li><strong>Agent Name</strong> — Ge AI:n ett namn, t.ex. <em>\"Sofia\"</em></li><li><strong>Tone</strong> — Välj professionell, vänlig eller informell</li><li><strong>Custom Instructions</strong> — <em>\"Du heter Sofia och jobbar på Acme kundtjänst. Du älskar att hjälpa kunder.\"</em></li></ul><p>Kombinera med system-prompten i <a href='/dashboard/settings'>Settings</a> för fullständig kontroll.</p>"
+          },
+          {
+            "id": "edge-cases",
+            "title": "Hantera edge cases",
+            "content": "<p>Testa dessa edge cases via <a href='/dashboard/testing'>Testing</a>:</p><ul><li><strong>Ingen matchning</strong> — Frågor utanför Knowledge Base → bör eskalera</li><li><strong>Flerspråkigt</strong> — Kunden byter språk mitt i konversationen</li><li><strong>Stöteord</strong> — Stötande eller aggressivt språk → bör eskalera</li><li><strong>PII i frågan</strong> — Kunden anger personnummer → PII Filter bör maskera</li><li><strong>Upprepade frågor</strong> — Kunden ställer samma fråga 5 gånger</li></ul>"
+          },
+          {
+            "id": "prompt-versioning",
+            "title": "Versionera prompts",
+            "content": "<p>Gör så här vid prompt-ändringar:</p><ol><li>Kör alla <a href='/dashboard/testing'>testscenarier</a> med nuvarande prompt → anteckna resultat</li><li>Uppdatera system-prompten i <a href='/dashboard/settings'>Settings</a></li><li>Kör alla testscenarier igen → jämför resultat</li><li>Om regression: återställ prompten</li></ol><blockquote><strong>Tips:</strong> Spara gamla prompts som textfiler i <a href='/dashboard/knowledge'>Knowledge</a> med namn som <code>system-prompt-v1.txt</code> för versionshistorik.</blockquote>"
+          }
+        ]
+      }
+    ]
+  },
+    {
+    "slug": "channels",
+    "title": "Kanaler & Deploy",
+    "icon": "settings",
+    "description": "Chat-widget, e-post, WhatsApp, SMS och telefoni.",
+    "articles": [
+      {
+        "slug": "web-messenger",
+        "title": "Web Messenger (Chat Widget)",
+        "description": "Installera och anpassa din chattwidget på din webbplats.",
+        "sections": [
+          {
+            "id": "installation",
+            "title": "Installation",
+            "content": "<p>Gå till <a href='/dashboard/settings'>Settings</a> → <strong>Widget Installation</strong> och kopiera embed-koden.</p><p>Klistra in före <code>&lt;/body&gt;</code> på din webbplats:</p><pre><code>&lt;script\n  src=\"https://din-domän.com/api/widget/chat-widget.js\"\n  data-api-key=\"YOUR_API_KEY\"\n  data-api-url=\"https://din-domän.com\"\n  data-title=\"Chat with us\"\n  data-color=\"#6366f1\"\n  data-position=\"right\"\n&gt;&lt;/script&gt;</code></pre><p>Alla <code>data-*</code> attribut:</p><table><thead><tr><th>Attribut</th><th>Standard</th><th>Beskrivning</th></tr></thead><tbody><tr><td><code>data-api-key</code></td><td><em>(obligatoriskt)</em></td><td>Din API-nyckel från <a href='/dashboard/settings'>Settings</a></td></tr><tr><td><code>data-api-url</code></td><td><code>window.location.origin</code></td><td>API-bas-URL</td></tr><tr><td><code>data-title</code></td><td><code>Chat with us</code></td><td>Text i chatheadern</td></tr><tr><td><code>data-color</code></td><td><code>#6366f1</code></td><td>Primärfärg (hex)</td></tr><tr><td><code>data-position</code></td><td><code>right</code></td><td><code>right</code> eller <code>left</code></td></tr></tbody></table>"
+          },
+          {
+            "id": "customize",
+            "title": "Anpassa utseende",
+            "content": "<p>Under <a href='/dashboard/settings'>Settings → Widget Installation</a> kan du konfigurera:</p><table><thead><tr><th>Inställning</th><th>Standard</th><th>Alternativ</th></tr></thead><tbody><tr><td>Title</td><td><code>Chat with us</code></td><td>Fritext, t.ex. <em>\"Hej! Hur kan vi hjälpa?\"</em></td></tr><tr><td>Color</td><td><code>#6366f1</code> (indigo)</td><td>Valfri hex-färg via färgväljare</td></tr><tr><td>Position</td><td>Bottom Right</td><td>Bottom Left</td></tr></tbody></table><p>Widgetens storlek:</p><ul><li><strong>Bubble</strong> — 56×56px cirkel, <code>z-index: 99999</code>, 20px från botten</li><li><strong>Panel</strong> — 380px bred (max <code>calc(100vw - 40px)</code>), 88px från botten</li></ul>"
+          },
+          {
+            "id": "behavior",
+            "title": "Beteendeinställningar",
+            "content": "<p>Widgeten har dessa inbyggda beteenden:</p><ul><li><strong>Anonymt användar-ID</strong> — Genereras automatiskt som <code>anon_xxxxx</code> och sparas i <code>localStorage</code> under nyckeln <code>__chat_widget_uid</code></li><li><strong>Konversationshistorik</strong> — Sparas per användar-ID, kunden ser sin historik vid återbesök</li><li><strong>Streaming</strong> — Svar visas token för token via SSE (<code>POST /api/chat/stream</code>)</li><li><strong>Responsiv</strong> — Panelen anpassar sig automatiskt till mobilskärmar</li></ul>"
+          },
+          {
+            "id": "proactive-messages",
+            "title": "Proaktiva meddelanden",
+            "content": "<p>Proaktiva meddelanden kan triggas via JavaScript API:t. Lägg till efter widget-scriptet:</p><pre><code>&lt;script&gt;\n  // Visa välkomstmeddelande efter 5 sekunder\n  setTimeout(() =&gt; {\n    window.__sweo_widget?.open();\n  }, 5000);\n&lt;/script&gt;</code></pre><p>Du kan även konfigurera automationsregler under <a href='/dashboard/ai'>AI &amp; Automation → Automation</a> som skickar proaktiva meddelanden baserat på beteende.</p>"
+          },
+          {
+            "id": "features",
+            "title": "Funktioner",
+            "content": "<p>Widgeten stödjer:</p><ul><li><strong>Realtid-streaming</strong> — Token-för-token svar via SSE</li><li><strong>Markdown</strong> — AI:ns svar renderas med formatering</li><li><strong>Citations</strong> — Källhänvisningar visas från Knowledge Base</li><li><strong>Eskalering</strong> — Kunden meddelas om ärendet eskaleras till agent</li><li><strong>Flerspråkigt</strong> — AI svarar på kundens språk automatiskt</li></ul>"
+          },
+          {
+            "id": "troubleshooting",
+            "title": "Felsökning",
+            "content": "<p>Vanliga problem med widgeten:</p><table><thead><tr><th>Problem</th><th>Orsak</th><th>Lösning</th></tr></thead><tbody><tr><td>Widgeten syns inte</td><td>Script laddas inte</td><td>Kontrollera att <code>data-api-url</code> är korrekt och att CORS tillåts</td></tr><tr><td>\"Missing API key\" i konsolen</td><td><code>data-api-key</code> saknas</td><td>Kopiera API-nyckel från <a href='/dashboard/settings'>Settings</a></td></tr><tr><td>AI svarar inte</td><td>Ingen Knowledge Base</td><td>Ladda upp minst en källa i <a href='/dashboard/knowledge'>Knowledge</a></td></tr><tr><td>HTTP 401</td><td>Felaktig API-nyckel</td><td>Rotera nyckeln via <a href='/dashboard/settings'>Settings</a> (24h grace period)</td></tr><tr><td>Widgeten döljer element</td><td>z-index-konflikt</td><td>Widgeten har <code>z-index: 99999</code> — justera andra elements z-index</td></tr></tbody></table>"
+          }
+        ]
+      },
+      {
+        "slug": "email-channel",
+        "title": "E-post",
+        "description": "Koppla din support-email och låt AI:n svara automatiskt.",
+        "sections": [
+          {
+            "id": "connect-email",
+            "title": "Koppla din support-e-post",
+            "content": "<p>Konfigurera e-postkanalen under <a href='/dashboard/settings/channels/email'>Settings → Channels → Email</a>.</p><p>SWEO AI tar emot inkommande e-post via webhook (<code>POST /api/webhooks/email</code>) med uppladdningsstöd för SendGrid och CloudMailin. E-postmeddelanden processas genom samma AI-pipeline som webbchatt:</p><ol><li>Sanitering av e-postinnehåll</li><li>Policy-validering (pre-generation)</li><li>Vektorsökning i Knowledge Base</li><li>LLM-generering av svar</li><li>Policy-validering (post-generation)</li><li>Svar skickas tillbaka via e-post</li></ol>"
+          },
+          {
+            "id": "how-it-works",
+            "title": "Hur det fungerar",
+            "content": "<p>Flödet vid inkommande e-post:</p><ol><li>Kund skickar e-post till <code>support@dindomän.com</code></li><li>Din e-postleverantör vidarebefordrar till SWEO AI:s webhook</li><li>AI:n skapar en konversation i <a href='/dashboard/inbox'>Inbox</a> med kanal-typ <code>email</code></li><li>AI:n genererar och skickar svar via e-post</li><li>Agenter kan se och hantera ärendet i Inbox</li></ol><p>Konversationer från e-post visas i <a href='/dashboard/inbox'>Inbox</a> med en e-post-ikon och kan filtreras via <strong>Views → Email</strong> i sidopanelen.</p>"
+          },
+          {
+            "id": "auto-reply",
+            "title": "Auto-reply inställningar",
+            "content": "<p>AI:n svarar automatiskt på alla e-postmeddelanden där confidence ≥ tröskeln (0.7). Vid lägre confidence eskaleras ärendet:</p><ul><li><strong>Resolved</strong> — AI svarade automatiskt → visas under Inbox → <em>Resolved</em></li><li><strong>Escalated</strong> — Confidence för låg → visas under Inbox → <em>Escalated &amp; Handoff</em></li></ul><p>Agenter ser eskalerade e-post-ärenden direkt i <a href='/dashboard/inbox'>Inbox</a> och kan svara manuellt med hjälp av <strong>AI Copilot → Suggest Reply</strong>.</p>"
+          },
+          {
+            "id": "email-templates",
+            "title": "E-postmallar",
+            "content": "<p>AI:n använder dina kunskapskällor i <a href='/dashboard/knowledge'>Knowledge</a> som grund för e-postsvar. Skapa e-postspecifika snippets:</p><pre><code>## E-post: Orderbekräftelse\nHej {{kundnamn}},\n\nTack för din beställning (#{{ordernummer}}).\nDin order processas just nu och du kommer få\nspårningsinformation via e-post inom 24 timmar.\n\nMed vänliga hälsningar,\nAcme Support</code></pre><p>Ladda upp som <code>email-templates.md</code> i <a href='/dashboard/knowledge'>Knowledge</a>.</p>"
+          },
+          {
+            "id": "dkim-spf",
+            "title": "DKIM, SPF & leveransbarhet",
+            "content": "<p>För att säkerställa att AI:ns e-postsvar levereras korrekt, konfigurera DNS-poster:</p><ul><li><strong>SPF</strong> — Tillåt SWEO AI:s server att skicka e-post från din domän</li><li><strong>DKIM</strong> — Signera e-post kryptografiskt</li><li><strong>DMARC</strong> — Policy för misslyckade SPF/DKIM-kontroller</li></ul><p>Konfigurera under <a href='/dashboard/settings/channels/email'>Settings → Channels → Email</a>.</p>"
+          },
+          {
+            "id": "troubleshooting",
+            "title": "Felsökning",
+            "content": "<p>E-postproblem och lösningar:</p><table><thead><tr><th>Problem</th><th>Lösning</th></tr></thead><tbody><tr><td>E-post kommer inte in</td><td>Kontrollera webhook-URL:en <code>/api/webhooks/email?key=YOUR_KEY</code></td></tr><tr><td>AI svarar inte</td><td>Kontrollera att e-postkanalen är aktiverad i <a href='/dashboard/settings'>Settings</a></td></tr><tr><td>Svar hamnar i spam</td><td>Konfigurera DKIM och SPF för din domän</td></tr><tr><td>Fel avsändaradress</td><td>Kontrollera avsändarinställningen under Channels → Email</td></tr></tbody></table>"
+          }
+        ]
+      },
+      {
+        "slug": "messaging-channels",
+        "title": "WhatsApp, SMS & Telefoni",
+        "description": "Aktivera WhatsApp Business, SMS och röstkanal via Twilio.",
+        "sections": [
+          {
+            "id": "whatsapp",
+            "title": "WhatsApp Business",
+            "content": "<p>WhatsApp-kanalen konfigureras under <a href='/dashboard/settings/channels/whatsapp'>Settings → Channels → WhatsApp</a>.</p><p>SWEO AI tar emot WhatsApp-meddelanden via Twilio webhook (<code>POST /api/webhooks/whatsapp?key=YOUR_API_KEY</code>) med signaturverifiering.</p><p>Setup-steg:</p><ol><li>Skapa ett <strong>Twilio-konto</strong> med WhatsApp Business-nummer</li><li>I Twilio: Ange webhook-URL:en <code>https://din-domän.com/api/webhooks/whatsapp?key=YOUR_API_KEY</code></li><li>I SWEO AI: Ange Twilio Account SID, Auth Token och WhatsApp-nummer under <a href='/dashboard/settings/channels/whatsapp'>Channels → WhatsApp</a></li><li>Aktivera kanalen i <a href='/dashboard/settings'>Settings</a></li></ol><p>Inkommande WhatsApp-meddelanden skapar konversationer i <a href='/dashboard/inbox'>Inbox</a> med kanal-typ <code>whatsapp</code>. Filtrera via <strong>Views → WhatsApp &amp; Social</strong>.</p>"
+          },
+          {
+            "id": "whatsapp-templates",
+            "title": "WhatsApp-meddelanden & mallar",
+            "content": "<p>WhatsApp kräver godkända mallar för utgående meddelanden (Meta-policy). AI:ns svar skickas som fritextmeddelanden inom 24h-fönstret.</p><p>Skapa WhatsApp-specifika kunskapskällor med korta, tydliga svar (WhatsApps teckenbegränsning):</p><pre><code>## WhatsApp: Returer (kort format)\nReturer inom 30 dagar. Gå till acme.se/returns\noch ange ordernummer. Returetikett skickas via e-post.</code></pre><p>Ladda upp som <code>whatsapp-snippets.md</code> i <a href='/dashboard/knowledge'>Knowledge</a>.</p>"
+          },
+          {
+            "id": "sms",
+            "title": "SMS-kanal",
+            "content": "<p>SMS-kanalen konfigureras under <a href='/dashboard/settings/channels/sms'>Settings → Channels → SMS</a>.</p><p>SWEO AI tar emot SMS via Twilio webhook (<code>POST /api/webhooks/sms?key=YOUR_API_KEY</code>) med signaturverifiering.</p><p>Setup:</p><ol><li>I Twilio: Ange webhook <code>https://din-domän.com/api/webhooks/sms?key=YOUR_API_KEY</code></li><li>I SWEO AI: Konfigurera under <a href='/dashboard/settings/channels/sms'>Channels → SMS</a></li><li>Aktivera kanalen i <a href='/dashboard/settings'>Settings</a></li></ol><p>SMS-konversationer syns i <a href='/dashboard/inbox'>Inbox</a> → <strong>Views → Phone &amp; SMS</strong>.</p>"
+          },
+          {
+            "id": "voice",
+            "title": "Telefoni (Voice)",
+            "content": "<p>Voice-kanalen konfigureras under <a href='/dashboard/settings/channels/phone'>Settings → Channels → Phone</a>.</p><p>Flödet vid samtal:</p><ol><li>Kunden ringer ditt Twilio-nummer</li><li>Twilio streamar ljudet till SWEO AI</li><li><strong>Speech-to-Text</strong> (Whisper) — Ljud → text</li><li>Texten processas genom AI-pipeline (RAG + policies)</li><li><strong>Text-to-Speech</strong> — Svar → ljud</li><li>Kunden hör svaret</li></ol><p>Voice-konversationer syns i <a href='/dashboard/inbox'>Inbox</a> → <strong>Views → Phone &amp; SMS</strong>.</p>"
+          },
+          {
+            "id": "shared-settings",
+            "title": "Gemensamma inställningar",
+            "content": "<p>Alla Twilio-baserade kanaler (WhatsApp, SMS, Voice) delar:</p><ul><li><strong>Webhook-autentisering</strong> — Query parameter <code>?key=YOUR_API_KEY</code> + Twilio-signaturverifiering</li><li><strong>Samma AI-pipeline</strong> — RAG-sökning, policies, confidence-check</li><li><strong>Konversationer i Inbox</strong> — Alla kanaler samlas i <a href='/dashboard/inbox'>Inbox</a></li></ul><p>Aktivera/inaktivera kanaler under <a href='/dashboard/settings'>Settings</a> → Channel toggles.</p>"
+          },
+          {
+            "id": "channel-routing",
+            "title": "Kanaldirigering",
+            "content": "<p>Ärenden från olika kanaler kan dirigeras separat via <a href='/dashboard/ai'>AI &amp; Automation → Automation</a>:</p><ul><li><strong>WhatsApp-ärenden → Social-teamet</strong></li><li><strong>E-post-ärenden → E-post-teamet</strong></li><li><strong>Voice-ärenden → Telefoni-teamet</strong></li></ul><p>I <a href='/dashboard/inbox'>Inbox</a> kan du filtrera per kanal via sidopanelens <strong>Views</strong>-sektion:</p><ul><li><strong>Messenger</strong> — Webbchatt-konversationer</li><li><strong>Email</strong> — E-postärenden</li><li><strong>WhatsApp &amp; Social</strong> — WhatsApp, Instagram, Facebook</li><li><strong>Phone &amp; SMS</strong> — Samtal och SMS</li><li><strong>Tickets</strong> — Manuellt skapade ärenden</li></ul>"
+          }
+        ]
+      },
+      {
+        "slug": "social-media",
+        "title": "Sociala medier",
+        "description": "Koppla Instagram DM, Facebook Messenger och andra sociala kanaler.",
+        "sections": [
+          {
+            "id": "instagram-dm",
+            "title": "Instagram DM",
+            "content": "<p>Instagram DM-integration via Meta Graph API:</p><ol><li>Skapa en app i <a href='https://developers.facebook.com' target='_blank'>Meta Developer Portal</a></li><li>Aktivera Instagram Messaging API</li><li>Konfigurera webhook-URL till SWEO AI</li><li>Ange app-ID och app-hemlighet under <a href='/dashboard/settings'>Settings → Channels</a></li></ol><p>Instagram-konversationer visas i <a href='/dashboard/inbox'>Inbox → Views → WhatsApp &amp; Social</a>.</p>"
+          },
+          {
+            "id": "facebook-messenger",
+            "title": "Facebook Messenger",
+            "content": "<p>Facebook Messenger-integration via Meta Messenger API:</p><ol><li>Skapa en app i <a href='https://developers.facebook.com' target='_blank'>Meta Developer Portal</a></li><li>Aktivera Messenger Platform</li><li>Kopera Page Access Token</li><li>Konfigurera under <a href='/dashboard/settings'>Settings → Channels</a></li></ol><p>Messenger-konversationer visas i <a href='/dashboard/inbox'>Inbox → Views → WhatsApp &amp; Social</a>.</p>"
+          },
+          {
+            "id": "slack-communities",
+            "title": "Slack Communities",
+            "content": "<p>Slack-integration via Slack Events API:</p><ol><li>Skapa en Slack-app på <a href='https://api.slack.com/apps' target='_blank'>api.slack.com/apps</a></li><li>Aktivera Event Subscriptions</li><li>Ange webhook-URL till SWEO AI</li><li>Konfigurera under <a href='/dashboard/settings'>Settings → Channels</a></li></ol><p>Slack-meddelanden processas genom samma AI-pipeline och konversationer visas i <a href='/dashboard/inbox'>Inbox</a>.</p>"
+          },
+          {
+            "id": "meta-setup",
+            "title": "Meta Business Suite-setup",
+            "content": "<p>För Instagram DM och Facebook Messenger behöver du:</p><ul><li>Ett <strong>Meta Business Suite</strong>-konto</li><li>En <strong>Facebook Page</strong> kopplad till ditt Instagram Business-konto</li><li>En <strong>Meta Developer App</strong> med rätt behörigheter</li></ul><p>Behörigheter som krävs: <code>pages_messaging</code>, <code>instagram_basic</code>, <code>instagram_manage_messages</code>.</p>"
+          },
+          {
+            "id": "social-routing",
+            "title": "Kanaldirigering för sociala medier",
+            "content": "<p>Sociala medier-ärenden kan filtreras och dirigeras i <a href='/dashboard/inbox'>Inbox</a>:</p><ul><li><strong>Views → WhatsApp &amp; Social</strong> — Alla sociala kanaler samlade</li><li>Automationsregler i <a href='/dashboard/ai'>AI &amp; Automation</a> kan dirigera sociala ärenden till specifika team</li></ul>"
+          },
+          {
+            "id": "social-best-practices",
+            "title": "Best practices",
+            "content": "<p>Tips för sociala kanaler:</p><ul><li><strong>Korta svar</strong> — Sociala kanaler förväntar sig snabba, korta svar. Skapa specifika snippets i <a href='/dashboard/knowledge'>Knowledge</a></li><li><strong>Snabb responstid</strong> — Instagram och Facebook visar responstid publikt. AI:n svarar inom sekunder</li><li><strong>Emoji-policy</strong> — Överväg om AI:n ska använda emojis via system-prompten</li><li><strong>Hantera DM vs kommentarer</strong> — SWEO AI hanterar DM:s, inte publika kommentarer</li></ul>"
+          }
+        ]
+      },
+      {
+        "slug": "widget-customization",
+        "title": "Avancerad widget-anpassning",
+        "description": "JavaScript API och avancerade konfigurationer för chattwidgeten.",
+        "sections": [
+          {
+            "id": "css-theming",
+            "title": "CSS-theming",
+            "content": "<p>Widgetens utseende kontrolleras primärt via <code>data-color</code>-attributet. Färgen appliceras på:</p><ul><li>Bubble-bakgrund</li><li>Header-bakgrund</li><li>Skicka-knappen</li><li>Användarens meddelandebubblor</li></ul><p>Widgeten använder shadow DOM för isolering — dina CSS-regler påverkar inte widgeten och vice versa.</p>"
+          },
+          {
+            "id": "js-api",
+            "title": "JavaScript API",
+            "content": "<p>Widgeten exponerar ett globalt API via <code>window.__sweo_widget</code>:</p><pre><code>// Öppna chattpanelen programmatiskt\nwindow.__sweo_widget?.open();\n\n// Stäng panelen\nwindow.__sweo_widget?.close();\n\n// Toggle (öppna/stäng)\nwindow.__sweo_widget?.toggle();</code></pre><p>Användbart för att trigga chatten från egna knappar eller vid specifika användaråtgärder.</p>"
+          },
+          {
+            "id": "events",
+            "title": "Events & callbacks",
+            "content": "<p>Widgeten kommunicerar med din server via dessa API-endpoints:</p><ul><li><code>POST /api/chat/stream</code> — Skickar meddelanden, få streaming-svar</li><li>SSE-events: <code>delta</code> (token), <code>done</code> (klart), <code>error</code>, <code>blocked</code>, <code>escalated</code></li></ul><p><code>done</code>-eventet innehåller:</p><pre><code>{\n  \"type\": \"done\",\n  \"conversationId\": \"conv_abc123\",\n  \"confidence\": 0.92,\n  \"citations\": [{\"sourceId\": \"...\"}]\n}</code></pre>"
+          },
+          {
+            "id": "user-identity",
+            "title": "Identifiera användare",
+            "content": "<p>Widgeten genererar automatiskt ett anonymt ID: <code>anon_</code> + 8 slumpmässiga tecken (base36). ID:t sparas i <code>localStorage</code> under nyckeln <code>__chat_widget_uid</code>.</p><p>Du kan skicka eget användar-ID via API:t:</p><pre><code>POST /api/chat/message\n{\n  \"message\": \"Hej!\",\n  \"userId\": \"customer_12345\",\n  \"channel\": \"web\"\n}</code></pre><p>Detta kopplar konversationen till en specifik kundprofil.</p>"
+          },
+          {
+            "id": "custom-data",
+            "title": "Skicka custom metadata",
+            "content": "<p>Via REST API:t kan du skicka metadata med varje meddelande:</p><pre><code>POST /api/chat/message\n{\n  \"message\": \"Where is my order?\",\n  \"userId\": \"customer_12345\",\n  \"conversationId\": \"conv_existing\",\n  \"channel\": \"web\"\n}</code></pre><p>Fältet <code>conversationId</code> kopplar meddelandet till en befintlig konversation. Om det utelämnas skapas en ny.</p>"
+          },
+          {
+            "id": "spa-integration",
+            "title": "SPA-integration (React, Vue, Angular)",
+            "content": "<p>För Single-Page Applications, lägg till widgeten dynamiskt:</p><pre><code>// React: Lägg i useEffect\nuseEffect(() =&gt; {\n  const script = document.createElement('script');\n  script.src = 'https://din-domän.com/api/widget/chat-widget.js';\n  script.dataset.apiKey = 'YOUR_API_KEY';\n  script.dataset.apiUrl = 'https://din-domän.com';\n  script.dataset.title = 'Hej!';\n  script.dataset.color = '#6366f1';\n  document.body.appendChild(script);\n\n  return () =&gt; script.remove();\n}, []);</code></pre><p>Widgeten hanterar navigering automatiskt — konversationshistoriken sparas i <code>localStorage</code>.</p>"
+          }
+        ]
+      }
+    ]
+  },
+  {
+  "slug": "integrations",
+  "title": "Integrationer & CRM",
+  "icon": "plug",
+  "description": "Anslut externa system, CRM-plattformar och e-handelsverktyg till SWEO AI.",
+  "articles": [
+    {
+      "slug": "data-connectors",
+      "title": "Data Connectors",
+      "content": "<p>Data Connectors låter SWEO AI hämta och skriva data i realtid från externa system — så att AI-agenten kan slå upp ordrar, kundinfo eller supportärenden mitt i en konversation.</p>",
+      "sections": [
+        {
+          "id": "supported-providers",
+          "title": "Providers som stöds",
+          "content": "<p>SWEO AI har inbyggt stöd för fem connector-typer:</p><table><thead><tr><th>Provider</th><th>Typiska användningsfall</th><th>Auth-metod</th></tr></thead><tbody><tr><td><strong>Shopify</strong></td><td>Ordersökning, returhantering, produktinfo</td><td>API Key / OAuth</td></tr><tr><td><strong>Stripe</strong></td><td>Betalningsstatus, fakturor, prenumerationer</td><td>API Key</td></tr><tr><td><strong>Zendesk</strong></td><td>Ärendehistorik, kontaktuppgifter</td><td>OAuth / Basic</td></tr><tr><td><strong>Salesforce</strong></td><td>CRM-data, leads, opportunities</td><td>OAuth</td></tr><tr><td><strong>Custom</strong></td><td>Valfritt REST API (eget backend, ERP, etc.)</td><td>API Key / Basic / OAuth</td></tr></tbody></table>"
+        },
+        {
+          "id": "create-connector",
+          "title": "Skapa en connector",
+          "content": "<p>Gå till <a href='/dashboard/connectors'>Knowledge → Connectors</a> och klicka <strong>Lägg till Connector</strong>. Fyll i formuläret:</p><table><thead><tr><th>Fält</th><th>Beskrivning</th><th>Exempel</th></tr></thead><tbody><tr><td><strong>Namn</strong></td><td>Beskrivande namn för connectorn</td><td><code>Shopify Production</code></td></tr><tr><td><strong>Provider</strong></td><td>Välj bland: shopify, stripe, zendesk, salesforce, custom</td><td><code>shopify</code></td></tr><tr><td><strong>Auth Type</strong></td><td>Autentiseringsmetod: api_key, oauth, basic</td><td><code>api_key</code></td></tr><tr><td><strong>Base URL</strong></td><td>API-bas-URL för connectorn</td><td><code>https://mystore.myshopify.com</code></td></tr><tr><td><strong>API Key</strong></td><td>Hemlig nyckel (visas aldrig i klartext efter sparande)</td><td><code>shpat_abc123...</code></td></tr></tbody></table><p>Klicka <strong>Testa Anslutning</strong> innan du sparar — knappen skickar en probe-request och visar grönt om anslutningen lyckas.</p>"
+        },
+        {
+          "id": "use-in-procedures",
+          "title": "Använda connectors i Procedures",
+          "content": "<p>Connectors blir kraftfulla när de kopplas till <a href='/docs/ai-automation/procedures'>Procedures</a>. Skapa ett steg av typen <code>data_lookup</code> eller <code>api_call</code> och referera connectorn:</p><pre><code>// Procedure-steg: Hämta order från Shopify\n{\n  \"type\": \"data_lookup\",\n  \"config\": {\n    \"dataConnector\": \"shopify-prod\",   // connector-id\n    \"query\": \"orders.get\",\n    \"params\": { \"email\": \"{{user.email}}\" }\n  }\n}\n\n// Resultat tillgängligt som {{order.id}}, {{order.total}} etc.\n// i efterföljande steg</code></pre><p>AI-agenten kan alltså svara: <em>\"Jag ser din order #4521 på 899 kr — vill du att jag påbörjar en retur?\"</em> — allt automatiskt.</p>"
+        },
+        {
+          "id": "response-mapping",
+          "title": "Response Mapping",
+          "content": "<p>Varje connector-endpoint har en <strong>response mapping</strong> som mappar API-svar till variabler som Procedures kan använda:</p><pre><code>// Mapping-exempel för Shopify orders\n{\n  \"orders[0].id\": \"order.id\",\n  \"orders[0].total_price\": \"order.total\",\n  \"orders[0].financial_status\": \"order.payment_status\",\n  \"orders[0].fulfillment_status\": \"order.shipping_status\"\n}</code></pre><p>Dessa variabler blir tillgängliga som <code>{{order.id}}</code>, <code>{{order.total}}</code> etc. i alla efterföljande Procedure-steg och meddelandemallar.</p>"
+        },
+        {
+          "id": "connector-security",
+          "title": "Säkerhet & kryptering",
+          "content": "<p>Alla connector-credentials krypteras med AES-256 innan de lagras i databasen. API-nycklar visas aldrig i klartext efter att de sparats — i dashboarden syns de som <code>shpat_****...3def</code>.</p><p>Connectors är tenant-isolerade: en organisation kan aldrig se eller använda en annan organisations connectors. Alla API-anrop loggas under <a href='/dashboard/analytics'>Analytics</a> för spårbarhet.</p>"
+        }
+      ]
+    },
+    {
+      "slug": "webhooks-api",
+      "title": "Webhooks & REST API",
+      "content": "<p>SWEO AI erbjuder ett komplett REST API och webhook-system för integration med externa system och custom workflows.</p>",
+      "sections": [
+        {
+          "id": "api-endpoints",
+          "title": "Tillgängliga API-endpoints",
+          "content": "<p>Alla endpoints kräver autentisering via <code>x-api-key</code>-header med din tenant API-nyckel (genereras under <a href='/dashboard/settings'>Inställningar → API</a>).</p><table><thead><tr><th>Endpoint</th><th>Metod</th><th>Beskrivning</th></tr></thead><tbody><tr><td><code>/api/chat/message</code></td><td>POST</td><td>Skicka meddelande, få synkront AI-svar</td></tr><tr><td><code>/api/chat/stream</code></td><td>POST</td><td>Skicka meddelande, få SSE-stream</td></tr><tr><td><code>/api/copilot</code></td><td>POST</td><td>AI Copilot-åtgärder (summarize, translate, etc.)</td></tr><tr><td><code>/api/simulate</code></td><td>POST</td><td>Kör test-scenario (dry run)</td></tr><tr><td><code>/api/embeddings</code></td><td>POST</td><td>Generera embeddings för text</td></tr><tr><td><code>/api/knowledge/export</code></td><td>GET</td><td>Exportera kunskapsbas som JSON</td></tr><tr><td><code>/api/knowledge/import</code></td><td>POST</td><td>Importera kunskapsbas från JSON</td></tr><tr><td><code>/api/conversations/handover</code></td><td>POST</td><td>Eskalera konversation till mänsklig agent</td></tr></tbody></table>"
+        },
+        {
+          "id": "api-example",
+          "title": "API-exempel: Skicka meddelande",
+          "content": "<p>Synkront svar:</p><pre><code>curl -X POST https://your-domain.com/api/chat/message \\\n  -H \"Content-Type: application/json\" \\\n  -H \"x-api-key: your-tenant-api-key\" \\\n  -d '{\n    \"message\": \"Hur returnerar jag en vara?\",\n    \"conversationId\": \"conv_abc123\",\n    \"channel\": \"api\"\n  }'</code></pre><p>Svar:</p><pre><code>{\n  \"content\": \"För att returnera en vara, gå till...\",\n  \"confidence\": 0.92,\n  \"sources\": [\n    { \"title\": \"Returpolicy\", \"sourceId\": \"src_456\" }\n  ],\n  \"conversationId\": \"conv_abc123\"\n}</code></pre>"
+        },
+        {
+          "id": "sse-streaming",
+          "title": "SSE Streaming",
+          "content": "<p>För realtidssvar, använd streaming-endpointen. Svaret skickas som <strong>Server-Sent Events</strong>:</p><pre><code>curl -N -X POST https://your-domain.com/api/chat/stream \\\n  -H \"Content-Type: application/json\" \\\n  -H \"x-api-key: your-tenant-api-key\" \\\n  -d '{\"message\": \"Vad kostar frakt?\", \"conversationId\": \"conv_789\"}'</code></pre><p>Event-typer som skickas:</p><table><thead><tr><th>Event</th><th>Beskrivning</th><th>Data</th></tr></thead><tbody><tr><td><code>delta</code></td><td>Textfragment (token för token)</td><td><code>{\"text\": \"Frakt\"}</code></td></tr><tr><td><code>done</code></td><td>Svaret är komplett</td><td><code>{\"confidence\": 0.89, \"sources\": [...]}</code></td></tr><tr><td><code>error</code></td><td>Fel uppstod</td><td><code>{\"message\": \"Rate limit exceeded\"}</code></td></tr><tr><td><code>blocked</code></td><td>Policy blockerade svaret</td><td><code>{\"policy\": \"topic_filter\", \"reason\": \"...\"}</code></td></tr><tr><td><code>escalated</code></td><td>Confidence för låg, eskalerar</td><td><code>{\"reason\": \"low_confidence\", \"score\": 0.45}</code></td></tr></tbody></table>"
+        },
+        {
+          "id": "inbound-webhooks",
+          "title": "Inkommande webhooks",
+          "content": "<p>SWEO AI tar emot meddelanden från externa kanaler via webhooks:</p><table><thead><tr><th>Webhook</th><th>Källa</th><th>Konfiguration</th></tr></thead><tbody><tr><td><code>/api/webhooks/email</code></td><td>CloudMailin / SendGrid Inbound Parse</td><td>Ställ in forwarding-adress i din e-postleverantör</td></tr><tr><td><code>/api/webhooks/whatsapp</code></td><td>Twilio WhatsApp</td><td>Ange URL i Twilio Console → Messaging</td></tr><tr><td><code>/api/webhooks/sms</code></td><td>Twilio SMS</td><td>Ange URL i Twilio Console → Phone Numbers</td></tr></tbody></table><p>Alla inkommande webhooks valideras med provider-specifika signaturer för att förhindra förfalskning.</p>"
+        },
+        {
+          "id": "outbound-webhooks",
+          "title": "Utgående webhooks (Events)",
+          "content": "<p>Konfigurera utgående webhooks under <a href='/dashboard/settings'>Inställningar</a> för att få notiser när saker händer i SWEO AI:</p><ul><li><strong>conversation.created</strong> — Ny konversation startad</li><li><strong>conversation.resolved</strong> — Konversation löst av AI</li><li><strong>conversation.escalated</strong> — Konversation eskalerad till agent</li><li><strong>message.received</strong> — Nytt kundmeddelande</li><li><strong>message.sent</strong> — AI eller agent skickade svar</li><li><strong>knowledge.updated</strong> — Kunskapskälla uppdaterad</li></ul><p>Payloaden skickas som JSON POST med en <code>x-webhook-signature</code>-header för verifiering.</p>"
+        }
+      ]
+    },
+    {
+      "slug": "crm-integration",
+      "title": "CRM & Kontakthantering",
+      "content": "<p>SWEO AI synkroniserar automatiskt kontaktdata och konversationshistorik med ditt CRM-system.</p>",
+      "sections": [
+        {
+          "id": "contacts-overview",
+          "title": "Kontakter i SWEO AI",
+          "content": "<p>Alla som interagerar med din AI-agent skapas automatiskt som kontakter. Gå till <a href='/dashboard/contacts'>Kontakter</a> för att se och hantera dem.</p><p>Varje kontakt visar:</p><ul><li><strong>Namn & e-post</strong> — Fångas från formulär, e-post-headers eller identifierade kunder</li><li><strong>Kanal</strong> — Varifrån kontakten först nådde er (web, email, whatsapp, sms)</li><li><strong>Konversationshistorik</strong> — Alla interaktioner med komplett tidslinje</li><li><strong>AI-noteringar</strong> — Automatiska sammanfattningar och sentiment</li><li><strong>Taggar</strong> — Manuella eller automatiska klassificeringar</li></ul>"
+        },
+        {
+          "id": "crm-sync",
+          "title": "Synkronisering med externt CRM",
+          "content": "<p>Använd en <a href='/docs/integrations/data-connectors'>Data Connector</a> av typen <strong>Salesforce</strong> eller <strong>Zendesk</strong> för att synkronisera kontakter tvåvägs:</p><ol><li>Skapa en connector med OAuth-autentisering mot ditt CRM</li><li>Aktivera <strong>Contact Sync</strong> i connector-inställningarna</li><li>Mappa fält: SWEO AI-fält → CRM-fält (t.ex. <code>email → Email</code>, <code>namn → FullName</code>)</li></ol><p>Synkroniseringen körs var 15:e minut, eller direkt vid nya konversationer om realtidssynk är aktiverat.</p>"
+        },
+        {
+          "id": "contact-enrichment",
+          "title": "AI-driven kontaktberikning",
+          "content": "<p>SWEO AI berikar kontaktprofiler automatiskt baserat på konversationer:</p><ul><li><strong>Språk</strong> — Detekteras från meddelandeinnehåll</li><li><strong>Sentiment-historik</strong> — Positiv/negativ trend över tid</li><li><strong>Ämnesintresse</strong> — Vilka ämnen kontakten frågar om mest</li><li><strong>Supportmognad</strong> — Hur ofta kontakten behöver hjälp vs self-service</li></ul><p>Denna data kan synkroniseras till CRM:et via connector-mapping för rikare kundprofiler.</p>"
+        }
+      ]
+    },
+    {
+      "slug": "ecommerce",
+      "title": "E-handel & Shopify",
+      "content": "<p>Integrera SWEO AI med din e-handelsplattform för att ge AI-agenten tillgång till ordrar, produkter och returhantering.</p>",
+      "sections": [
+        {
+          "id": "shopify-setup",
+          "title": "Shopify-integration steg för steg",
+          "content": "<ol><li>Gå till <a href='/dashboard/connectors'>Knowledge → Connectors</a> → <strong>Lägg till Connector</strong></li><li>Välj provider: <strong>Shopify</strong></li><li>Ange din butiks-URL: <code>https://din-butik.myshopify.com</code></li><li>Skapa ett <strong>Custom App</strong> i Shopify Admin → Settings → Apps and sales channels → Develop apps</li><li>Ge appen scope: <code>read_orders</code>, <code>read_products</code>, <code>write_orders</code> (för returer)</li><li>Kopiera <strong>Admin API access token</strong> och klistra in som API Key</li><li>Klicka <strong>Testa Anslutning</strong> — ska visa grönt</li></ol>"
+        },
+        {
+          "id": "shopify-procedures",
+          "title": "Automatisera med Procedures",
+          "content": "<p>Med Shopify-connectorn aktiv kan du skapa <a href='/docs/ai-automation/procedures'>Procedures</a> som:</p><table><thead><tr><th>Procedure</th><th>Trigger</th><th>Vad den gör</th></tr></thead><tbody><tr><td>Orderstatus</td><td>Intent: <code>order_status</code></td><td>Slår upp order via e-post, svarar med status + tracking</td></tr><tr><td>Returhantering</td><td>Intent: <code>return_request</code></td><td>Hittar order → Kollar om returbar → Skapar retur eller eskalerar</td></tr><tr><td>Produktrekommendation</td><td>Intent: <code>product_recommendation</code></td><td>Söker produktkatalog baserat på kundens behov</td></tr></tbody></table><p>Exemplet <em>Returhantering</em> med conditional-steg:</p><pre><code>Steg 1: data_lookup → Hämta order via {{user.email}}\nSteg 2: conditional → Om {{order.total}} > 500 kr?\n  → Ja: approval (kräver manager-godkännande)\n  → Nej: api_call → Skapa retur direkt\nSteg 3: message → \"Din retur av order #{{order.id}} är registrerad.\"</code></pre>"
+        },
+        {
+          "id": "stripe-payments",
+          "title": "Stripe för betalningsinfo",
+          "content": "<p>Skapa en <strong>Stripe-connector</strong> för att ge AI-agenten insyn i betalningar:</p><ol><li>Provider: <strong>Stripe</strong></li><li>Auth Type: <strong>api_key</strong></li><li>API Key: Din Stripe Secret Key (börjar med <code>sk_live_</code> eller <code>sk_test_</code>)</li><li>Base URL: <code>https://api.stripe.com</code></li></ol><p>Användbara lookups:</p><ul><li><code>charges.get</code> — Hämta betalningsstatus</li><li><code>invoices.list</code> — Lista fakturor för kund</li><li><code>subscriptions.get</code> — Kontrollera prenumerationsstatus</li><li><code>refunds.create</code> — Skapa återbetalning (kräver approval-steg)</li></ul>"
+        }
+      ]
+    }
+  ]
+},
+{
+  "slug": "inbox",
+  "title": "Inbox & Konversationer",
+  "icon": "inbox",
+  "description": "Hantera kundkonversationer, AI Copilot och ärendeflöden i SWEO AI:s inbox.",
+  "articles": [
+    {
+      "slug": "inbox-workflow",
+      "title": "Inbox — Översikt & Workflow",
+      "content": "<p>Inboxen är navet i SWEO AI där alla kundkonversationer samlas — oavsett kanal. Här ser agenter pågående ärenden, får AI-assistans och kan eskalera eller lösa ärenden.</p>",
+      "sections": [
+        {
+          "id": "inbox-layout",
+          "title": "Inboxens layout",
+          "content": "<p>Gå till <a href='/dashboard/inbox'>Inbox</a>. Vyn är uppdelad i fyra delar:</p><table><thead><tr><th>Del</th><th>Beskrivning</th></tr></thead><tbody><tr><td><strong>Vänster sidebar</strong></td><td>Navigering mellan inboxvyer och filter</td></tr><tr><td><strong>Konversationslista</strong></td><td>Lista på konversationer i vald vy med sökfält</td></tr><tr><td><strong>Meddelandepanel</strong></td><td>Konversationens fulla historik med svarsfält</td></tr><tr><td><strong>Detaljpanel (höger)</strong></td><td>Kontaktinfo, AI Copilot, ärendemetadata</td></tr></tbody></table>"
+        },
+        {
+          "id": "sidebar-sections",
+          "title": "Sidebar-sektioner",
+          "content": "<p>Sidebaren organiserar konversationer i kategorier:</p><ul><li><strong>Your inbox</strong> — Ärenden tilldelade till dig</li><li><strong>Mentions</strong> — Konversationer där du nämnts</li><li><strong>Created by you</strong> — Ärenden du startat manuellt</li><li><strong>Starred</strong> — Konversationer du markerat med stjärna</li><li><strong>All</strong> — Alla konversationer i organisationen</li><li><strong>Unassigned</strong> — Ärenden som inte tilldelats en agent</li><li><strong>Spam</strong> — Automatiskt eller manuellt markerat spam</li></ul><p>Under <strong>SWEO AI Agent</strong> finns undersektioner:</p><ul><li><strong>AI Resolved</strong> — Konversationer som AI löst utan mänsklig hjälp</li><li><strong>AI Escalated</strong> — Konversationer där AI eskalerat pga låg confidence</li></ul>"
+        },
+        {
+          "id": "conversation-states",
+          "title": "Ärendestatus",
+          "content": "<p>Varje konversation har en status som styr var den visas:</p><table><thead><tr><th>Status</th><th>Betydelse</th><th>Vem hanterar</th></tr></thead><tbody><tr><td><code>active</code></td><td>Pågående konversation, väntar på svar</td><td>AI eller agent</td></tr><tr><td><code>resolved</code></td><td>Ärende löst, inget mer att göra</td><td>-</td></tr><tr><td><code>escalated</code></td><td>AI kunde inte svara, eskalerat till människa</td><td>Agent</td></tr><tr><td><code>snoozed</code></td><td>Pausad, dyker upp igen vid angiven tidpunkt</td><td>Agent</td></tr><tr><td><code>spam</code></td><td>Markerat som skräppost</td><td>-</td></tr></tbody></table><p>Tips: Använd <a href='/dashboard/analytics'>Analytics</a> för att se fördelningen av statusar per kanal och tid.</p>"
+        },
+        {
+          "id": "reply-and-actions",
+          "title": "Svara & agera på ärenden",
+          "content": "<p>I meddelandepanelen kan du:</p><ul><li><strong>Svara direkt</strong> — Skriv svar i textfältet, stödjer Markdown</li><li><strong>Tilldela</strong> — Tilldela ärendet till dig själv eller annan agent</li><li><strong>Stjärnmärka</strong> — Markera som viktig för uppföljning</li><li><strong>Ändra status</strong> — Markera som Resolved, Snoozed eller Spam</li><li><strong>Se kanal</strong> — Ikonen visar om ärendet kom via web, email, whatsapp, sms etc.</li></ul><p>Alla svar skickas tillbaka via samma kanal som kunden använde — svarar du på ett WhatsApp-ärende skickas svaret som WhatsApp-meddelande.</p>"
+        },
+        {
+          "id": "search-filter",
+          "title": "Sök & filtrera",
+          "content": "<p>Sökfältet ovanför konversationslistan söker i meddelandeinnehåll, kontaktnamn och e-postadresser. Filtrera ytterligare på:</p><ul><li><strong>Kanal</strong> — web, email, whatsapp, sms, voice</li><li><strong>Status</strong> — active, resolved, escalated</li><li><strong>Tilldelad till</strong> — Specifik agent eller Unassigned</li><li><strong>Datum</strong> — Tidsperiod</li><li><strong>Confidence</strong> — AI:s confidence-nivå (hög/medel/låg)</li></ul>"
+        }
+      ]
+    },
+    {
+      "slug": "ai-copilot-inbox",
+      "title": "AI Copilot i Inboxen",
+      "content": "<p>AI Copilot är agentens AI-assistent som sitter i detaljpanelens Copilot-flik — redo att hjälpa med sammanfattningar, översättningar och svarsförslag.</p>",
+      "sections": [
+        {
+          "id": "copilot-tab",
+          "title": "Öppna Copilot",
+          "content": "<p>I detaljpanelen (höger sida) finns två flikar: <strong>Details</strong> och <strong>Copilot</strong>. Klicka på <strong>Copilot</strong> för att öppna AI-assistenten.</p><p>Copilot analyserar den aktiva konversationen och erbjuder sex snabbåtgärder som knappar.</p>"
+        },
+        {
+          "id": "copilot-actions",
+          "title": "Tillgängliga åtgärder",
+          "content": "<p>Klicka på en knapp för att köra åtgärden mot den aktuella konversationen:</p><table><thead><tr><th>Åtgärd</th><th>Vad den gör</th><th>Användningsfall</th></tr></thead><tbody><tr><td><strong>Summarize</strong></td><td>Sammanfattar hela konversationen i 2-3 meningar</td><td>Snabb överblick vid ärendeövertag</td></tr><tr><td><strong>Translate to English</strong></td><td>Översätter senaste meddelandet till engelska</td><td>Internationella kunder</td></tr><tr><td><strong>Translate to Swedish</strong></td><td>Översätter senaste meddelandet till svenska</td><td>Engelskspråkiga kollegor som behöver förstå</td></tr><tr><td><strong>Suggest Reply</strong></td><td>Genererar ett svarsförslag baserat på kunskapsbasen</td><td>Snabba upp svarstid — redigera och skicka</td></tr><tr><td><strong>Analyze Sentiment</strong></td><td>Bedömer kundens ton: positiv, neutral, negativ, frustrerad</td><td>Prioritera frustrerade kunder</td></tr><tr><td><strong>Draft Note</strong></td><td>Skapar en intern anteckning från konversationen</td><td>Dokumentera ärenden för teamet</td></tr></tbody></table>"
+        },
+        {
+          "id": "copilot-api",
+          "title": "Copilot API",
+          "content": "<p>Copilot-åtgärderna drivs av <code>/api/copilot</code>-endpointen (NVIDIA API). Du kan anropa den programmatiskt:</p><pre><code>curl -X POST https://your-domain.com/api/copilot \\\n  -H \"Content-Type: application/json\" \\\n  -H \"x-api-key: your-tenant-api-key\" \\\n  -d '{\n    \"action\": \"suggest_reply\",\n    \"conversationId\": \"conv_abc123\"\n  }'</code></pre><p>Möjliga <code>action</code>-värden: <code>summarize</code>, <code>translate_en</code>, <code>translate_sv</code>, <code>suggest_reply</code>, <code>analyze_sentiment</code>, <code>draft_note</code>.</p>"
+        },
+        {
+          "id": "copilot-tips",
+          "title": "Tips för effektiv användning",
+          "content": "<ul><li><strong>Suggest Reply + redigera</strong> — Låt Copilot föreslå, sen anpassa tonen innan du skickar. Sparar 60–80% av skrivtiden.</li><li><strong>Summarize vid handover</strong> — När du tar över ett ärende från en kollega, klicka Summarize för att snabbt förstå kontexten.</li><li><strong>Sentiment som prioriteringsverktyg</strong> — Kör Analyze Sentiment på eskalerade ärenden för att hantera de mest frustrerade kunderna först.</li><li><strong>Draft Note för compliance</strong> — Skapa automatiska anteckningar för ärenden som kräver dokumentation.</li></ul>"
+        }
+      ]
+    },
+    {
+      "slug": "conversation-detail",
+      "title": "Konversationsvy & Detaljer",
+      "content": "<p>Varje konversation i SWEO AI har en dedikerad vy med fullständig historik, metadata och AI-insikter.</p>",
+      "sections": [
+        {
+          "id": "message-timeline",
+          "title": "Meddelandetidslinje",
+          "content": "<p>Klicka på en konversation i listan för att se hela meddelandehistoriken. Varje meddelande visar:</p><ul><li><strong>Avsändare</strong> — Kund, AI-agent (med SWEO AI-ikon) eller mänsklig agent (med avatar)</li><li><strong>Tidsstämpel</strong> — Exakt tid med relativ visning (\"3 min sedan\")</li><li><strong>Kanal-ikon</strong> — Vilken kanal meddelandet kom via</li><li><strong>AI-källor</strong> — Om AI svarade visas vilka kunskapskällor som användes (citations)</li><li><strong>Confidence-badge</strong> — AI:s confidence-nivå för svaret (grön ≥0.8, gul 0.6-0.8, röd <0.6)</li></ul>"
+        },
+        {
+          "id": "detail-panel",
+          "title": "Detaljpanelen",
+          "content": "<p>Detaljpanelen till höger visar under fliken <strong>Details</strong>:</p><ul><li><strong>Kontaktinfo</strong> — Namn, e-post, telefon (om tillgängligt)</li><li><strong>Kanal</strong> — Ursprungskanal med ikon</li><li><strong>Skapad</strong> — Tidpunkt konversationen startade</li><li><strong>Status</strong> — Nuvarande status med möjlighet att ändra</li><li><strong>Tilldelad</strong> — Vilken agent som äger ärendet</li><li><strong>AI Confidence</strong> — Genomsnittlig confidence för konversationen</li><li><strong>Taggar</strong> — Automatiska och manuella taggar</li></ul><p>Under fliken <strong>Copilot</strong> finns <a href='/docs/inbox/ai-copilot-inbox'>AI Copilot-åtgärderna</a>.</p>"
+        },
+        {
+          "id": "handover-flow",
+          "title": "AI → Agent handover",
+          "content": "<p>När AI:n eskalerar ett ärende (confidence under tröskelvärdet, default <code>0.7</code>) sker följande:</p><ol><li>Konversationen får status <code>escalated</code></li><li>Ärendet dyker upp under <strong>AI Escalated</strong> i sidebaren</li><li>Om auto-assign är aktivt tilldelas ärendet till en ledig agent</li><li>Agenten ser hela AI-konversationen + anledning till eskalering</li><li>Agenten kan använda <strong>Copilot → Suggest Reply</strong> för att snabbt formulera svar</li></ol><p>Du kan även manuellt eskalera via API:</p><pre><code>POST /api/conversations/handover\n{\n  \"conversationId\": \"conv_abc123\",\n  \"reason\": \"Kunden vill prata med en människa\",\n  \"assignTo\": \"agent_xyz\"  // valfritt\n}</code></pre>"
+        },
+        {
+          "id": "conversation-page",
+          "title": "Fullskärmsvy för konversationer",
+          "content": "<p>Utöver inboxen finns en dedikerad konversationsvy på <a href='/dashboard/conversations'>Konversationer</a> som visar alla konversationer i tabellformat med kolumner för:</p><ul><li>Kund (namn + e-post)</li><li>Kanal</li><li>Status</li><li>Senaste meddelande (preview)</li><li>Confidence</li><li>Skapad / Senast aktiv</li></ul><p>Klicka på en rad för att öppna konversationens detaljvy. Använd sök och filter för att hitta specifika ärenden snabbt.</p>"
+        }
+      ]
+    },
+    {
+      "slug": "csat-feedback",
+      "title": "CSAT & Kundfeedback",
+      "content": "<p>Mät kundnöjdhet efter avslutade konversationer med CSAT-undersökningar och feedbacksamling.</p>",
+      "sections": [
+        {
+          "id": "csat-setup",
+          "title": "Aktivera CSAT",
+          "content": "<p>Under <a href='/dashboard/settings'>Inställningar</a> → <strong>CSAT</strong> kan du aktivera automatiska nöjdhetsundersökningar:</p><ul><li><strong>Tidpunkt</strong> — Skickas automatiskt när en konversation markeras som <code>resolved</code></li><li><strong>Format</strong> — 1-5 stjärnor + valfri kommentar</li><li><strong>Kanal</strong> — Visas i samma kanal som konversationen (popup i widget, reply i email)</li></ul>"
+        },
+        {
+          "id": "csat-analytics",
+          "title": "CSAT i Analytics",
+          "content": "<p>CSAT-data visas i <a href='/dashboard/analytics'>Analytics</a> under översikten:</p><ul><li><strong>Genomsnittlig CSAT</strong> — Snittvärde senaste 30 dagarna</li><li><strong>CSAT per kanal</strong> — Jämför nöjdhet mellan web, email, WhatsApp etc.</li><li><strong>CSAT: AI vs Agent</strong> — Jämför kundnöjdhet för AI-lösta vs agent-lösta ärenden</li><li><strong>Trend</strong> — Utveckling över tid (del av Flywheel-analysen)</li></ul><p>Låga CSAT-poäng på AI-lösta ärenden indikerar kunskapsluckor — se <a href='/docs/analytics/ai-insights'>AI Insights & Flywheel</a> för automatiska förslag.</p>"
+        },
+        {
+          "id": "feedback-loop",
+          "title": "Feedback-loop & förbättring",
+          "content": "<p>CSAT-data matar in i SWEO AI:s <strong>Flywheel</strong>:</p><ol><li><strong>Analyze</strong> — Låga CSAT-scorer kopplas till specifika ämnen och kunskapskällor</li><li><strong>Train</strong> — AI Suggestions föreslår förbättrat innehåll för de ämnen med lägst CSAT</li><li><strong>Test</strong> — Simulera konversationer med det nya innehållet</li><li><strong>Deploy</strong> — Publicera förbättringar och mät igen</li></ol><p>Denna loop gör att din AI progressivt blir bättre — varje vecka bör du se CSAT-trenden röra sig uppåt i <a href='/dashboard/analytics'>Analytics</a>.</p>"
+        }
+      ]
+    }
+  ]
+},
+{
+  "slug": "analytics",
+  "title": "Analytics & Rapporter",
+  "icon": "barChart",
+  "description": "Mät AI-prestanda, spåra KPI:er och generera rapporter för ditt supportteam.",
+  "articles": [
+    {
+      "slug": "dashboard-kpis",
+      "title": "Dashboard & KPI:er",
+      "content": "<p>Analytics-dashboarden ger dig realtidsöversikt av hur din AI-agent och ditt team presterar — med nyckeltal, trender och nedbrytningar.</p>",
+      "sections": [
+        {
+          "id": "overview-tab",
+          "title": "Översikt-fliken",
+          "content": "<p>Gå till <a href='/dashboard/analytics'>Analytics</a>. Första fliken <strong>Overview</strong> visar fyra nyckeltal i toppkort:</p><table><thead><tr><th>KPI</th><th>Beskrivning</th><th>Målvärde</th></tr></thead><tbody><tr><td><strong>Resolution Rate</strong></td><td>Andel konversationer som AI löst utan mänsklig hjälp</td><td>≥ 70%</td></tr><tr><td><strong>Avg Confidence</strong></td><td>Genomsnittlig AI-confidence för alla svar</td><td>≥ 0.80</td></tr><tr><td><strong>Total Conversations</strong></td><td>Antal konversationer under perioden</td><td>Trending up = mer trafik</td></tr><tr><td><strong>Escalations</strong></td><td>Antal ärenden eskalerade till mänskliga agenter</td><td>Trending down = AI förbättras</td></tr></tbody></table><p>Varje kort visar också <strong>trenden</strong> jämfört med föregående period (grön pil upp = förbättring, röd pil ner = försämring).</p>"
+        },
+        {
+          "id": "status-breakdown",
+          "title": "Status & Kanal-nedbrytning",
+          "content": "<p>Under nyckeltalen visas två diagram:</p><ul><li><strong>Status Breakdown</strong> — Cirkeldiagram som visar fördelningen av konversationer per status: <code>resolved</code>, <code>active</code>, <code>escalated</code>, <code>snoozed</code>, <code>spam</code></li><li><strong>Channel Breakdown</strong> — Stapeldiagram som visar konversationsvolym per kanal: web, email, whatsapp, sms, voice</li></ul><p>Klicka på en sektion i diagrammet för att filtrera konversationslistan nedan.</p>"
+        },
+        {
+          "id": "top-topics",
+          "title": "Top Topics",
+          "content": "<p>Tabellen <strong>Top Topics</strong> listar de vanligaste ämnena som kunder frågar om, rankade efter frekvens:</p><table><thead><tr><th>Kolumn</th><th>Beskrivning</th></tr></thead><tbody><tr><td><strong>Ämne</strong></td><td>Automatiskt extraherat ämne (t.ex. \"Returer\", \"Frakt\", \"Priser\")</td></tr><tr><td><strong>Frekvens</strong></td><td>Antal konversationer om detta ämne</td></tr><tr><td><strong>Avg Confidence</strong></td><td>Genomsnittlig AI-confidence för ämnet</td></tr><tr><td><strong>Resolution Rate</strong></td><td>Hur ofta AI löser ärenden om detta ämne</td></tr></tbody></table><p>Ämnen med <strong>låg confidence + hög frekvens</strong> är dina viktigaste förbättringsområden — skapa kunskapskällor för dessa under <a href='/dashboard/knowledge'>Knowledge</a>.</p>"
+        },
+        {
+          "id": "date-range",
+          "title": "Datumfilter",
+          "content": "<p>Alla analytics-vyer har en datumväljare i övre högra hörnet. Fördefinierade perioder:</p><ul><li><strong>Idag</strong></li><li><strong>Senaste 7 dagarna</strong></li><li><strong>Senaste 30 dagarna</strong> (default)</li><li><strong>Senaste 90 dagarna</strong></li><li><strong>Custom</strong> — Välj start- och slutdatum</li></ul><p>Trender och jämförelser beräknas automatiskt mot föregående matchande period.</p>"
+        }
+      ]
+    },
+    {
+      "slug": "reports-export",
+      "title": "Rapporter & Export",
+      "content": "<p>Generera detaljerade rapporter för team-möten, ledning och kunder — med export till CSV.</p>",
+      "sections": [
+        {
+          "id": "reports-page",
+          "title": "Rapportgeneratorn",
+          "content": "<p>Gå till <a href='/dashboard/reports'>Reports</a>. Välj rapporttyp, datumintervall och klicka <strong>Generera</strong>.</p><p>SWEO AI har 10 rapporttyper organiserade i 4 kategorier:</p>"
+        },
+        {
+          "id": "report-types",
+          "title": "Tillgängliga rapporttyper",
+          "content": "<table><thead><tr><th>Kategori</th><th>Rapporttyp</th><th>Innehåll</th></tr></thead><tbody><tr><td rowspan='3'><strong>Performance</strong></td><td>AI Resolution Report</td><td>Detaljerad breakdown av AI-lösta vs eskalerade ärenden per dag/vecka</td></tr><tr><td>Response Time Report</td><td>Genomsnittlig svarstid för AI och mänskliga agenter</td></tr><tr><td>Confidence Distribution</td><td>Histogram över confidence-nivåer med terskelmarkering</td></tr><tr><td rowspan='3'><strong>Volume</strong></td><td>Conversation Volume</td><td>Total volym per kanal, dag och timme (hitta peak hours)</td></tr><tr><td>Channel Breakdown</td><td>Jämförelse mellan kanaler: volym, CSAT, resolution rate</td></tr><tr><td>Topic Analysis</td><td>Ämnesfördelning med trender och confidence per ämne</td></tr><tr><td rowspan='2'><strong>Team</strong></td><td>Agent Performance</td><td>Individuella metrics per agent: svarstid, CSAT, volym</td></tr><tr><td>Workload Distribution</td><td>Ärendefördelning mellan agenter och AI</td></tr><tr><td rowspan='2'><strong>Quality</strong></td><td>CSAT Report</td><td>Kundnöjdhet per kanal, agent och ämne med kommentarer</td></tr><tr><td>Knowledge Gaps</td><td>Ämnen där AI har låg confidence — kandidater för nytt innehåll</td></tr></tbody></table>"
+        },
+        {
+          "id": "export-options",
+          "title": "Exportformat",
+          "content": "<p>Varje genererad rapport kan exporteras:</p><ul><li><strong>CSV</strong> — För import till Excel, Google Sheets eller BI-verktyg</li><li><strong>Visning i dashboard</strong> — Interaktiv vy med sortering och filtrering</li></ul><p>Rapporten genereras för den valda tidsperioden (samma datumväljare som i Analytics).</p>"
+        },
+        {
+          "id": "scheduled-reports",
+          "title": "Schemalagda rapporter",
+          "content": "<p>Konfigurera automatiska rapporter under <a href='/dashboard/settings'>Inställningar</a> → <strong>Scheduled Reports</strong>:</p><ul><li><strong>Frekvens</strong> — Daglig, veckovis eller månadsvis</li><li><strong>Rapporttyp</strong> — Välj en eller flera från listan ovan</li><li><strong>Mottagare</strong> — E-postadresser som ska få rapporten</li><li><strong>Format</strong> — CSV-bilaga eller sammanfattning i e-postens brödtext</li></ul><p>Perfekt för att automatisera veckorapporter till ledningen.</p>"
+        }
+      ]
+    },
+    {
+      "slug": "ai-insights",
+      "title": "AI Insights & Flywheel",
+      "content": "<p>Flywheel-systemet är SWEO AI:s självförbättrande motor — det analyserar var AI:n misslyckas och föreslår konkreta förbättringar.</p>",
+      "sections": [
+        {
+          "id": "ai-suggestions-tab",
+          "title": "AI Suggestions-fliken",
+          "content": "<p>I <a href='/dashboard/analytics'>Analytics</a> finns en andra flik: <strong>AI Suggestions</strong>. Här visas automatiskt genererade förbättringsförslag baserat på:</p><ul><li><strong>Eskalerade konversationer</strong> — Ärenden där AI:n inte kunde svara</li><li><strong>Låg confidence</strong> — Svar som gavs med osäkerhet</li><li><strong>Låga CSAT-scorer</strong> — Ärenden där kunden var missnöjd med AI-svaret</li></ul>"
+        },
+        {
+          "id": "content-gap-detection",
+          "title": "Content Gap Detection",
+          "content": "<p>Systemet analyserar eskalerade ärenden och klustrar liknande frågor automatiskt. Varje kluster visas som ett kort med:</p><ul><li><strong>Ämne</strong> — AI-genererad sammanfattning av vad kunderna frågar om</li><li><strong>Frekvens</strong> — Antal kunder som frågat om detta (t.ex. <em>\"23 kunder frågade om detta\"</em>)</li><li><strong>Exempelfrågor</strong> — De 3-5 vanligaste formuleringarna</li><li><strong>Föreslaget innehåll</strong> — AI-genererat utkast till kunskapsartikel som skulle besvara frågorna</li></ul>"
+        },
+        {
+          "id": "approve-suggestions",
+          "title": "Godkänn eller avfärda förslag",
+          "content": "<p>Varje förslag har två knappar:</p><ul><li><strong>Approve & Add to Knowledge Base</strong> — Skapar en ny kunskapskälla baserat på det föreslagna innehållet. Du redirectas till <a href='/dashboard/knowledge'>Knowledge</a> för att granska och eventuellt redigera innan publicering.</li><li><strong>Dismiss</strong> — Avfärdar förslaget (det kommer inte tillbaka).</li></ul><p>Varje godkänt förslag förbättrar AI:ns förmåga att svara på just det ämnet — du bör se en direkt förbättring i Resolution Rate för det ämnet inom 24 timmar.</p>"
+        },
+        {
+          "id": "flywheel-cycle",
+          "title": "Flywheel-cykeln i praktiken",
+          "content": "<p>Den kompletta Flywheel-cykeln ser ut så här:</p><ol><li><strong>Deploy</strong> — Din AI-agent hanterar kundkonversationer via <a href='/docs/channels/web-messenger'>chat</a>, <a href='/docs/channels/email-channel'>email</a>, <a href='/docs/channels/whatsapp-sms'>WhatsApp</a></li><li><strong>Analyze</strong> — Analytics samlar data om confidence, resolution rate och CSAT. Content Gap Detection identifierar kunskapsluckor.</li><li><strong>Train</strong> — Godkänn AI Suggestions för att lägga till nytt innehåll i <a href='/dashboard/knowledge'>Knowledge Base</a>. Finjustera <a href='/dashboard/policies'>Policies</a> och skapa <a href='/dashboard/procedures'>Procedures</a> för nya flöden.</li><li><strong>Test</strong> — Kör <a href='/dashboard/testing'>simulerade konversationer</a> med det nya innehållet för att verifiera att AI:n svarar korrekt.</li><li><strong>Deploy</strong> — Publicera ändringarna och börja från steg 1 igen.</li></ol><p><strong>Rekommenderad frekvens:</strong> Kör Flywheel-cykeln minst en gång per vecka. Avsätt 30 minuter till att granska AI Suggestions, godkänna relevanta, och köra ett par testscenarier. Teamen som gör detta konsekvent ser typiskt 5-10% förbättring i Resolution Rate per månad.</p>"
+        },
+        {
+          "id": "flywheel-metrics",
+          "title": "Mät Flywheel-effekten",
+          "content": "<p>Spåra dessa KPI:er vecka för vecka för att mäta Flywheel-effekten:</p><table><thead><tr><th>KPI</th><th>Mål</th><th>Var det visas</th></tr></thead><tbody><tr><td>Resolution Rate</td><td>+5% per månad</td><td><a href='/dashboard/analytics'>Analytics → Overview</a></td></tr><tr><td>Content Gaps</td><td>Sjunkande antal</td><td><a href='/dashboard/analytics'>Analytics → AI Suggestions</a></td></tr><tr><td>Avg Confidence</td><td>Stigande trend</td><td><a href='/dashboard/analytics'>Analytics → Overview</a></td></tr><tr><td>Escalation Rate</td><td>Sjunkande trend</td><td><a href='/dashboard/analytics'>Analytics → Overview</a></td></tr><tr><td>CSAT (AI-lösta)</td><td>≥ 4.0 / 5.0</td><td><a href='/dashboard/reports'>Reports → CSAT Report</a></td></tr></tbody></table><p>När Resolution Rate stabiliseras runt 85-90% har din kunskapsbas nått en mognadsnivå där huvudfokus skiftar till att finslipa tonalitet och hantera edge cases.</p>"
+        }
+      ]
+    }
+  ]
+},
+{
+  "slug": "team-management",
+  "title": "Team & Administration",
+  "icon": "users",
+  "description": "Hantera teammedlemmar, roller, workspace-inställningar och automatiseringsregler.",
+  "articles": [
+    {
+      "slug": "team-roles",
+      "title": "Team & Roller",
+      "content": "<p>SWEO AI använder rollbaserad åtkomstkontroll (RBAC) för att styra vad varje teammedlem kan se och göra i plattformen.</p>",
+      "sections": [
+        {
+          "id": "available-roles",
+          "title": "Tillgängliga roller",
+          "content": "<p>Varje teammedlem tilldelas en av fyra roller:</p><table><thead><tr><th>Roll</th><th>Beskrivning</th><th>Behörigheter</th></tr></thead><tbody><tr><td><strong>Admin</strong></td><td>Full kontroll över organisationen</td><td>Allt: settings, billing, team, knowledge, policies, connectors, analytics</td></tr><tr><td><strong>Manager</strong></td><td>Teamledare med insyn i analytics</td><td>Inbox, knowledge, procedures, analytics, reports, contacts — ingen billing/settings</td></tr><tr><td><strong>Agent</strong></td><td>Supportmedarbetare</td><td>Inbox, konversationer, Copilot, kontakter — ingen knowledge/policy-redigering</td></tr><tr><td><strong>Developer</strong></td><td>Teknisk roll för integrationer</td><td>Connectors, API-nycklar, webhooks, testing, widget-konfiguration</td></tr></tbody></table>"
+        },
+        {
+          "id": "invite-members",
+          "title": "Bjuda in teammedlemmar",
+          "content": "<p>Gå till <a href='/dashboard/workspace'>Workspace</a> och klicka <strong>Invite Member</strong>:</p><ol><li>Ange e-postadress</li><li>Välj roll: Admin, Manager, Agent eller Developer</li><li>Klicka <strong>Send Invite</strong></li></ol><p>Mottagaren får ett e-postmeddelande med en inbjudningslänk. När de accepterar och skapar konto får de automatiskt den tilldelade rollen.</p><p>Du kan se väntande inbjudningar och ändra roller för befintliga medlemmar på samma sida.</p>"
+        },
+        {
+          "id": "nav-visibility",
+          "title": "Navigeringsfiltrering",
+          "content": "<p>Sidebaren i dashboarden anpassas automatiskt baserat på roll. En <strong>Agent</strong> ser till exempel bara:</p><ul><li>Inbox</li><li>Konversationer</li><li>Kontakter</li><li>Dokumentation</li></ul><p>Medan en <strong>Admin</strong> ser alla menypunkter inklusive Knowledge, Policies, Procedures, Connectors, Testing, Analytics, Reports, Workspace, Billing och Settings.</p><p><strong>Viktigt:</strong> Navigeringsfiltrering är en UX-förbättring — faktisk säkerhet hanteras server-side via middleware som verifierar roller vid varje API-anrop.</p>"
+        },
+        {
+          "id": "role-best-practices",
+          "title": "Best practices för roller",
+          "content": "<ul><li><strong>Minst 2 admins</strong> — Förhindra lockout om en admin slutar</li><li><strong>Managers för veckoanalys</strong> — Ge managers tillgång till analytics så de kan driva Flywheel-cykeln</li><li><strong>Developers för integrationer</strong> — Separera teknisk åtkomst (API-nycklar, connectors) från support-åtkomst</li><li><strong>Agents = fokus på inbox</strong> — Agentens vy ska vara ren och fokusera på att lösa kundärenden, inte konfiguration</li></ul>"
+        }
+      ]
+    },
+    {
+      "slug": "workspace-settings",
+      "title": "Workspace & Inställningar",
+      "content": "<p>Workspace-inställningarna styr hur din organisation fungerar i SWEO AI — från grundläggande profil till AI-beteende och kanalintegrationer.</p>",
+      "sections": [
+        {
+          "id": "workspace-overview",
+          "title": "Workspace-sidan",
+          "content": "<p>Gå till <a href='/dashboard/workspace'>Workspace</a> för att hantera din organisation:</p><ul><li><strong>Organisation</strong> — Namn, logo och beskrivning</li><li><strong>Members</strong> — Lista på alla teammedlemmar med roller</li><li><strong>Pending Invites</strong> — Väntande inbjudningar</li></ul><p>Byt mellan organisationer via <strong>Org Switcher</strong> i sidebaren (stödjer flera workspaces per användare).</p>"
+        },
+        {
+          "id": "settings-sections",
+          "title": "Inställningssektioner",
+          "content": "<p>Under <a href='/dashboard/settings'>Settings</a> finns följande sektioner:</p><table><thead><tr><th>Sektion</th><th>Innehåll</th><th>Roll som krävs</th></tr></thead><tbody><tr><td><strong>General</strong></td><td>Organisationsnamn, tidzon, standardspråk</td><td>Admin</td></tr><tr><td><strong>AI Configuration</strong></td><td>Confidence-tröskel, modellval, systemmeddelande</td><td>Admin</td></tr><tr><td><strong>Widget</strong></td><td>Embed-kod, färg, position, titel</td><td>Admin, Developer</td></tr><tr><td><strong>Channels</strong></td><td>E-post, WhatsApp, SMS, Voice-konfiguration</td><td>Admin, Developer</td></tr><tr><td><strong>API Keys</strong></td><td>Generera och hantera API-nycklar</td><td>Admin, Developer</td></tr><tr><td><strong>Webhooks</strong></td><td>Konfigurera utgående webhook-endpoints</td><td>Admin, Developer</td></tr><tr><td><strong>CSAT</strong></td><td>Aktivera/konfigurera kundnöjdhetsundersökningar</td><td>Admin, Manager</td></tr><tr><td><strong>Notifications</strong></td><td>E-post- och push-notiser för teamet</td><td>Admin</td></tr></tbody></table>"
+        },
+        {
+          "id": "ai-configuration",
+          "title": "AI-konfiguration",
+          "content": "<p>Under <strong>Settings → AI Configuration</strong> ställer du in AI-agentens beteende:</p><table><thead><tr><th>Inställning</th><th>Default</th><th>Beskrivning</th></tr></thead><tbody><tr><td><strong>Confidence Threshold</strong></td><td><code>0.7</code></td><td>Under detta värde eskaleras konversationen till mänsklig agent</td></tr><tr><td><strong>System Message</strong></td><td>Standardhälsning</td><td>Anpassa AI:ns personlighet och instruktioner</td></tr><tr><td><strong>Max Response Length</strong></td><td>500 tokens</td><td>Begränsa svarslängd</td></tr><tr><td><strong>Language</strong></td><td>Svenska</td><td>Primärt svarsspråk (AI detekterar och svarar på kundens språk)</td></tr><tr><td><strong>Auto-escalate Topics</strong></td><td>Tomt</td><td>Ämnen som alltid eskaleras (t.ex. \"juridik\", \"klagomål\")</td></tr></tbody></table><p>Ändringar träder i kraft omedelbart för nya konversationer. Befintliga konversationer påverkas inte.</p>"
+        },
+        {
+          "id": "widget-install",
+          "title": "Widget-installation",
+          "content": "<p>Under <strong>Settings → Widget</strong> hittar du embed-koden för din webbplats. Se <a href='/docs/channels/widget-customization'>Widget Customization</a> för detaljer om styling och konfiguration.</p><p>Snabbinstallation — kopiera och klistra in före <code>&lt;/body&gt;</code>:</p><pre><code>&lt;script\n  src=\"https://your-domain.com/api/widget/chat-widget.js\"\n  data-api-key=\"your-api-key\"\n  data-api-url=\"https://your-domain.com\"\n  data-title=\"Kundservice\"\n  data-color=\"#2563eb\"\n  data-position=\"right\"\n&gt;&lt;/script&gt;</code></pre>"
+        }
+      ]
+    },
+    {
+      "slug": "contacts-management",
+      "title": "Kontakthantering",
+      "content": "<p>Kontakter-sidan samlar alla kunder som interagerat med din AI-agent, med fullständig historik och AI-genererade insikter.</p>",
+      "sections": [
+        {
+          "id": "contacts-page",
+          "title": "Kontakter-sidan",
+          "content": "<p>Gå till <a href='/dashboard/contacts'>Kontakter</a> för en tabell över alla kontakter med kolumner:</p><ul><li><strong>Namn</strong> — Identifierat namn eller \"Anonym besökare\"</li><li><strong>E-post</strong> — Om tillgängligt</li><li><strong>Telefon</strong> — Om tillgängligt (WhatsApp/SMS-kontakter)</li><li><strong>Kanal</strong> — Varifrån kontakten först nådde er</li><li><strong>Konversationer</strong> — Antal konversationer</li><li><strong>Senast aktiv</strong> — Datum för senaste interaktion</li><li><strong>Sentiment</strong> — Övergripande sentiment baserat på alla konversationer</li></ul>"
+        },
+        {
+          "id": "contact-detail",
+          "title": "Kontaktprofil",
+          "content": "<p>Klicka på en kontakt för att se detaljerad profil:</p><ul><li><strong>Kontaktinfo</strong> — Alla kända kontaktuppgifter</li><li><strong>Konversationshistorik</strong> — Tidslinje med alla interaktioner</li><li><strong>AI-insikter</strong> — Automatiskt genererade: vanligaste ämnen, sentiment-trend, språk</li><li><strong>Taggar</strong> — Manuella och automatiska klassificeringar</li><li><strong>Noteringar</strong> — Agentanteckningar om kontakten</li></ul>"
+        },
+        {
+          "id": "contact-search",
+          "title": "Sök & filtrera kontakter",
+          "content": "<p>Sökfältet söker i namn, e-post och telefonnummer. Filtrera på:</p><ul><li><strong>Kanal</strong> — web, email, whatsapp, sms</li><li><strong>Sentiment</strong> — Positiv, neutral, negativ</li><li><strong>Senast aktiv</strong> — Tidsperiod</li><li><strong>Antal konversationer</strong> — Min/max</li></ul><p>Exportera filtrerad kontaktlista som CSV via <strong>Export</strong>-knappen.</p>"
+        },
+        {
+          "id": "contact-merge",
+          "title": "Slå ihop kontakter",
+          "content": "<p>Samma kund kan kontakta er via flera kanaler (email + WhatsApp). SWEO AI försöker matcha kontakter automatiskt via e-post. Om dubbletter uppstår:</p><ol><li>Gå till kontaktprofilen</li><li>Klicka <strong>Merge</strong> och sök efter den andra kontakten</li><li>Välj vilken kontaktinfo som ska behållas</li><li>Konversationshistorik från båda sammanfogas kronologiskt</li></ol>"
+        }
+      ]
+    },
+    {
+      "slug": "automation-rules",
+      "title": "Automatiseringsregler",
+      "content": "<p>Automatiseringsregler hanterar konversationsflödet automatiskt baserat på villkor — som auto-assign, auto-tagging och SLA-varningar.</p>",
+      "sections": [
+        {
+          "id": "auto-assign",
+          "title": "Auto-assign",
+          "content": "<p>Konfigurera under <a href='/dashboard/ai'>AI & Automation</a> → <strong>Automation</strong>-fliken:</p><ul><li><strong>Round-robin</strong> — Fördela eskalerade ärenden jämnt mellan tillgängliga agenter</li><li><strong>Skill-based</strong> — Tilldela baserat på ämne + agentens kompetens (t.ex. fakturering → Alice, teknik → Bob)</li><li><strong>Load-balanced</strong> — Tilldela till agenten med minst aktiva ärenden</li></ul><p>Auto-assign triggas när en konversation får status <code>escalated</code> eller när ett nytt ärende kommer in på en kanal utan AI-hantering.</p>"
+        },
+        {
+          "id": "auto-tagging",
+          "title": "Auto-tagging",
+          "content": "<p>SWEO AI kan automatiskt tagga konversationer baserat på:</p><ul><li><strong>Ämnesdetektering</strong> — AI klassificerar konversationen (\"Retur\", \"Frakt\", \"Faktura\")</li><li><strong>Sentiment</strong> — Automatisk tagg: <code>positive</code>, <code>neutral</code>, <code>negative</code>, <code>frustrated</code></li><li><strong>Kanal</strong> — Tagg baserad på inkommande kanal</li><li><strong>VIP-kund</strong> — Om kontaktens e-post matchar en VIP-lista</li></ul><p>Taggar syns i <a href='/dashboard/inbox'>Inbox</a> och kan användas som filter i <a href='/dashboard/analytics'>Analytics</a>.</p>"
+        },
+        {
+          "id": "sla-rules",
+          "title": "SLA-regler",
+          "content": "<p>Sätt servicenivåmål för svarstider:</p><table><thead><tr><th>Regel</th><th>Beskrivning</th><th>Åtgärd vid överträdelse</th></tr></thead><tbody><tr><td><strong>First Response SLA</strong></td><td>Max tid till första svar (t.ex. 5 minuter)</td><td>Notis till manager + prioritetsmarkering</td></tr><tr><td><strong>Resolution SLA</strong></td><td>Max tid till ärendet löses (t.ex. 24 timmar)</td><td>Eskalera till manager + notis</td></tr><tr><td><strong>AI Escalation SLA</strong></td><td>Max tid ett eskalerat ärende väntar på agent (t.ex. 10 minuter)</td><td>Re-assign till nästa lediga agent</td></tr></tbody></table><p>SLA-tider beräknas baserat på <strong>business hours</strong> (sätts under Settings → General). Helger och helgdagar exkluderas automatiskt.</p>"
+        },
+        {
+          "id": "business-hours",
+          "title": "Business Hours & arbetsmöte",
+          "content": "<p>Ställ in era öppettider under <a href='/dashboard/settings'>Settings → General</a>:</p><ul><li><strong>Business hours</strong> — Start- och sluttid per veckodag (t.ex. Mån-Fre 08:00-17:00)</li><li><strong>Timezone</strong> — Er tidzon (t.ex. Europe/Stockholm)</li><li><strong>Utanför kontorstid</strong> — Välj beteende: enbart AI (default), automatiskt meddelande, eller stäng av chat</li></ul><p>AI-agenten är alltid aktiv 24/7 oavsett business hours. SLA-beräkningar och agentnotiser påverkas dock av inställningen.</p>"
+        }
+      ]
+    }
+  ]
+},
+{
+  "slug": "security-compliance",
+  "title": "Säkerhet & Compliance",
+  "icon": "shield",
+  "description": "Dataskydd, GDPR-efterlevnad, multi-tenant-isolering och AI-säkerhet i SWEO AI.",
+  "articles": [
+    {
+      "slug": "data-security",
+      "title": "Datasäkerhet & Arkitektur",
+      "content": "<p>SWEO AI är byggt med säkerhet i grunden — från multi-tenant-isolering till krypterad datalagring och rollbaserad åtkomstkontroll.</p>",
+      "sections": [
+        {
+          "id": "multi-tenant-isolation",
+          "title": "Multi-tenant-isolering",
+          "content": "<p>Varje organisation (tenant) i SWEO AI är helt isolerad från andra:</p><table><thead><tr><th>Lager</th><th>Isoleringsmetod</th></tr></thead><tbody><tr><td><strong>Databas</strong></td><td>Alla Appwrite-collections filtreras på <code>tenantId</code> — det är tekniskt omöjligt att läsa en annan tenants data</td></tr><tr><td><strong>Vektordatabas</strong></td><td>Pinecone använder separata <strong>namespaces</strong> per tenant — vektorsökning sker alltid inom tenantens namespace</td></tr><tr><td><strong>API-nycklar</strong></td><td>Varje API-nyckel är bunden till en specifik tenant och valideras vid varje anrop</td></tr><tr><td><strong>File Storage</strong></td><td>Uppladdade filer lagras i tenant-specifika Appwrite Storage buckets</td></tr><tr><td><strong>AI-kontext</strong></td><td>RAG-pipeline hämtar enbart dokument från tenantens namespace</td></tr></tbody></table><p>Server-side middleware verifierar tenant-tillhörighet i varje request — även om en klient-bugg skulle skicka fel tenantId, avvisas förfrågan.</p>"
+        },
+        {
+          "id": "encryption",
+          "title": "Kryptering",
+          "content": "<p>SWEO AI krypterar data i vila och under transport:</p><ul><li><strong>Transport</strong> — All trafik krypteras med TLS 1.3 (HTTPS). Inga okrypterade anslutningar accepteras.</li><li><strong>Data i vila</strong> — Appwrite-databasen krypteras med AES-256. Pinecone-data krypteras med AWS-managed keys.</li><li><strong>Connector-credentials</strong> — API-nycklar och OAuth-tokens krypteras med AES-256 innan lagring. Visas aldrig i klartext efter sparande (maskeras som <code>sk_****...3def</code>).</li><li><strong>Session-tokens</strong> — Clerk-sessioner använder signerade JWT med kort livslängd (15 min) och secure httpOnly cookies.</li></ul>"
+        },
+        {
+          "id": "auth-security",
+          "title": "Autentisering & auktorisering",
+          "content": "<p>SWEO AI använder Clerk för autentisering med följande säkerhetsfunktioner:</p><ul><li><strong>Multi-factor authentication (MFA)</strong> — Stöd för TOTP (Google Authenticator) och SMS-verifiering</li><li><strong>SSO</strong> — SAML och OIDC för enterprise-kunder</li><li><strong>Session management</strong> — Automatisk utloggning efter inaktivitet, sessionslistor per enhet</li><li><strong>RBAC</strong> — Rollbaserad åtkomst (Admin, Manager, Agent, Developer) med server-side validering</li><li><strong>Organization isolation</strong> — Clerk Organizations säkerställer att användare bara ser data från sin organisation</li></ul><p>Mer om roller: <a href='/docs/team-management/team-roles'>Team & Roller</a>.</p>"
+        },
+        {
+          "id": "api-security",
+          "title": "API-säkerhet",
+          "content": "<p>Alla API-endpoints skyddas med flera lager:</p><ol><li><strong>API Key validation</strong> — Varje request kräver giltig <code>x-api-key</code> header bunden till tenant</li><li><strong>Rate limiting</strong> — Max antal requests per minut per tenant (standard: 60/min, konfigurerbart)</li><li><strong>Input sanitization</strong> — Alla indata saniteras innan de når AI-pipelinen (skydd mot prompt injection)</li><li><strong>CORS</strong> — Konfigurerat per tenant för widget-embedding</li><li><strong>Webhook signatures</strong> — Alla inkommande webhooks (Twilio, email) verifieras med provider-specifik signatur</li></ol><p>Generera och hantera API-nycklar under <a href='/dashboard/settings'>Settings → API Keys</a>.</p>"
+        },
+        {
+          "id": "infrastructure",
+          "title": "Infrastruktur",
+          "content": "<ul><li><strong>Hosting</strong> — Vercel (frontend) med edge network för låg latens globalt</li><li><strong>Databas</strong> — Appwrite Cloud med dagliga backups och point-in-time recovery</li><li><strong>Vektordatabas</strong> — Pinecone med SOC2 Type II-certifiering</li><li><strong>AI-modeller</strong> — OpenAI via Azure för data residency inom EU (konfigurerbart)</li><li><strong>Monitoring</strong> — Sentry för felspårning med källkartor</li><li><strong>Logging</strong> — Alla API-anrop loggas med tenant, timestamp, endpoint och HTTP-status (inga kunddata i loggar)</li></ul>"
+        }
+      ]
+    },
+    {
+      "slug": "gdpr",
+      "title": "GDPR & Dataskydd",
+      "content": "<p>SWEO AI är byggt för att uppfylla GDPR-kraven för behandling av personuppgifter i kundkonversationer.</p>",
+      "sections": [
+        {
+          "id": "data-processing",
+          "title": "Databehandling",
+          "content": "<p>SWEO AI behandlar personuppgifter i konversationer under följande rättsliga grunder:</p><ul><li><strong>Berättigat intresse (Art. 6.1f)</strong> — Kundservice är ett berättigat intresse för er verksamhet</li><li><strong>Samtycke (Art. 6.1a)</strong> — Widget visar samtyckesbanner innan konversation startar (konfigurerbart)</li><li><strong>Avtal (Art. 6.1b)</strong> — Om konversationen rör en beställning eller tjänst</li></ul><p>Som databehandlare (processor) erbjuder SWEO AI ett <strong>Data Processing Agreement (DPA)</strong> som specificerar behandlingens omfattning.</p>"
+        },
+        {
+          "id": "data-minimization",
+          "title": "Dataminimering",
+          "content": "<p>SWEO AI följer principen om dataminimering:</p><ul><li><strong>PII-filter</strong> — <a href='/docs/knowledge/policies'>Policies</a> av typen <code>pii_filter</code> kan automatiskt maskera personnummer, kreditkortsnummer och e-postadresser i meddelanden innan de lagras</li><li><strong>Retention policy</strong> — Konfigurera automatisk radering av konversationer efter en viss period (30, 60, 90, 180 eller 365 dagar)</li><li><strong>Anonymisering</strong> — Möjlighet att anonymisera kontakter istället för att radera (behåller statistik utan identifierbara uppgifter)</li></ul>"
+        },
+        {
+          "id": "data-subject-rights",
+          "title": "Registrerades rättigheter",
+          "content": "<p>SWEO AI stödjer alla GDPR-rättigheter:</p><table><thead><tr><th>Rättighet</th><th>Hur det hanteras</th></tr></thead><tbody><tr><td><strong>Rätt till tillgång (Art. 15)</strong></td><td>Exportera all data för en kontakt via <a href='/dashboard/contacts'>Kontakter</a> → Kontaktprofil → <strong>Export Data</strong></td></tr><tr><td><strong>Rätt till radering (Art. 17)</strong></td><td>Radera kontakt och alla tillhörande konversationer via <strong>Delete Contact</strong></td></tr><tr><td><strong>Rätt till rättelse (Art. 16)</strong></td><td>Redigera kontaktuppgifter direkt i kontaktprofilen</td></tr><tr><td><strong>Rätt till dataportabilitet (Art. 20)</strong></td><td>Export i maskinläsbart JSON-format</td></tr><tr><td><strong>Rätt att göra invändningar (Art. 21)</strong></td><td>Blockera AI-behandling för en kontakt → alla nya meddelanden eskaleras direkt</td></tr></tbody></table>"
+        },
+        {
+          "id": "data-location",
+          "title": "Datalagring & residency",
+          "content": "<p>SWEO AI erbjuder flexibel datareisdency:</p><ul><li><strong>EU (standard)</strong> — Appwrite Cloud EU, Pinecone EU (aws-eu-west-1), Azure OpenAI Sweden Central</li><li><strong>US</strong> — Tillgängligt på begäran för amerikanska kunder</li></ul><p>Alla AI-anrop via Azure OpenAI innebär att <strong>inga kunddata används för modellträning</strong> — detta skiljer sig från direkt OpenAI API-användning.</p><p>Detaljerad dataflödeskarta finns i DPA-dokumentet som tillhandahålls vid kontraktsskrivning.</p>"
+        },
+        {
+          "id": "cookie-consent",
+          "title": "Cookies & samtycke",
+          "content": "<p>Webwidgeten använder minimala cookies:</p><table><thead><tr><th>Cookie</th><th>Syfte</th><th>Livslängd</th><th>Typ</th></tr></thead><tbody><tr><td><code>sweo_session</code></td><td>Identifiera återkommande besökare</td><td>30 dagar</td><td>Funktionell (nödvändig)</td></tr><tr><td><code>sweo_consent</code></td><td>Spara samtyckesstatus</td><td>365 dagar</td><td>Strikt nödvändig</td></tr></tbody></table><p>Inga tredjepartscookies eller spårningscookies används. Widget-konfigurationen stödjer en samtyckesbanner som visas innan konversation startar — konfigurera under <a href='/dashboard/settings'>Settings → Widget</a>.</p>"
+        }
+      ]
+    },
+    {
+      "slug": "ai-safety",
+      "title": "AI-säkerhet",
+      "content": "<p>SWEO AI har flera lager av skydd för att säkerställa att AI-agenten beter sig pålitligt och säkert.</p>",
+      "sections": [
+        {
+          "id": "prompt-injection",
+          "title": "Skydd mot prompt injection",
+          "content": "<p>Prompt injection är ett angrepp där en användare försöker manipulera AI:n att ignorera sina instruktioner. SWEO AI skyddar mot detta i flera steg:</p><ol><li><strong>Input sanitization</strong> — Alla meddelanden saniteras innan de når LLM:en. Kända injection-patterns detekteras och blockeras.</li><li><strong>System message isolation</strong> — Systeminstruktioner och kundinput hålls i separata delar av prompten med tydliga avgränsare.</li><li><strong>Pre-policies</strong> — <a href='/docs/knowledge/policies'>Policies</a> i <code>pre</code>-läge kan filtrera bort misstänkt manipulation innan AI bearbetar meddelandet.</li><li><strong>Output validation</strong> — Post-policies verifierar att AI-svaret inte avviker från godkänt beteende.</li></ol>"
+        },
+        {
+          "id": "content-filtering",
+          "title": "Innehållsfiltrering",
+          "content": "<p>Policies-systemet filtrerar AI-svar i realtid:</p><table><thead><tr><th>Policy-typ</th><th>Skyddar mot</th><th>Exempel</th></tr></thead><tbody><tr><td><code>topic_filter</code></td><td>Oönskade ämnen</td><td>Blockera svar om konkurrenter, politik, personliga åsikter</td></tr><tr><td><code>pii_filter</code></td><td>Personuppgiftsläckage</td><td>Förhindra AI från att avslöja lagrad kunddata till obehöriga</td></tr><tr><td><code>tone</code></td><td>Olämplig tonalitet</td><td>Hålla AI professionell, förhindra sarkasm eller aggressivitet</td></tr><tr><td><code>length</code></td><td>För långa/korta svar</td><td>Begränsa svarlängd för SMS-kanalen</td></tr></tbody></table><p>Skapa policies under <a href='/dashboard/policies'>Knowledge → Policies</a>. Se <a href='/docs/knowledge/policies'>Policies & Regler</a> för detaljerad guide.</p>"
+        },
+        {
+          "id": "confidence-guardrails",
+          "title": "Confidence guardrails",
+          "content": "<p>Confidence-systemet fungerar som en säkerhetsspärr:</p><ul><li><strong>Confidence ≥ 0.8</strong> — AI svarar direkt, hög säkerhet</li><li><strong>Confidence 0.7–0.8</strong> — AI svarar men markerar svaret som osäkert i metadata</li><li><strong>Confidence < 0.7</strong> — AI eskalerar till mänsklig agent istället för att gissa</li></ul><p>Tröskelvärdet (<code>0.7</code> default) konfigureras under <a href='/dashboard/settings'>Settings → AI Configuration</a>. Höj till <code>0.85</code> för känsliga branscher (finans, sjukvård) eller sänk till <code>0.6</code> för mer generösa AI-svar.</p>"
+        },
+        {
+          "id": "hallucination-prevention",
+          "title": "Förebygga hallucination",
+          "content": "<p>RAG-arkitekturen (Retrieval-Augmented Generation) är det primära skyddet mot AI-hallucinationer:</p><ol><li><strong>Enbart kunskapsbas-baserade svar</strong> — AI:n instrueras att bara svara baserat på innehåll från din <a href='/dashboard/knowledge'>Knowledge Base</a>, inte \"higar på\"</li><li><strong>Citations</strong> — Varje AI-svar inkluderar källhänvisningar så att agenter och kunder kan verifiera informationen</li><li><strong>Confidence scoring</strong> — Om vektorsökningen inte hittar relevanta dokument (låg cosine similarity) sjunker confidence och svaret eskaleras</li><li><strong>Top-K begränsning</strong> — Enbart de 5 mest relevanta dokumentchunks används som kontext (<code>top_k: 5</code>), vilket minskar risken för irrelevant information</li></ol>"
+        },
+        {
+          "id": "audit-trail",
+          "title": "Audit trail",
+          "content": "<p>SWEO AI loggar alla AI-beslut för spårbarhet:</p><ul><li><strong>Varje AI-svar</strong> — Loggat med confidence, använda källor, triggade policies och eventuell procedure</li><li><strong>Policy-blockering</strong> — Loggar när och varför en policy blockerade ett svar</li><li><strong>Eskaleringar</strong> — Loggar anledning, confidence-nivå och eventuell auto-assign</li><li><strong>Connector-anrop</strong> — Loggar externa API-anrop gjorda av Procedures (endpoint, status, response time)</li><li><strong>Admin-ändringar</strong> — Loggar alla ändringar i knowledge, policies, procedures och settings med vem och när</li></ul><p>Audit-loggar kan exporteras via <a href='/dashboard/reports'>Reports → CSAT Report</a> eller via API.</p>"
+        }
+      ]
+    }
+  ]
+},
+{
+  "slug": "advanced",
+  "title": "Avancerat",
+  "icon": "code",
+  "description": "API-referens, bulk-operationer, felsökning och avancerade integrationsmönster.",
+  "articles": [
+    {
+      "slug": "api-reference",
+      "title": "API-referens",
+      "content": "<p>Komplett referens för SWEO AI:s REST API — alla endpoints, parametrar och svarsformat.</p>",
+      "sections": [
+        {
+          "id": "authentication",
+          "title": "Autentisering",
+          "content": "<p>Alla API-anrop kräver en giltig API-nyckel i headern:</p><pre><code>x-api-key: your-tenant-api-key</code></pre><p>Generera API-nycklar under <a href='/dashboard/settings'>Settings → API Keys</a>. Varje nyckel är bunden till en specifik tenant och kan inte användas för andra organisationer.</p><p>Rate limit: <strong>60 requests/minut</strong> per API-nyckel (konfigurerbart för enterprise-planer).</p>"
+        },
+        {
+          "id": "chat-endpoints",
+          "title": "Chat-endpoints",
+          "content": "<table><thead><tr><th>Endpoint</th><th>Metod</th><th>Parametrar</th><th>Svar</th></tr></thead><tbody><tr><td><code>/api/chat/message</code></td><td>POST</td><td><code>message</code> (string), <code>conversationId</code> (string, optional), <code>channel</code> (string)</td><td>JSON: <code>content</code>, <code>confidence</code>, <code>sources[]</code>, <code>conversationId</code></td></tr><tr><td><code>/api/chat/stream</code></td><td>POST</td><td>Samma som ovan</td><td>SSE-stream: <code>delta</code>, <code>done</code>, <code>error</code>, <code>blocked</code>, <code>escalated</code></td></tr><tr><td><code>/api/copilot</code></td><td>POST</td><td><code>action</code> (string), <code>conversationId</code> (string)</td><td>JSON: <code>result</code> (action-specifikt innehåll)</td></tr><tr><td><code>/api/simulate</code></td><td>POST</td><td><code>scenario</code> (object med <code>messages[]</code>), <code>tenantId</code></td><td>JSON: <code>log[]</code>, <code>metrics</code></td></tr></tbody></table><p>Se <a href='/docs/integrations/webhooks-api'>Webhooks & REST API</a> för detaljerade curl-exempel.</p>"
+        },
+        {
+          "id": "knowledge-endpoints",
+          "title": "Knowledge-endpoints",
+          "content": "<table><thead><tr><th>Endpoint</th><th>Metod</th><th>Beskrivning</th></tr></thead><tbody><tr><td><code>/api/knowledge/export</code></td><td>GET</td><td>Exportera hela kunskapsbasen som JSON (alla sources med chunks)</td></tr><tr><td><code>/api/knowledge/import</code></td><td>POST</td><td>Importera kunskapsbas från JSON-fil (merge eller replace-läge)</td></tr><tr><td><code>/api/embeddings</code></td><td>POST</td><td>Generera embeddings för godtycklig text (använder text-embedding-3-large)</td></tr></tbody></table>"
+        },
+        {
+          "id": "conversation-endpoints",
+          "title": "Konversations-endpoints",
+          "content": "<table><thead><tr><th>Endpoint</th><th>Metod</th><th>Beskrivning</th></tr></thead><tbody><tr><td><code>/api/conversations/handover</code></td><td>POST</td><td>Eskalera konversation till mänsklig agent. Params: <code>conversationId</code>, <code>reason</code>, <code>assignTo</code> (optional)</td></tr></tbody></table><p>Webhook-endpoints för inkommande meddelanden:</p><table><thead><tr><th>Endpoint</th><th>Källa</th></tr></thead><tbody><tr><td><code>/api/webhooks/email</code></td><td>CloudMailin / SendGrid Inbound Parse</td></tr><tr><td><code>/api/webhooks/whatsapp</code></td><td>Twilio WhatsApp</td></tr><tr><td><code>/api/webhooks/sms</code></td><td>Twilio SMS</td></tr></tbody></table>"
+        },
+        {
+          "id": "error-codes",
+          "title": "Felkoder",
+          "content": "<table><thead><tr><th>HTTP Status</th><th>Kod</th><th>Beskrivning</th></tr></thead><tbody><tr><td>400</td><td><code>invalid_request</code></td><td>Saknade eller ogiltiga parametrar</td></tr><tr><td>401</td><td><code>unauthorized</code></td><td>Ogiltig eller saknad API-nyckel</td></tr><tr><td>403</td><td><code>forbidden</code></td><td>API-nyckeln har inte behörighet för denna endpoint</td></tr><tr><td>404</td><td><code>not_found</code></td><td>Konversation eller resurs hittades inte</td></tr><tr><td>429</td><td><code>rate_limited</code></td><td>Rate limit överskriden (retry efter <code>Retry-After</code>-header)</td></tr><tr><td>500</td><td><code>internal_error</code></td><td>Internt fel — kontakta support om det upprepas</td></tr></tbody></table>"
+        }
+      ]
+    },
+    {
+      "slug": "bulk-operations",
+      "title": "Bulk-operationer",
+      "content": "<p>Hantera stora mängder data effektivt med SWEO AI:s bulk-funktioner.</p>",
+      "sections": [
+        {
+          "id": "bulk-knowledge-import",
+          "title": "Bulk-import av kunskapskällor",
+          "content": "<p>Importera flera kunskapskällor på en gång via API:</p><pre><code>curl -X POST https://your-domain.com/api/knowledge/import \\\n  -H \"x-api-key: your-api-key\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"mode\": \"merge\",\n    \"sources\": [\n      {\n        \"title\": \"FAQ - Frakt\",\n        \"type\": \"text\",\n        \"content\": \"Fri frakt över 499 kr...\"\n      },\n      {\n        \"title\": \"FAQ - Returer\",\n        \"type\": \"text\",\n        \"content\": \"Returrätt 30 dagar...\"\n      }\n    ]\n  }'</code></pre><p>Lägen:</p><ul><li><code>merge</code> — Lägg till nya, uppdatera befintliga (matchar på title)</li><li><code>replace</code> — Radera allt och ersätt med importerade källor</li></ul><p>Större importer (100+ artiklar) körs asynkront — du får ett <code>jobId</code> tillbaka och kan polla status.</p>"
+        },
+        {
+          "id": "bulk-knowledge-export",
+          "title": "Bulk-export av kunskapsbas",
+          "content": "<p>Exportera hela kunskapsbasen för backup eller migration:</p><pre><code>curl -X GET https://your-domain.com/api/knowledge/export \\\n  -H \"x-api-key: your-api-key\" \\\n  -o knowledge-backup.json</code></pre><p>Exportfilen innehåller alla sources med titel, typ, originalinnehåll, chunks och metadata. Kan importeras direkt till en annan SWEO AI-instans.</p>"
+        },
+        {
+          "id": "bulk-contacts",
+          "title": "Kontaktexport",
+          "content": "<p>Exportera kontakter som CSV via <a href='/dashboard/contacts'>Kontakter</a> → <strong>Export</strong>-knappen, eller via API:</p><pre><code>curl -X GET https://your-domain.com/api/contacts/export \\\n  -H \"x-api-key: your-api-key\" \\\n  -H \"Accept: text/csv\" \\\n  -o contacts.csv</code></pre><p>CSV-filen innehåller: namn, e-post, telefon, kanal, antal konversationer, senast aktiv, sentiment.</p>"
+        }
+      ]
+    },
+    {
+      "slug": "troubleshooting",
+      "title": "Felsökning",
+      "content": "<p>Vanliga problem och lösningar vid användning av SWEO AI.</p>",
+      "sections": [
+        {
+          "id": "ai-wrong-answers",
+          "title": "AI ger fel svar",
+          "content": "<p><strong>Problem:</strong> AI-agenten svarar inkorrekt eller verkar \"hitta på\" information.</p><p><strong>Lösning:</strong></p><ol><li>Kontrollera att kunskapsbasen (<a href='/dashboard/knowledge'>Knowledge</a>) innehåller korrekt information om ämnet</li><li>Sök efter ärendet i <a href='/dashboard/analytics'>Analytics → AI Suggestions</a> — kanske finns det som content gap</li><li>Granska <a href='/dashboard/policies'>Policies</a> — en <code>topic_filter</code> kan blockera rätt svar</li><li>Kör scenariot i <a href='/dashboard/testing'>Testing</a> med dry-run för att se confidence och använda källor</li><li>Om confidence är hög men svaret fel: uppdatera eller ta bort den felaktiga kunskapskällan</li></ol>"
+        },
+        {
+          "id": "low-resolution-rate",
+          "title": "Låg Resolution Rate",
+          "content": "<p><strong>Problem:</strong> AI löser < 50% av konversationerna.</p><p><strong>Lösning:</strong></p><ol><li>Gå till <a href='/dashboard/analytics'>Analytics → AI Suggestions</a> — godkänn föreslagna kunskapsartiklar</li><li>Granska <strong>Top Topics</strong> med låg confidence — skapa dedikerade kunskapskällor</li><li>Kontrollera confidence-tröskeln i <a href='/dashboard/settings'>Settings → AI Configuration</a> — om den är > 0.8 kan den vara för strikt</li><li>Skapa <a href='/dashboard/procedures'>Procedures</a> för vanliga flöden som kräver data-lookup (orderstatus, returer)</li><li>Kör Flywheel-cykeln veckovis — se <a href='/docs/analytics/ai-insights'>AI Insights</a></li></ol>"
+        },
+        {
+          "id": "widget-not-showing",
+          "title": "Widget visas inte",
+          "content": "<p><strong>Problem:</strong> Chat-widgeten syns inte på hemsidan.</p><p><strong>Lösning:</strong></p><ol><li>Verifiera att embed-koden finns före <code>&lt;/body&gt;</code>-taggen</li><li>Kontrollera att <code>data-api-key</code> är korrekt (hämta från <a href='/dashboard/settings'>Settings → Widget</a>)</li><li>Kontrollera att <code>data-api-url</code> pekar på din SWEO AI-instans</li><li>Öppna webbläsarens Developer Console (F12) → Network-fliken → sök efter <code>chat-widget.js</code></li><li>Om du ser CORS-fel: lägg till din domän i tillåtna origins under Settings</li><li>Testa med en ren inkognito-flik (adblockers kan blockera chat-widgets)</li></ol>"
+        },
+        {
+          "id": "connector-errors",
+          "title": "Connector-fel",
+          "content": "<p><strong>Problem:</strong> Data Connector misslyckas eller ger timeout.</p><p><strong>Lösning:</strong></p><ol><li>Gå till <a href='/dashboard/connectors'>Connectors</a> och klicka <strong>Testa Anslutning</strong></li><li>Kontrollera att API-nyckeln inte har gått ut (Shopify-tokens roteras ibland)</li><li>Verifiera Base URL — vanligt fel: <code>https://mystore.myshopify.com</code> (inte <code>.com/admin</code>)</li><li>Kontrollera att API-nyckeln har rätt scopes (t.ex. <code>read_orders</code> för Shopify)</li><li>Vid timeout: det externa API:t kan vara nere — kontrollera deras statuspage</li></ol>"
+        },
+        {
+          "id": "email-not-received",
+          "title": "E-post-kanal fungerar inte",
+          "content": "<p><strong>Problem:</strong> Inkommande e-post skapar inte konversationer.</p><p><strong>Lösning:</strong></p><ol><li>Verifiera att din e-postleverantör (CloudMailin/SendGrid) forwarding pekar på <code>https://your-domain.com/api/webhooks/email</code></li><li>Skicka ett test-mejl och kontrollera webhook-loggar</li><li>Kontrollera att e-postadressen inte filtrerats som spam av din provider</li><li>Verifiera SPF/DKIM/DMARC-konfiguration för din domän</li></ol>"
+        },
+        {
+          "id": "performance-issues",
+          "title": "Långsamma svar",
+          "content": "<p><strong>Problem:</strong> AI-agenten svarar långsamt (> 5 sekunder).</p><p><strong>Lösning:</strong></p><ul><li><strong>Använd streaming</strong> — SSE-endpointen (<code>/api/chat/stream</code>) visar svar token-för-token, vilket upplevs snabbare</li><li><strong>Kontrollera kunskapsbas-storlek</strong> — Extremt stora kunskapsbaser (10 000+ chunks) kan ge långsammare embedding-sökning. Rensa irrelevanta källor.</li><li><strong>Minska top_k</strong> — Standardvärdet (5) bör räcka. Högre värden ger långsammare svar utan proportionell kvalitetsförbättring.</li><li><strong>Connector-latens</strong> — Om Procedures gör externa API-anrop adderas deras latens. Kontrollera connector-prestanda i <a href='/dashboard/analytics'>Analytics</a>.</li></ul>"
+        }
+      ]
+    }
+  ]
+}
+]

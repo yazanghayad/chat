@@ -16,9 +16,15 @@ import {
   MessageSquare,
   HelpCircle,
   Megaphone,
-  Search
+  Search,
+  RotateCcw,
+  User,
+  Mail,
+  ExternalLink,
+  BookOpen
 } from 'lucide-react';
 import Image from 'next/image';
+import docsData from '@/config/docs-data.json';
 
 // ── Helpers ───────────────────────────────────────────────────────────────
 let _id = 0;
@@ -72,12 +78,19 @@ export function ChatBotWidget() {
     setIsStreaming,
     hasStartedConversation,
     setHasStartedConversation,
-    resetChat
+    resetChat,
+    userName,
+    userEmail,
+    setUserInfo
   } = useChatbotStore();
 
   const [inputValue, setInputValue] = useState('');
   const [unreadCount, setUnreadCount] = useState(0);
   const [inConversation, setInConversation] = useState(false);
+  const [showEndConfirm, setShowEndConfirm] = useState(false);
+  const [showSalesForm, setShowSalesForm] = useState(false);
+  const [salesName, setSalesName] = useState('');
+  const [salesEmail, setSalesEmail] = useState('');
   const endRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -102,6 +115,14 @@ export function ChatBotWidget() {
 
   const handleSelectDepartment = useCallback(
     (dept: ChatDepartment) => {
+      if (dept === 'sales' && !userName && !userEmail) {
+        // Show sales form before starting
+        setDepartment(dept);
+        setShowSalesForm(true);
+        setInConversation(true);
+        return;
+      }
+
       setDepartment(dept);
       setInConversation(true);
       const info = DEPARTMENTS.find((d) => d.id === dept)!;
@@ -119,9 +140,34 @@ export function ChatBotWidget() {
       setDepartment,
       addMessage,
       hasStartedConversation,
-      setHasStartedConversation
+      setHasStartedConversation,
+      userName,
+      userEmail
     ]
   );
+
+  const handleSalesFormSubmit = useCallback(() => {
+    if (!salesName.trim() || !salesEmail.trim()) return;
+    setUserInfo(salesName.trim(), salesEmail.trim());
+    setShowSalesForm(false);
+    const info = DEPARTMENTS.find((d) => d.id === 'sales')!;
+    if (!hasStartedConversation) {
+      addMessage({
+        id: uid(),
+        role: 'assistant',
+        content: `Hej ${salesName.trim()}! ${info.greeting}`,
+        timestamp: new Date()
+      });
+      setHasStartedConversation(true);
+    }
+  }, [
+    salesName,
+    salesEmail,
+    setUserInfo,
+    addMessage,
+    hasStartedConversation,
+    setHasStartedConversation
+  ]);
 
   const handleStartChat = useCallback(() => {
     setActiveTab('messages');
@@ -131,6 +177,16 @@ export function ChatBotWidget() {
     setInConversation(false);
     setActiveTab('home');
   }, [setActiveTab]);
+
+  const handleEndChat = useCallback(() => {
+    setShowEndConfirm(false);
+    setShowSalesForm(false);
+    setInConversation(false);
+    resetChat();
+    setInputValue('');
+    setSalesName('');
+    setSalesEmail('');
+  }, [resetChat]);
 
   const handleSend = useCallback(async () => {
     const text = inputValue.trim();
@@ -159,7 +215,13 @@ export function ChatBotWidget() {
       const res = await fetch('/api/chatbot', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: text, department, conversationId })
+        body: JSON.stringify({
+          message: text,
+          department,
+          conversationId,
+          userName: userName || undefined,
+          userEmail: userEmail || undefined
+        })
       });
 
       if (!res.ok) {
@@ -330,74 +392,182 @@ export function ChatBotWidget() {
                   department={department}
                   onBack={handleBackToHome}
                   onClose={toggleOpen}
+                  onEndChat={() => setShowEndConfirm(true)}
                 />
+
+                {/* End chat confirmation */}
+                <AnimatePresence>
+                  {showEndConfirm && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      className='border-border bg-muted/50 border-b px-4 py-3'
+                    >
+                      <p className='text-foreground mb-2 text-[13px] font-medium'>
+                        Vill du avsluta chatten?
+                      </p>
+                      <p className='text-muted-foreground mb-3 text-[12px]'>
+                        Konversationen rensas och kan inte återställas.
+                      </p>
+                      <div className='flex gap-2'>
+                        <button
+                          onClick={handleEndChat}
+                          className='rounded-lg bg-red-500 px-3 py-1.5 text-[12px] font-medium text-white transition-colors hover:bg-red-600'
+                        >
+                          Avsluta
+                        </button>
+                        <button
+                          onClick={() => setShowEndConfirm(false)}
+                          className='text-muted-foreground hover:text-foreground rounded-lg border px-3 py-1.5 text-[12px] font-medium transition-colors'
+                        >
+                          Avbryt
+                        </button>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
 
                 <div className='flex-1 overflow-y-auto overscroll-contain'>
                   <div className='space-y-4 px-4 py-4'>
-                    {messages.map((msg, i) => (
-                      <MessageBubble
-                        key={msg.id ?? i}
-                        message={msg}
-                        isLast={i === messages.length - 1}
-                        isStreaming={
-                          isStreaming &&
-                          i === messages.length - 1 &&
-                          msg.role === 'assistant'
-                        }
-                      />
-                    ))}
+                    {/* Sales form gate */}
+                    {showSalesForm && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className='space-y-4'
+                      >
+                        <div className='bg-muted/50 rounded-xl p-4'>
+                          <p className='text-foreground mb-1 text-[14px] font-semibold'>
+                            Innan vi börjar
+                          </p>
+                          <p className='text-muted-foreground mb-4 text-[13px]'>
+                            Fyll i dina uppgifter så att vi kan hjälpa dig
+                            bättre och en handläggare kan följa upp.
+                          </p>
+                          <div className='space-y-3'>
+                            <div>
+                              <label className='text-muted-foreground mb-1 block text-[12px] font-medium'>
+                                Namn
+                              </label>
+                              <div className='border-border focus-within:border-foreground/20 flex items-center gap-2 rounded-lg border bg-white px-3 py-2 transition-colors dark:bg-black'>
+                                <User className='text-muted-foreground h-4 w-4 shrink-0' />
+                                <input
+                                  type='text'
+                                  value={salesName}
+                                  onChange={(e) => setSalesName(e.target.value)}
+                                  placeholder='Ditt namn'
+                                  className='text-foreground flex-1 bg-transparent text-[14px] outline-none placeholder:text-gray-400'
+                                  autoFocus
+                                />
+                              </div>
+                            </div>
+                            <div>
+                              <label className='text-muted-foreground mb-1 block text-[12px] font-medium'>
+                                E-post
+                              </label>
+                              <div className='border-border focus-within:border-foreground/20 flex items-center gap-2 rounded-lg border bg-white px-3 py-2 transition-colors dark:bg-black'>
+                                <Mail className='text-muted-foreground h-4 w-4 shrink-0' />
+                                <input
+                                  type='email'
+                                  value={salesEmail}
+                                  onChange={(e) =>
+                                    setSalesEmail(e.target.value)
+                                  }
+                                  placeholder='din@email.com'
+                                  onKeyDown={(e) => {
+                                    if (e.key === 'Enter')
+                                      handleSalesFormSubmit();
+                                  }}
+                                  className='text-foreground flex-1 bg-transparent text-[14px] outline-none placeholder:text-gray-400'
+                                />
+                              </div>
+                            </div>
+                            <button
+                              onClick={handleSalesFormSubmit}
+                              disabled={!salesName.trim() || !salesEmail.trim()}
+                              className={cn(
+                                'w-full rounded-lg px-4 py-2.5 text-[14px] font-medium transition-all',
+                                salesName.trim() && salesEmail.trim()
+                                  ? 'bg-foreground text-background hover:opacity-90 active:scale-[0.98]'
+                                  : 'bg-muted text-muted-foreground cursor-not-allowed'
+                              )}
+                            >
+                              Starta konversation
+                            </button>
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+
+                    {/* Chat messages */}
+                    {!showSalesForm &&
+                      messages.map((msg, i) => (
+                        <MessageBubble
+                          key={msg.id ?? i}
+                          message={msg}
+                          isLast={i === messages.length - 1}
+                          isStreaming={
+                            isStreaming &&
+                            i === messages.length - 1 &&
+                            msg.role === 'assistant'
+                          }
+                        />
+                      ))}
                     <div ref={endRef} />
                   </div>
                 </div>
 
-                <div className='px-4 pt-2 pb-3'>
-                  <div
-                    className={cn(
-                      'flex items-end gap-2 rounded-xl',
-                      'border-border border',
-                      'bg-background',
-                      'px-3.5 py-2.5',
-                      'transition-colors',
-                      'focus-within:border-foreground/20'
-                    )}
-                  >
-                    <textarea
-                      ref={inputRef}
-                      value={inputValue}
-                      onChange={handleInputChange}
-                      onKeyDown={handleKeyDown}
-                      placeholder='Ställ en fråga ...'
-                      rows={1}
-                      disabled={isStreaming}
+                {!showSalesForm && (
+                  <div className='px-4 pt-2 pb-3'>
+                    <div
                       className={cn(
-                        'text-foreground placeholder:text-muted-foreground/60',
-                        'flex-1 resize-none bg-transparent',
-                        'border-0 py-1',
-                        'text-[14px] leading-[1.5]',
-                        'outline-none',
-                        'max-h-[100px] min-h-[24px]',
-                        'disabled:cursor-not-allowed disabled:opacity-40'
+                        'flex items-end gap-2 rounded-xl',
+                        'border-border border',
+                        'bg-background',
+                        'px-3.5 py-2.5',
+                        'transition-colors',
+                        'focus-within:border-foreground/20'
                       )}
-                    />
-                    <button
-                      onClick={handleSend}
-                      disabled={!inputValue.trim() || isStreaming}
-                      className={cn(
-                        'flex h-7 w-7 shrink-0 items-center justify-center rounded-full',
-                        'transition-all duration-100',
-                        inputValue.trim() && !isStreaming
-                          ? 'bg-foreground text-background'
-                          : 'bg-muted text-muted-foreground/40',
-                        'disabled:cursor-default',
-                        'active:scale-95'
-                      )}
-                      aria-label='Skicka'
                     >
-                      <Send className='h-3.5 w-3.5' />
-                    </button>
+                      <textarea
+                        ref={inputRef}
+                        value={inputValue}
+                        onChange={handleInputChange}
+                        onKeyDown={handleKeyDown}
+                        placeholder='Ställ en fråga ...'
+                        rows={1}
+                        disabled={isStreaming}
+                        className={cn(
+                          'text-foreground placeholder:text-muted-foreground/60',
+                          'flex-1 resize-none bg-transparent',
+                          'border-0 py-1',
+                          'text-[14px] leading-[1.5]',
+                          'outline-none',
+                          'max-h-[100px] min-h-[24px]',
+                          'disabled:cursor-not-allowed disabled:opacity-40'
+                        )}
+                      />
+                      <button
+                        onClick={handleSend}
+                        disabled={!inputValue.trim() || isStreaming}
+                        className={cn(
+                          'flex h-7 w-7 shrink-0 items-center justify-center rounded-full',
+                          'transition-all duration-100',
+                          inputValue.trim() && !isStreaming
+                            ? 'bg-foreground text-background'
+                            : 'bg-muted text-muted-foreground/40',
+                          'disabled:cursor-default',
+                          'active:scale-95'
+                        )}
+                        aria-label='Skicka'
+                      >
+                        <Send className='h-3.5 w-3.5' />
+                      </button>
+                    </div>
+                    <PoweredBy />
                   </div>
-                  <PoweredBy />
-                </div>
+                )}
               </div>
             ) : (
               /* ── Tabbed Home View ── */
@@ -722,46 +892,87 @@ function MessagesTab({
 }
 
 // ── Help Tab ──────────────────────────────────────────────────────────────
-const HELP_COLLECTIONS = [
-  {
-    title: 'Kom igång',
-    desc: 'Allt du behöver veta för att komma igång med SWEO.',
-    articles: 12
-  },
-  {
-    title: 'AI Agent',
-    desc: 'Lös kundfrågor direkt och precist — från chatt till e-post.',
-    articles: 24
-  },
-  {
-    title: 'Kanaler',
-    desc: 'Aktivera kanalerna du använder för att kommunicera med kunder.',
-    articles: 18
-  },
-  {
-    title: 'Kunskapsbas',
-    desc: 'Hantera och publicera hjälpartiklar för dina kunder.',
-    articles: 15
-  },
-  {
-    title: 'Automatiseringar',
-    desc: 'Skapa workflows och procedurer som effektiviserar supporten.',
-    articles: 9
-  }
-];
+
+interface DocsCategory {
+  slug: string;
+  title: string;
+  icon: string;
+  description: string;
+  articles: {
+    slug: string;
+    title: string;
+    sections: { id: string; title: string; content: string }[];
+  }[];
+}
 
 function HelpTab() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<DocsCategory | null>(
+    null
+  );
+
+  const categories = docsData as DocsCategory[];
 
   const filtered = searchQuery.trim()
-    ? HELP_COLLECTIONS.filter(
+    ? categories.filter(
         (c) =>
           c.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          c.desc.toLowerCase().includes(searchQuery.toLowerCase())
+          c.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          c.articles.some((a) =>
+            a.title.toLowerCase().includes(searchQuery.toLowerCase())
+          )
       )
-    : HELP_COLLECTIONS;
+    : categories;
 
-  const totalCollections = HELP_COLLECTIONS.length;
+  if (selectedCategory) {
+    return (
+      <div className='flex flex-col'>
+        {/* Back + category title */}
+        <div className='flex items-center gap-2 px-5 pt-5 pb-3'>
+          <button
+            onClick={() => setSelectedCategory(null)}
+            className='text-muted-foreground hover:text-foreground -ml-1 flex h-7 w-7 items-center justify-center rounded-full transition-colors'
+          >
+            <ArrowLeft className='h-4 w-4' strokeWidth={2} />
+          </button>
+          <h2 className='text-foreground text-[17px] font-semibold'>
+            {selectedCategory.title}
+          </h2>
+        </div>
+
+        <p className='text-muted-foreground px-5 pb-3 text-[13px]'>
+          {selectedCategory.description}
+        </p>
+
+        {/* Articles list */}
+        <div className='divide-border divide-y'>
+          {selectedCategory.articles.map((article) => (
+            <a
+              key={article.slug}
+              href={`/docs/${selectedCategory.slug}/${article.slug}`}
+              target='_blank'
+              rel='noopener noreferrer'
+              className={cn(
+                'flex w-full items-center gap-3 px-5 py-3.5 text-left',
+                'hover:bg-accent transition-colors'
+              )}
+            >
+              <BookOpen className='text-muted-foreground h-4 w-4 shrink-0' />
+              <div className='min-w-0 flex-1'>
+                <p className='text-foreground text-[14px] font-medium'>
+                  {article.title}
+                </p>
+                <p className='text-muted-foreground/60 mt-0.5 text-[12px]'>
+                  {article.sections.length} avsnitt
+                </p>
+              </div>
+              <ExternalLink className='text-muted-foreground/30 h-3.5 w-3.5 shrink-0' />
+            </a>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className='flex flex-col'>
@@ -804,9 +1015,10 @@ function HelpTab() {
 
       {/* Collections */}
       <div className='divide-border divide-y'>
-        {filtered.map((col) => (
+        {filtered.map((cat) => (
           <button
-            key={col.title}
+            key={cat.slug}
+            onClick={() => setSelectedCategory(cat)}
             className={cn(
               'flex w-full items-center gap-3 px-5 py-4 text-left',
               'hover:bg-accent transition-colors'
@@ -814,13 +1026,13 @@ function HelpTab() {
           >
             <div className='min-w-0 flex-1'>
               <p className='text-foreground text-[15px] font-semibold'>
-                {col.title}
+                {cat.title}
               </p>
               <p className='text-muted-foreground mt-0.5 text-[13px] leading-snug'>
-                {col.desc}
+                {cat.description}
               </p>
               <p className='text-muted-foreground/60 mt-1 text-[12px]'>
-                {col.articles} artiklar
+                {cat.articles.length} artiklar
               </p>
             </div>
             <ChevronRight className='text-muted-foreground/30 h-4 w-4 shrink-0' />
@@ -1159,11 +1371,13 @@ function NewsTab() {
 function ConversationHeader({
   department,
   onBack,
-  onClose
+  onClose,
+  onEndChat
 }: {
   department: ChatDepartment | null;
   onBack: () => void;
   onClose: () => void;
+  onEndChat: () => void;
 }) {
   const deptInfo = department
     ? DEPARTMENTS.find((d) => d.id === department)
@@ -1203,6 +1417,15 @@ function ConversationHeader({
           </p>
         </div>
       </div>
+
+      <button
+        onClick={onEndChat}
+        className='text-muted-foreground hover:text-foreground hover:bg-accent flex h-8 w-8 items-center justify-center rounded-full transition-colors'
+        aria-label='Avsluta chatt'
+        title='Avsluta chatt'
+      >
+        <RotateCcw className='h-[16px] w-[16px]' strokeWidth={2} />
+      </button>
 
       <button
         onClick={onClose}

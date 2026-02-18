@@ -27,26 +27,56 @@ const EMBEDDING_DIMENSIONS = 1024;
 /**
  * Generate an embedding vector for the given text.
  */
-export async function generateEmbedding(text: string): Promise<number[]> {
+export async function generateEmbedding(
+  text: string,
+  inputType: 'query' | 'passage' = 'query'
+): Promise<number[]> {
   const client = getAIClient();
-  const response = await client.embeddings.create({
-    model: getEmbeddingModel(),
-    input: text,
-    dimensions: EMBEDDING_DIMENSIONS
-  });
+  const model = getEmbeddingModel();
+  const isNvidia = model.startsWith('nvidia/');
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const params: any = {
+    model,
+    input: text
+  };
+
+  // NVIDIA asymmetric models require input_type but don't support dimensions
+  if (isNvidia) {
+    params.input_type = inputType;
+  } else {
+    params.dimensions = EMBEDDING_DIMENSIONS;
+  }
+
+  const response = await client.embeddings.create(params);
   return response.data[0].embedding;
 }
 
 /**
  * Generate embeddings for multiple texts in a single API call.
  */
-export async function generateEmbeddings(texts: string[]): Promise<number[][]> {
+export async function generateEmbeddings(
+  texts: string[],
+  inputType: 'query' | 'passage' = 'passage'
+): Promise<number[][]> {
   const client = getAIClient();
-  const response = await client.embeddings.create({
-    model: getEmbeddingModel(),
-    input: texts,
-    dimensions: EMBEDDING_DIMENSIONS
-  });
+  const model = getEmbeddingModel();
+  const isNvidia = model.startsWith('nvidia/');
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const params: any = {
+    model,
+    input: texts
+  };
+
+  // NVIDIA asymmetric models require input_type but don't support dimensions
+  if (isNvidia) {
+    params.input_type = inputType;
+  } else {
+    params.dimensions = EMBEDDING_DIMENSIONS;
+  }
+
+  const response = await client.embeddings.create(params);
   return response.data
     .sort((a, b) => a.index - b.index)
     .map((d) => d.embedding);
@@ -146,6 +176,8 @@ export async function deleteVectorsBySource(
 export interface SearchResult {
   id: string;
   score: number;
+  /** Full chunk text stored in the document. */
+  text: string;
   metadata: Record<string, unknown>;
 }
 
@@ -163,6 +195,7 @@ export async function vectorSearch(
   const { databases } = await createAdminClient();
   const allDocs: Array<{
     vectorId: string;
+    text: string;
     embedding: string;
     metadata: string;
   }> = [];
@@ -194,7 +227,7 @@ export async function vectorSearch(
     const embedding: number[] = JSON.parse(doc.embedding);
     const score = cosineSimilarity(queryEmbedding, embedding);
     const metadata: Record<string, unknown> = JSON.parse(doc.metadata);
-    return { id: doc.vectorId, score, metadata };
+    return { id: doc.vectorId, score, text: doc.text, metadata };
   });
 
   // Sort descending by score and return top K

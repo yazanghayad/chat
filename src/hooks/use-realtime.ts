@@ -1,7 +1,12 @@
 'use client';
 
-import { useEffect, useRef, useCallback } from 'react';
-import { client, APPWRITE_DATABASE } from '@/lib/appwrite/client';
+import { useEffect, useRef, useState } from 'react';
+import {
+  client,
+  account,
+  APPWRITE_DATABASE,
+  APPWRITE_CONFIGURED
+} from '@/lib/appwrite/client';
 import { COLLECTION } from '@/lib/appwrite/collections';
 import type { Models } from 'appwrite';
 
@@ -23,15 +28,9 @@ interface UseRealtimeOptions<T extends Models.Document> {
 /**
  * Subscribe to Appwrite Realtime events for a collection.
  *
- * Usage:
- * ```ts
- * useRealtime<Message>({
- *   collection: 'MESSAGES',
- *   events: ['create'],
- *   filter: (msg) => msg.conversationId === selectedId,
- *   onEvent: (msg) => setMessages(prev => [...prev, msg]),
- * });
- * ```
+ * Only subscribes when Appwrite is configured AND the user has an
+ * active session. This prevents the SDK from opening a WebSocket
+ * that immediately fails and spams console.error.
  */
 export function useRealtime<T extends Models.Document>({
   collection,
@@ -40,7 +39,6 @@ export function useRealtime<T extends Models.Document>({
   onEvent,
   enabled = true
 }: UseRealtimeOptions<T>) {
-  // Keep callbacks stable via refs so subscription doesn't re-create
   const onEventRef = useRef(onEvent);
   onEventRef.current = onEvent;
   const filterRef = useRef(filter);
@@ -48,35 +46,64 @@ export function useRealtime<T extends Models.Document>({
 
   const collectionId = COLLECTION[collection];
 
+  // Check for an active Appwrite session before subscribing
+  const [hasSession, setHasSession] = useState(false);
+
   useEffect(() => {
-    if (!enabled || !APPWRITE_DATABASE || !collectionId) return;
+    if (!APPWRITE_CONFIGURED) return;
+    let cancelled = false;
+    account
+      .get()
+      .then(() => {
+        if (!cancelled) setHasSession(true);
+      })
+      .catch(() => {
+        // No session — Realtime won't work
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (
+      !enabled ||
+      !hasSession ||
+      !APPWRITE_CONFIGURED ||
+      !APPWRITE_DATABASE ||
+      !collectionId
+    )
+      return;
 
     const channel = `databases.${APPWRITE_DATABASE}.collections.${collectionId}.documents`;
 
-    const unsubscribe = client.subscribe<T>(channel, (response) => {
-      // Determine event type from the events array
-      // Appwrite events look like: "databases.*.collections.*.documents.*.create"
-      const eventStr = response.events?.find((e) => e.includes('.documents.'));
-      if (!eventStr) return;
+    let unsubscribe: (() => void) | undefined;
 
-      let eventType: RealtimeEvent = 'update';
-      if (eventStr.endsWith('.create')) eventType = 'create';
-      else if (eventStr.endsWith('.delete')) eventType = 'delete';
-      else if (eventStr.endsWith('.update')) eventType = 'update';
+    try {
+      unsubscribe = client.subscribe<T>(channel, (response) => {
+        const eventStr = response.events?.find((e) =>
+          e.includes('.documents.')
+        );
+        if (!eventStr) return;
 
-      // Filter by event type
-      if (events && !events.includes(eventType)) return;
+        let eventType: RealtimeEvent = 'update';
+        if (eventStr.endsWith('.create')) eventType = 'create';
+        else if (eventStr.endsWith('.delete')) eventType = 'delete';
+        else if (eventStr.endsWith('.update')) eventType = 'update';
 
-      const payload = response.payload as T;
+        if (events && !events.includes(eventType)) return;
 
-      // Optional user filter
-      if (filterRef.current && !filterRef.current(payload)) return;
+        const payload = response.payload as T;
+        if (filterRef.current && !filterRef.current(payload)) return;
 
-      onEventRef.current(payload, eventType);
-    });
+        onEventRef.current(payload, eventType);
+      });
+    } catch {
+      // Appwrite Realtime not available — silently degrade
+    }
 
     return () => {
-      unsubscribe();
+      unsubscribe?.();
     };
-  }, [collectionId, enabled, events]);
+  }, [collectionId, enabled, events, hasSession]);
 }

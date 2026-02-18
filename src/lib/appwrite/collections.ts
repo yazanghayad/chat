@@ -12,5 +12,7 @@ export const COLLECTION = {
   DATA_CONNECTORS: 'data_connectors',
   TEST_SCENARIOS: 'test_scenarios',
   CONTENT_SUGGESTIONS: 'content_suggestions',
-  VECTORS: 'vectors'
+  VECTORS: 'vectors',
+  CHATBOT_CONVERSATIONS: 'chatbot_conversations',
+  CHATBOT_MESSAGES: 'chatbot_messages'
 } as const;

@@ -35,7 +35,16 @@ export async function getCurrentTenantAction(): Promise<{
       };
     }
 
-    // Auto-create tenant for first-time users
+    // No tenant found – signup should have created one.
+    // For legacy users without a tenant, auto-create with a generated subdomain.
+    const slug =
+      (user.name || user.email.split('@')[0])
+        .toLowerCase()
+        .replace(/[^a-z0-9-]/g, '-')
+        .replace(/-+/g, '-')
+        .replace(/^-|-$/g, '')
+        .slice(0, 63) || `tenant-${Date.now()}`;
+
     const tenant = await databases.createDocument(
       APPWRITE_DATABASE,
       COLLECTION.TENANTS,
@@ -43,9 +52,10 @@ export async function getCurrentTenantAction(): Promise<{
       {
         name: user.name || user.email,
         plan: 'trial',
-        config: JSON.stringify({}),
+        config: JSON.stringify({ subdomain: slug }),
         apiKey: crypto.randomUUID().replace(/-/g, ''),
-        userId: user.$id
+        userId: user.$id,
+        subdomain: slug
       }
     );
 

@@ -130,9 +130,11 @@ async function setupTenants() {
   await attr('longtext',C, 'config');
   await attr('string',  C, 'apiKey', { size: 64, required: true });
   await attr('string',  C, 'userId', { required: true });
+  await attr('string',  C, 'subdomain', { size: 63 });
   await waitForAttributes(C);
-  await idx(C, 'apiKey_unique', 'unique', ['apiKey']);
-  await idx(C, 'userId_idx',   'key',    ['userId']);
+  await idx(C, 'apiKey_unique',    'unique', ['apiKey']);
+  await idx(C, 'userId_idx',      'key',    ['userId']);
+  await idx(C, 'subdomain_unique', 'unique', ['subdomain']);
 }
 
 async function setupKnowledgeSources() {
@@ -158,6 +160,9 @@ async function setupConversations() {
   await attr('string',   C, 'userId');
   await attr('longtext', C, 'metadata');
   await attr('datetime', C, 'resolvedAt');
+  await attr('datetime', C, 'firstResponseAt');
+  await attr('float',    C, 'csatScore',  { min: 1, max: 5 });
+  await attr('string',   C, 'assignedTo');
   await waitForAttributes(C);
   await idx(C, 'tenantId_status_idx',    'key', ['tenantId', 'status']);
   await idx(C, 'tenantId_createdAt_idx', 'key', ['tenantId', '$createdAt']);
@@ -269,6 +274,33 @@ async function setupVectors() {
   await idx(C, 'tenantId_sourceId_idx', 'key', ['tenantId', 'sourceId']);
 }
 
+// ── Chatbot (public SWEO website chatbot) ──────────────────────────────────────
+async function setupChatbotConversations() {
+  const C = 'chatbot_conversations';
+  await ensureCollection(C, 'Chatbot Conversations');
+  await attr('string',   C, 'sessionId',       { required: true, size: 64 });
+  await attr('enum',     C, 'department',       { elements: ['sales', 'support'], required: true });
+  await attr('enum',     C, 'status',           { elements: ['active', 'closed'], required: true });
+  await attr('string',   C, 'visitorIp');
+  await attr('string',   C, 'visitorUserAgent', { size: 512 });
+  await attr('longtext', C, 'metadata');
+  await waitForAttributes(C);
+  await idx(C, 'sessionId_idx', 'unique', ['sessionId']);
+  await idx(C, 'department_status_idx', 'key', ['department', 'status']);
+  await idx(C, 'createdAt_idx', 'key', ['$createdAt']);
+}
+
+async function setupChatbotMessages() {
+  const C = 'chatbot_messages';
+  await ensureCollection(C, 'Chatbot Messages');
+  await attr('string',   C, 'conversationId', { required: true });
+  await attr('enum',     C, 'role',           { elements: ['user', 'assistant'], required: true });
+  await attr('longtext', C, 'content',        { required: true });
+  await waitForAttributes(C);
+  await idx(C, 'conversationId_idx', 'key', ['conversationId']);
+  await idx(C, 'conversationId_createdAt_idx', 'key', ['conversationId', '$createdAt']);
+}
+
 // ── Main ─────────────────────────────────────────────────────────────────────
 async function main() {
   console.log('Setting up Appwrite database…\n');
@@ -285,6 +317,8 @@ async function main() {
   await setupTestScenarios();
   await setupContentSuggestions();
   await setupVectors();
+  await setupChatbotConversations();
+  await setupChatbotMessages();
 
   console.log('\n✅ All collections, attributes, and indexes created.');
 }

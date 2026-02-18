@@ -198,7 +198,10 @@ export class WhatsAppAdapter extends ChannelAdapter {
         status: 'active',
         userId: phoneNumber,
         metadata: JSON.stringify({ phoneNumber }),
-        resolvedAt: null
+        resolvedAt: null,
+        firstResponseAt: null,
+        csatScore: null,
+        assignedTo: null
       }
     );
 

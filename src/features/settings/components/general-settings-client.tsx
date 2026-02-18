@@ -61,7 +61,9 @@ export default function GeneralSettingsClient() {
       const cfg = (tenant.config ?? {}) as Record<string, unknown>;
       setTimezone((cfg.timezone as string) ?? 'UTC');
       setLanguage((cfg.language as string) ?? 'en');
-      setSubdomain((cfg.subdomain as string) ?? '');
+      setSubdomain(
+        (tenant.subdomain as string) ?? (cfg.subdomain as string) ?? ''
+      );
     }
   }, [tenant]);
 
@@ -137,7 +139,9 @@ export default function GeneralSettingsClient() {
                 onChange={(e) => setSubdomain(e.target.value)}
                 placeholder='my-company'
               />
-              <span className='text-muted-foreground text-sm'>.support.ai</span>
+              <span className='text-muted-foreground text-sm'>
+                .optitech.software
+              </span>
             </div>
           </div>
         </CardContent>

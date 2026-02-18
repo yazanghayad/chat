@@ -209,7 +209,10 @@ export class EmailAdapter extends ChannelAdapter {
           subject: subject ?? '',
           messageId: messageId ?? ''
         }),
-        resolvedAt: null
+        resolvedAt: null,
+        firstResponseAt: null,
+        csatScore: null,
+        assignedTo: null
       }
     );
 

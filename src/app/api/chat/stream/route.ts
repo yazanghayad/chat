@@ -257,7 +257,7 @@ export async function POST(request: NextRequest) {
         const ragContext: RAGContext = {
           query: cleanedMessage,
           chunks: results.map((r) => ({
-            text: (r.metadata.text as string) ?? '',
+            text: r.text || ((r.metadata.text as string) ?? ''),
             sourceId: r.id,
             score: r.score
           })),
@@ -374,6 +374,7 @@ export async function POST(request: NextRequest) {
 interface SearchResult {
   id: string;
   score: number;
+  text: string;
   metadata: Record<string, unknown>;
 }
 
@@ -393,7 +394,10 @@ async function ensureConversation(
       status: 'active',
       userId: userId ?? null,
       metadata: JSON.stringify({}),
-      resolvedAt: null
+      resolvedAt: null,
+      firstResponseAt: null,
+      csatScore: null,
+      assignedTo: null
     }
   );
 
@@ -421,6 +425,28 @@ async function saveMessage(
       metadata: JSON.stringify({})
     }
   );
+
+  // Track first response time
+  if (role === 'assistant') {
+    try {
+      const conv = await databases.getDocument(
+        APPWRITE_DATABASE,
+        COLLECTION.CONVERSATIONS,
+        conversationId
+      );
+      if (!(conv as Record<string, unknown>).firstResponseAt) {
+        await databases.updateDocument(
+          APPWRITE_DATABASE,
+          COLLECTION.CONVERSATIONS,
+          conversationId,
+          { firstResponseAt: new Date().toISOString() }
+        );
+      }
+    } catch {
+      // Non-critical
+    }
+  }
+
   return doc.$id;
 }
 

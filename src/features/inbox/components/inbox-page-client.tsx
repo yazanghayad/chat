@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useTenant } from '@/hooks/use-tenant';
+import { getInboxCountsAction } from '@/features/conversation/actions/conversation-crud';
 import { Icons } from '@/components/icons';
 import { InboxSidebar } from './inbox-sidebar';
 import { InboxConversationList } from './inbox-conversation-list';
@@ -20,7 +21,12 @@ export type InboxView =
   | 'fin-all'
   | 'fin-resolved'
   | 'fin-escalated'
-  | 'fin-pending';
+  | 'fin-pending'
+  | 'channel-web'
+  | 'channel-email'
+  | 'channel-whatsapp'
+  | 'channel-sms'
+  | 'channel-voice';
 
 export interface InboxFilters {
   view: InboxView;
@@ -29,16 +35,39 @@ export interface InboxFilters {
   search?: string;
 }
 
+export interface InboxCounts {
+  total: number;
+  active: number;
+  resolved: number;
+  escalated: number;
+  byChannel: Record<string, number>;
+}
+
 export default function InboxPageClient() {
   const { tenant, loading, error } = useTenant();
   const [filters, setFilters] = useState<InboxFilters>({ view: 'your-inbox' });
-  const [selectedConvoId, setSelectedConvoId] = useState<string | null>(
-    'demo-messenger'
-  );
+  const [selectedConvoId, setSelectedConvoId] = useState<string | null>(null);
   const [showDetail, setShowDetail] = useState(true);
   const [threadMessages, setThreadMessages] = useState<
     Array<{ role: string; content: string }>
   >([]);
+  const [counts, setCounts] = useState<InboxCounts>({
+    total: 0,
+    active: 0,
+    resolved: 0,
+    escalated: 0,
+    byChannel: {}
+  });
+
+  const loadCounts = useCallback(async () => {
+    if (!tenant) return;
+    const res = await getInboxCountsAction(tenant.$id);
+    if (res.success && res.counts) setCounts(res.counts);
+  }, [tenant]);
+
+  useEffect(() => {
+    loadCounts();
+  }, [loadCounts]);
 
   if (loading) {
     return (
@@ -61,8 +90,18 @@ export default function InboxPageClient() {
       {/* Left: Inbox navigation sidebar */}
       <InboxSidebar
         currentView={filters.view}
+        counts={counts}
         onViewChange={(view) => {
-          setFilters((f) => ({ ...f, view }));
+          // Map channel views to channel filter
+          const channelMap: Record<string, string> = {
+            'channel-web': 'web',
+            'channel-email': 'email',
+            'channel-whatsapp': 'whatsapp',
+            'channel-sms': 'sms',
+            'channel-voice': 'voice'
+          };
+          const channel = channelMap[view];
+          setFilters((f) => ({ ...f, view, channel }));
           setSelectedConvoId(null);
         }}
       />
@@ -72,7 +111,11 @@ export default function InboxPageClient() {
         tenantId={tenant.$id}
         filters={filters}
         selectedId={selectedConvoId}
-        onSelect={setSelectedConvoId}
+        onSelect={(id) => {
+          setSelectedConvoId(id);
+          // Clear stale context so Copilot doesn't show old conversation data
+          setThreadMessages([]);
+        }}
         userName={tenant.name ?? 'User'}
       />
 

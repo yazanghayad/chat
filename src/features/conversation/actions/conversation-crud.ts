@@ -3,12 +3,73 @@
 import { createSessionClient, createAdminClient } from '@/lib/appwrite/server';
 import { APPWRITE_DATABASE } from '@/lib/appwrite/constants';
 import { COLLECTION } from '@/lib/appwrite/collections';
-import { Query } from 'node-appwrite';
+import { Query, ID } from 'node-appwrite';
 import type {
   Conversation,
   ConversationStatus,
   Message
 } from '@/types/appwrite';
+import type { InboxCounts } from '@/features/inbox/components/inbox-page-client';
+
+/**
+ * Get conversation counts by channel and status for the inbox sidebar.
+ */
+export async function getInboxCountsAction(
+  tenantId: string
+): Promise<{ success: boolean; counts?: InboxCounts; error?: string }> {
+  try {
+    await createSessionClient();
+    const { databases } = createAdminClient();
+
+    // Fetch all conversations for this tenant (up to 5000)
+    const result = await databases.listDocuments(
+      APPWRITE_DATABASE,
+      COLLECTION.CONVERSATIONS,
+      [
+        Query.equal('tenantId', tenantId),
+        Query.limit(5000),
+        Query.select(['status', 'channel'])
+      ]
+    );
+
+    const docs = result.documents as unknown as Array<{
+      status: string;
+      channel: string;
+    }>;
+
+    const byChannel: Record<string, number> = {};
+    let active = 0;
+    let resolved = 0;
+    let escalated = 0;
+
+    for (const d of docs) {
+      // Channel counts
+      const ch = d.channel ?? 'web';
+      byChannel[ch] = (byChannel[ch] ?? 0) + 1;
+
+      // Status counts
+      if (d.status === 'resolved') resolved++;
+      else if (d.status === 'escalated') escalated++;
+      else active++;
+    }
+
+    return {
+      success: true,
+      counts: {
+        total: docs.length,
+        active,
+        resolved,
+        escalated,
+        byChannel
+      }
+    };
+  } catch (err) {
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : 'Failed to get inbox counts'
+    };
+  }
+}
 
 /**
  * List conversations for a tenant with optional filters.
@@ -191,6 +252,65 @@ export async function updateConversationStatusAction(
       success: false,
       error:
         err instanceof Error ? err.message : 'Failed to update conversation'
+    };
+  }
+}
+
+/**
+ * Save an agent (human) reply message to a conversation.
+ * This bypasses the AI orchestrator — it's a direct write.
+ */
+export async function saveAgentReplyAction(input: {
+  conversationId: string;
+  tenantId: string;
+  content: string;
+  metadata?: Record<string, unknown>;
+}): Promise<{ success: boolean; messageId?: string; error?: string }> {
+  try {
+    await createSessionClient();
+    const { databases } = createAdminClient();
+
+    // Verify conversation belongs to tenant
+    const convo = await databases.getDocument(
+      APPWRITE_DATABASE,
+      COLLECTION.CONVERSATIONS,
+      input.conversationId
+    );
+    if ((convo as unknown as Conversation).tenantId !== input.tenantId) {
+      return { success: false, error: 'Not found' };
+    }
+
+    // Create the message
+    const doc = await databases.createDocument(
+      APPWRITE_DATABASE,
+      COLLECTION.MESSAGES,
+      ID.unique(),
+      {
+        conversationId: input.conversationId,
+        role: 'assistant',
+        content: input.content,
+        confidence: 1,
+        citations: JSON.stringify([]),
+        metadata: JSON.stringify(input.metadata ?? {})
+      }
+    );
+
+    // Track first response time if not set
+    if (!(convo as unknown as Conversation).firstResponseAt) {
+      await databases.updateDocument(
+        APPWRITE_DATABASE,
+        COLLECTION.CONVERSATIONS,
+        input.conversationId,
+        { firstResponseAt: new Date().toISOString() }
+      );
+    }
+
+    return { success: true, messageId: doc.$id };
+  } catch (err) {
+    console.error('saveAgentReplyAction error:', err);
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : 'Failed to save reply'
     };
   }
 }

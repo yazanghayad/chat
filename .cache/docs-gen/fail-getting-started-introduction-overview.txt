@@ -1,0 +1,36 @@
+```json
+{
+  "id": "overview",
+  "content": "
+    <p>SWEO AI är en AI-driven kundsupportplattform som kombinerar automatisering, kunskapsbaser och manuell hantering för att leverera snabb och effektiv kundservice. Plattformen är byggd för att stödja flera kommunikationskanaler och integreras sömlöst med dina befintliga system, vilket gör den till en flexibel lösning för organisationer av alla storlekar.</p>
+
+    <h4>Nyckelfunktioner</h4>
+    <ul>
+      <li><strong>Multi-kanalstöd:</strong> Hantera kundärenden via web chat widget, e-post, WhatsApp, SMS och telefoni från en och samma inbox.</li>
+      <li><strong>AI-driven kunskapsbas:</strong> Skapa och underhåll en dynamisk kunskapsbas genom URL-crawling, filuppladdning eller manuellt innehåll. AI:n tränas kontinuerligt för att förbättra svarens relevans och precision.</li>
+      <li><strong>Automatisering med Policies och Procedures:</strong>
+        <ul>
+          <li><em>Policies:</em> Definiera regler i naturligt språk som AI:n följer för att säkerställa konsekvent och compliant hantering av ärenden.</li>
+          <li><em>Procedures:</em> Skapa multi-step workflows för att automatisera komplexa processer, som t.ex. returhantering eller bokningar.</li>
+        </ul>
+      </li>
+      <li><strong>Data Connectors:</strong> Integrera med plattformar som Shopify, Stripe, Salesforce, HubSpot eller anpassade API:er för att hämta och uppdatera data i realtid.</li>
+      <li><strong>AI Copilot:</strong> Få stöd av en AI-assistent direkt i inboxen för att snabbt svara på kundfrågor, sammanfatta ärenden eller föreslå lösningar.</li>
+      <li><strong>Analytics och rapportering:</strong> Följ KPI:er, identifiera kunskapsluckor och generera anpassade rapporter för att kontinuerligt förbättra supporten.</li>
+    </ul>
+
+    <h4>Flywheel-modellen: Train → Test → Deploy → Analyze</h4>
+    <p>SWEO AI använder en iterativ modell för att säkerställa att AI:n ständigt förbättras:</p>
+    <ol>
+      <li><strong>Train:</strong> Mata in data från din kunskapsbas, historiska ärenden eller externa källor för att träna AI-modellen.</li>
+      <li><strong>Test:</strong> Utvärdera AI:ns prestanda genom att simulera kundinteraktioner och justera regler eller innehåll vid behov.</li>
+      <li><strong>Deploy:</strong> Lansera den tränade AI:n i produktion för att hantera verkliga kundärenden.</li>
+      <li><strong>Analyze:</strong> Använd plattformens analysverktyg för att mäta effektivitet, identifiera förbättringsområden och iterera processen.</li>
+    </ol>
+
+    <blockquote><strong>Tips:</strong> Börja med att definiera dina viktigaste kundsupportkanaler och integrera dem i SWEO AI. Använd sedan kunskapsbasen för att lägga till vanliga frågor och svar, så att AI:n snabbt kan börja assistera dina agenter.</blockquote>
+
+    <p>Med SWEO AI får du en skalbar lösning som växer med ditt företag, samtidigt som du säkerställer en enhetlig och högkvalitativ kundupplevelse.</p>
+  "
+}
+```

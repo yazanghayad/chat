@@ -27,6 +27,12 @@ export interface TenantConfig {
   previousApiKey?: string;
   /** ISO timestamp when previousApiKey expires. */
   previousApiKeyExpiresAt?: string;
+  /** Subdomain slug (stored on tenant doc, mirrored here for convenience). */
+  subdomain?: string;
+  /** Default timezone. */
+  timezone?: string;
+  /** Default language code. */
+  language?: string;
 }
 
 export interface Tenant extends Models.Document {
@@ -35,6 +41,8 @@ export interface Tenant extends Models.Document {
   config: Record<string, unknown>;
   apiKey: string;
   userId: string;
+  /** Unique subdomain slug, e.g. 'acme' → acme.optitech.software */
+  subdomain?: string;
 }
 
 // ---------------------------------------------------------------------------
@@ -71,6 +79,12 @@ export interface Conversation extends Models.Document {
   userId: string | null;
   metadata: Record<string, unknown>;
   resolvedAt: string | null;
+  /** ISO timestamp of the first assistant reply. */
+  firstResponseAt: string | null;
+  /** CSAT score (1-5) left by the customer. */
+  csatScore: number | null;
+  /** Agent ID/name when escalated or assigned. */
+  assignedTo: string | null;
 }
 
 // ---------------------------------------------------------------------------
@@ -210,4 +224,25 @@ export interface ContentSuggestion extends Models.Document {
   exampleQueries: string[];
   suggestedContent: string;
   status: ContentSuggestionStatus;
+}
+
+// ---------------------------------------------------------------------------
+// Chatbot (public SWEO website chatbot)
+// ---------------------------------------------------------------------------
+export type ChatbotDepartment = 'sales' | 'support';
+export type ChatbotConversationStatus = 'active' | 'closed';
+
+export interface ChatbotConversation extends Models.Document {
+  sessionId: string;
+  department: ChatbotDepartment;
+  status: ChatbotConversationStatus;
+  visitorIp: string | null;
+  visitorUserAgent: string | null;
+  metadata: Record<string, unknown>;
+}
+
+export interface ChatbotMessage extends Models.Document {
+  conversationId: string;
+  role: MessageRole;
+  content: string;
 }

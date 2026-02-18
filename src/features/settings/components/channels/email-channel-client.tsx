@@ -198,7 +198,7 @@ export default function EmailChannelClient() {
               Forward your support emails to:
             </p>
             <code className='text-primary text-sm'>
-              inbox-{'{tenant-id}'}@ingest.support.ai
+              inbox-{'{tenant-id}'}@ingest.optitech.software
             </code>
             <p className='text-muted-foreground mt-2 text-xs'>
               Set this as a forwarding address in your email provider (Gmail,

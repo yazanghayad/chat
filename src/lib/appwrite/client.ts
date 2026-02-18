@@ -8,7 +8,10 @@ import {
 
 const client = new Client();
 
-if (APPWRITE_ENDPOINT && APPWRITE_PROJECT) {
+/** True when endpoint + project are set and Appwrite can be used. */
+export const APPWRITE_CONFIGURED = !!(APPWRITE_ENDPOINT && APPWRITE_PROJECT);
+
+if (APPWRITE_CONFIGURED) {
   client.setEndpoint(APPWRITE_ENDPOINT).setProject(APPWRITE_PROJECT);
 }
 

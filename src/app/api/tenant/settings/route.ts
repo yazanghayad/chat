@@ -15,9 +15,14 @@ import { Query } from 'node-appwrite';
 import { z } from 'zod';
 import type { Tenant, TenantConfig } from '@/types/appwrite';
 import { logAuditEventAsync } from '@/lib/audit/logger';
+import {
+  validateSubdomain,
+  normalizeSubdomain,
+  isSubdomainAvailable
+} from '@/lib/tenant/subdomain';
 
 // ---------------------------------------------------------------------------
-// Validation schema for config updates
+// Validation schemas
 // ---------------------------------------------------------------------------
 
 const tenantConfigSchema = z.object({
@@ -30,6 +35,17 @@ const tenantConfigSchema = z.object({
   customSystemPrompt: z.string().max(5000).optional(),
   webhookUrl: z.string().url().optional().or(z.literal('')),
   cacheTtlSeconds: z.number().int().min(0).max(86400).optional()
+});
+
+/**
+ * Schema for "general settings" fields that live on the tenant document
+ * and/or in the config JSON (timezone, language).
+ */
+const generalSettingsSchema = z.object({
+  name: z.string().min(1).max(128).optional(),
+  subdomain: z.string().min(3).max(63).optional(),
+  timezone: z.string().max(64).optional(),
+  language: z.string().max(10).optional()
 });
 
 // ---------------------------------------------------------------------------
@@ -100,17 +116,52 @@ export async function PATCH(request: NextRequest) {
   }
 
   const parsed = tenantConfigSchema.safeParse(body);
-  if (!parsed.success) {
+  const generalParsed = generalSettingsSchema.safeParse(body);
+
+  // At least one schema should match
+  if (!parsed.success && !generalParsed.success) {
     return NextResponse.json(
       {
-        error: 'Invalid config',
-        details: parsed.error.issues.map((i) => ({
-          path: i.path.join('.'),
-          message: i.message
-        }))
+        error: 'Invalid settings',
+        details: [
+          ...(parsed.error?.issues ?? []).map((i) => ({
+            path: i.path.join('.'),
+            message: i.message
+          })),
+          ...(generalParsed.error?.issues ?? []).map((i) => ({
+            path: i.path.join('.'),
+            message: i.message
+          }))
+        ]
       },
       { status: 400 }
     );
+  }
+
+  const { databases } = createAdminClient();
+
+  // ── Handle general settings (name, subdomain, timezone, language) ──
+  const general = generalParsed.success ? generalParsed.data : {};
+  const docUpdate: Record<string, unknown> = {};
+
+  if (general.name) {
+    docUpdate.name = general.name;
+  }
+
+  if (general.subdomain) {
+    const normalized = normalizeSubdomain(general.subdomain);
+    const validationError = validateSubdomain(normalized);
+    if (validationError) {
+      return NextResponse.json({ error: validationError }, { status: 400 });
+    }
+    const available = await isSubdomainAvailable(normalized, tenant.$id);
+    if (!available) {
+      return NextResponse.json(
+        { error: 'This subdomain is already taken. Please choose another.' },
+        { status: 409 }
+      );
+    }
+    docUpdate.subdomain = normalized;
   }
 
   // Merge with existing config
@@ -124,9 +175,16 @@ export async function PATCH(request: NextRequest) {
     existingConfig = {};
   }
 
+  const configUpdate = parsed.success ? parsed.data : {};
   const updatedConfig: TenantConfig = {
     ...existingConfig,
-    ...parsed.data
+    ...configUpdate,
+    // Store timezone & language in config JSON too
+    ...(general.timezone ? { timezone: general.timezone } : {}),
+    ...(general.language ? { language: general.language } : {}),
+    ...(general.subdomain
+      ? { subdomain: normalizeSubdomain(general.subdomain) }
+      : {})
   };
 
   // Remove empty string values (treat as "unset")
@@ -136,18 +194,24 @@ export async function PATCH(request: NextRequest) {
     }
   }
 
+  // Merge doc-level fields + config
+  docUpdate.config = JSON.stringify(updatedConfig);
+
   // Save
-  const { databases } = createAdminClient();
   await databases.updateDocument(
     APPWRITE_DATABASE,
     COLLECTION.TENANTS,
     tenant.$id,
-    { config: JSON.stringify(updatedConfig) }
+    docUpdate
   );
 
   logAuditEventAsync(tenant.$id, 'tenant.config_updated', {
-    updatedFields: Object.keys(parsed.data)
+    updatedFields: [...Object.keys(configUpdate), ...Object.keys(general)]
   });
 
-  return NextResponse.json({ config: updatedConfig });
+  return NextResponse.json({
+    config: updatedConfig,
+    name: general.name ?? tenant.name,
+    subdomain: (docUpdate.subdomain as string) ?? tenant.subdomain
+  });
 }

@@ -7,11 +7,20 @@ const APPWRITE_SESSION_COOKIE = 'appwrite_session';
 const APPWRITE_ENDPOINT = process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT ?? '';
 const APPWRITE_PROJECT = process.env.NEXT_PUBLIC_APPWRITE_PROJECT ?? '';
 
+/**
+ * Root domain for subdomain extraction.
+ * Production: ROOT_DOMAIN=optitech.software → acme.optitech.software
+ * Development: ROOT_DOMAIN=localhost:3000 (or localhost)
+ */
+const ROOT_DOMAIN = process.env.ROOT_DOMAIN ?? 'localhost:3000';
+
 // ── Public routes ────────────────────────────────────────────────────────
 const PUBLIC_PATHS = [
   '/',
   '/auth/sign-in',
   '/auth/sign-up',
+  '/auth/forgot-password',
+  '/auth/reset-password',
   '/about',
   '/privacy-policy',
   '/terms-of-service',
@@ -24,7 +33,8 @@ const API_PUBLIC_PREFIXES = [
   '/api/health',
   '/api/inngest',
   '/api/cron/',
-  '/api/widget/'
+  '/api/widget/',
+  '/api/tenant/subdomain-check'
 ];
 
 function isPublicPath(pathname: string): boolean {
@@ -32,6 +42,9 @@ function isPublicPath(pathname: string): boolean {
 
   // Docs pages (including /docs/[slug])
   if (pathname.startsWith('/docs')) return true;
+
+  // Portal pages served for subdomain rewrites
+  if (pathname.startsWith('/portal/')) return true;
 
   for (const prefix of API_PUBLIC_PREFIXES) {
     if (pathname.startsWith(prefix)) return true;
@@ -90,9 +103,49 @@ function clearSessionCookie(response: NextResponse) {
   return response;
 }
 
+/**
+ * Extract subdomain from the request hostname.
+ * e.g. "acme.optitech.software" → "acme", "optitech.software" → null
+ */
+function extractSubdomain(request: NextRequest): string | null {
+  const hostname =
+    request.headers.get('x-forwarded-host') ??
+    request.headers.get('host') ??
+    '';
+  const rootWithoutPort = ROOT_DOMAIN.split(':')[0];
+  const hostWithoutPort = hostname.split(':')[0];
+
+  if (
+    hostWithoutPort !== rootWithoutPort &&
+    hostWithoutPort.endsWith(`.${rootWithoutPort}`)
+  ) {
+    const sub = hostWithoutPort.replace(`.${rootWithoutPort}`, '');
+    return sub === 'www' ? null : sub;
+  }
+  return null;
+}
+
 // ── Proxy (middleware) ───────────────────────────────────────────────────
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  // ── 0. Subdomain routing ──────────────────────────────────────────
+  const subdomain = extractSubdomain(request);
+  if (subdomain) {
+    // Inject subdomain header for downstream use
+    const headers = new Headers(request.headers);
+    headers.set('x-tenant-subdomain', subdomain);
+
+    // Rewrite root to portal page
+    if (pathname === '/' || pathname === '') {
+      const url = request.nextUrl.clone();
+      url.pathname = `/portal/${subdomain}`;
+      return NextResponse.rewrite(url, { request: { headers } });
+    }
+
+    // All other paths on subdomain continue with header injected
+    return NextResponse.next({ request: { headers } });
+  }
 
   // Allow public paths
   if (isPublicPath(pathname)) {

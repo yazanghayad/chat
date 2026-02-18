@@ -3,9 +3,10 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
 import {
   listMessagesAction,
-  updateConversationStatusAction
+  updateConversationStatusAction,
+  getConversationAction,
+  saveAgentReplyAction
 } from '@/features/conversation/actions/conversation-crud';
-import { getConversationAction } from '@/features/conversation/actions/conversation-crud';
 import { useRealtime } from '@/hooks/use-realtime';
 import type {
   Message,
@@ -105,89 +106,7 @@ export function InboxThread({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const isDemo = conversationId.startsWith('demo-');
-
-  /* Demo messages per channel so Copilot has real content to work with */
-  const demoMessages: Record<
-    string,
-    Array<{ role: string; content: string }>
-  > = {
-    messenger: [
-      {
-        role: 'user',
-        content:
-          'Hej! Jag undrar om ni kan hjälpa mig med min beställning? Jag har väntat i över två veckor och paketet har fortfarande inte kommit. Ordernummer #45892.'
-      },
-      {
-        role: 'assistant',
-        content:
-          'Hej! Tack för att du kontaktar oss. Jag ska kolla upp din beställning direkt. Kan du bekräfta vilken e-postadress du använde vid köpet?'
-      },
-      {
-        role: 'user',
-        content:
-          'Ja, det var erik.lindgren@gmail.com. Jag betalade med Klarna och det har redan dragits pengar.'
-      }
-    ],
-    email: [
-      {
-        role: 'user',
-        content:
-          'Dear Support,\n\nI am writing to request a refund for order #78234. The product arrived damaged and is not usable. I have attached photos of the damage.\n\nPlease process the refund as soon as possible.\n\nBest regards,\nAnna Svensson'
-      },
-      {
-        role: 'assistant',
-        content:
-          "Hi Anna,\n\nThank you for reaching out. I'm sorry to hear about the damaged product. We'll get this sorted for you right away.\n\nCould you please confirm: would you prefer a full refund or a replacement?"
-      }
-    ],
-    whatsapp: [
-      {
-        role: 'user',
-        content:
-          "Bonjour, je voudrais savoir si vous livrez en France ? J'ai vu vos produits sur Instagram et je suis très intéressé."
-      },
-      {
-        role: 'assistant',
-        content:
-          'Bonjour ! Merci pour votre intérêt. Oui, nous livrons en France. Les frais de livraison sont de 15€ et le délai est de 5-7 jours.'
-      },
-      {
-        role: 'user',
-        content:
-          'Parfait ! Et est-ce que je peux payer avec PayPal ? Aussi, avez-vous le modèle X500 en stock en couleur bleue ?'
-      }
-    ],
-    phone: [
-      {
-        role: 'user',
-        content:
-          'مرحبا، أحتاج مساعدة في إعداد المنتج الذي اشتريته. لا أستطيع تشغيله والتعليمات غير واضحة.'
-      },
-      {
-        role: 'assistant',
-        content:
-          'مرحبا! شكرا لاتصالك. سأساعدك في إعداد المنتج خطوة بخطوة. ما هو رقم الموديل؟'
-      },
-      {
-        role: 'user',
-        content:
-          'الموديل هو RT-3000. لقد حاولت اتباع الدليل لكنه باللغة الإنجليزية فقط.'
-      }
-    ]
-  };
-
   const load = useCallback(async () => {
-    if (isDemo) {
-      setLoading(false);
-      /* Report demo messages to parent for Copilot context */
-      const channelKey = conversationId.replace('demo-', '');
-      const demoMsgs = demoMessages[channelKey] ?? demoMessages.messenger;
-      if (onMessagesLoaded) {
-        onMessagesLoaded(demoMsgs);
-      }
-      return;
-    }
     setLoading(true);
     const [msgRes, convoRes] = await Promise.all([
       listMessagesAction(conversationId, tenantId),
@@ -201,7 +120,7 @@ export function InboxThread({
     }
     setLoading(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [conversationId, tenantId, isDemo]);
+  }, [conversationId, tenantId]);
 
   useEffect(() => {
     load();
@@ -216,12 +135,14 @@ export function InboxThread({
 
   /* Report messages to parent for Copilot context */
   useEffect(() => {
-    if (onMessagesLoaded) {
+    if (!onMessagesLoaded) return;
+    if (messages.length > 0) {
       onMessagesLoaded(
         messages.map((m) => ({ role: m.role, content: m.content }))
       );
     }
-  }, [messages, onMessagesLoaded]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [messages, conversationId]);
 
   useRealtime<Message>({
     collection: 'MESSAGES',
@@ -236,10 +157,6 @@ export function InboxThread({
   });
 
   async function handleStatusChange(status: ConversationStatus) {
-    if (isDemo) {
-      toast.info('This is a demo conversation');
-      return;
-    }
     const res = await updateConversationStatusAction(
       conversationId,
       tenantId,
@@ -293,8 +210,10 @@ export function InboxThread({
     const content =
       fileNames.length > 0 ? `${text}\n\n📎 ${fileNames.join(', ')}` : text;
 
+    // Optimistic local UI update
+    const localId = `local-${Date.now()}`;
     const newMsg = {
-      $id: `local-${Date.now()}`,
+      $id: localId,
       $createdAt: new Date().toISOString(),
       $updatedAt: new Date().toISOString(),
       $permissions: [],
@@ -310,26 +229,50 @@ export function InboxThread({
     setMessages((prev) => [...prev, newMsg]);
     clearEditor();
     setAttachedFiles([]);
-    toast.success('Reply sent');
+
+    // Persist to database
+    const res = await saveAgentReplyAction({
+      conversationId,
+      tenantId,
+      content,
+      metadata: { html, files: fileNames }
+    });
+
+    if (res.success && res.messageId) {
+      // Replace local-id with real id
+      setMessages((prev) =>
+        prev.map((m) => (m.$id === localId ? { ...m, $id: res.messageId! } : m))
+      );
+      toast.success('Reply sent');
+    } else {
+      toast.error(res.error ?? 'Failed to send reply');
+    }
   }
 
   async function handleAiReply() {
     setAiGenerating(true);
     try {
-      const conversationMsgs =
-        messages.length > 0
-          ? messages.map((m) => ({ role: m.role, content: m.content }))
-          : (demoMessages[conversationId.replace('demo-', '')] ??
-            demoMessages.messenger);
+      const currentChannelKey = conversation?.channel ?? 'web';
+
+      // Build conversation context from real messages
+      const conversationMsgs = messages.map((m) => ({
+        role: m.role,
+        content: m.content
+      }));
 
       const res = await fetch('/api/copilot', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          message:
-            'Generate a professional, helpful reply to the customer based on this conversation. Write ONLY the reply text, no explanations.',
+          messages: [
+            {
+              role: 'user',
+              content:
+                'Generate a professional, helpful reply to the customer based on this conversation. Write ONLY the reply text, no explanations or preamble.'
+            }
+          ],
           conversationContext: {
-            channel: channelKey,
+            channel: currentChannelKey,
             status: conversation?.status ?? 'open',
             messages: conversationMsgs
           }
@@ -341,18 +284,32 @@ export function InboxThread({
       const reader = res.body?.getReader();
       const decoder = new TextDecoder();
       let aiText = '';
+      let buffer = '';
 
       if (reader) {
         while (true) {
           const { done, value } = await reader.read();
           if (done) break;
-          const chunk = decoder.decode(value);
-          const lines = chunk.split('\n');
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split('\n');
+          buffer = lines.pop() ?? '';
           for (const line of lines) {
-            if (line.startsWith('data: ')) {
-              const data = line.slice(6);
-              if (data === '[DONE]') break;
-              aiText += data;
+            const trimmed = line.trim();
+            if (!trimmed || !trimmed.startsWith('data: ')) continue;
+            const data = trimmed.slice(6);
+            if (data === '[DONE]') continue;
+            try {
+              const parsed = JSON.parse(data);
+              if (parsed.content) {
+                aiText += parsed.content;
+                // Live update editor as tokens stream in
+                if (editorRef.current) {
+                  editorRef.current.innerText = aiText;
+                  setReplyText(aiText);
+                }
+              }
+            } catch {
+              // skip malformed chunks
             }
           }
         }
@@ -369,10 +326,8 @@ export function InboxThread({
     }
   }
 
-  /* channel key needed early for AI reply */
-  const channelKey = isDemo
-    ? conversationId.replace('demo-', '')
-    : (conversation?.channel ?? 'web');
+  /* channel key for display */
+  const channelKey = conversation?.channel ?? 'web';
 
   /* Determine channel for display */
   const channelLabel = channelLabels[channelKey] ?? channelLabels.web;
@@ -384,55 +339,6 @@ export function InboxThread({
       </div>
     );
   }
-
-  /* Demo content for when a demo conversation is selected */
-  const renderDemoContent = () => (
-    <div className='mx-auto max-w-lg space-y-6 py-8'>
-      {/* Link icon */}
-      <div className='flex justify-start'>
-        <LinkIcon className='text-muted-foreground h-4 w-4' />
-      </div>
-
-      {/* Channel icon placeholder */}
-      <div className='flex justify-center'>
-        <div className='bg-muted flex h-16 w-16 items-center justify-center rounded-xl'>
-          <MessageSquare className='text-muted-foreground h-8 w-8' />
-        </div>
-      </div>
-
-      {/* Demo message */}
-      <div className='space-y-3 text-sm leading-relaxed'>
-        <p>
-          This is a demo message. It shows how a customer conversation from the{' '}
-          <span className='font-medium'>{channelLabel}</span> will look in your
-          Inbox. Conversations handled by{' '}
-          <span className='font-medium'>SWEO AI Agent</span> will also appear
-          here.
-        </p>
-        <p>
-          Once a channel is installed, all{' '}
-          <span className='text-primary underline'>conversations</span> come
-          straight to your Inbox, so you can route them to the right team.
-        </p>
-      </div>
-
-      {/* Install link card */}
-      <div className='flex items-center gap-3 pt-2'>
-        <div className='bg-muted flex h-8 w-8 items-center justify-center rounded-full text-xs font-semibold'>
-          M
-        </div>
-        <div>
-          <p className='text-primary text-sm font-medium underline'>
-            Install {channelLabel}
-          </p>
-          <div className='text-muted-foreground flex items-center gap-1.5 text-[10px]'>
-            <MessageSquare className='h-3 w-3' />
-            <span>4d</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
 
   return (
     <div className='flex h-full flex-col'>
@@ -595,11 +501,9 @@ export function InboxThread({
         </DialogContent>
       </Dialog>
 
-      {/* Messages / Demo content */}
+      {/* Messages */}
       <ScrollArea className='flex-1 px-4' ref={scrollRef}>
-        {isDemo ? (
-          renderDemoContent()
-        ) : messages.length === 0 ? (
+        {messages.length === 0 ? (
           <div className='text-muted-foreground py-12 text-center text-sm'>
             No messages yet
           </div>

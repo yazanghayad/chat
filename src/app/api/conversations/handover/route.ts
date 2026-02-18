@@ -145,6 +145,7 @@ async function initiateHandover(
     conversationId,
     {
       status: 'escalated',
+      assignedTo: agentId ?? userId ?? null,
       metadata: JSON.stringify({
         ...existingMetadata,
         handover: handoverData

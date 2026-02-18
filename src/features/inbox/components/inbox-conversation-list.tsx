@@ -58,70 +58,6 @@ const channelConfig: Record<
   }
 };
 
-/* Demo fallback data shown when no real conversations exist */
-const demoConversations = [
-  {
-    $id: 'demo-messenger',
-    channel: 'web',
-    status: 'active' as ConversationStatus,
-    userId: 'Messenger - [Demo]',
-    metadata: '{}',
-    tenantId: '',
-    resolvedAt: null,
-    $createdAt: new Date(Date.now() - 4 * 86400000).toISOString(),
-    $updatedAt: new Date(Date.now() - 4 * 86400000).toISOString(),
-    $permissions: [],
-    $databaseId: '',
-    $collectionId: '',
-    _preview: 'Install Messenger'
-  },
-  {
-    $id: 'demo-email',
-    channel: 'email',
-    status: 'active' as ConversationStatus,
-    userId: 'Email - [Demo]',
-    metadata: '{}',
-    tenantId: '',
-    resolvedAt: null,
-    $createdAt: new Date(Date.now() - 4 * 86400000).toISOString(),
-    $updatedAt: new Date(Date.now() - 4 * 86400000).toISOString(),
-    $permissions: [],
-    $databaseId: '',
-    $collectionId: '',
-    _preview: 'This is a demo email. It sho...'
-  },
-  {
-    $id: 'demo-whatsapp',
-    channel: 'whatsapp',
-    status: 'active' as ConversationStatus,
-    userId: 'WhatsApp - [Demo]',
-    metadata: '{}',
-    tenantId: '',
-    resolvedAt: null,
-    $createdAt: new Date(Date.now() - 4 * 86400000).toISOString(),
-    $updatedAt: new Date(Date.now() - 4 * 86400000).toISOString(),
-    $permissions: [],
-    $databaseId: '',
-    $collectionId: '',
-    _preview: 'Set up WhatsApp or social ...'
-  },
-  {
-    $id: 'demo-phone',
-    channel: 'sms',
-    status: 'active' as ConversationStatus,
-    userId: 'Phone - [Demo]',
-    metadata: '{}',
-    tenantId: '',
-    resolvedAt: null,
-    $createdAt: new Date(Date.now() - 4 * 86400000).toISOString(),
-    $updatedAt: new Date(Date.now() - 4 * 86400000).toISOString(),
-    $permissions: [],
-    $databaseId: '',
-    $collectionId: '',
-    _preview: 'Set up phone or SMS'
-  }
-];
-
 interface InboxConversationListProps {
   tenantId: string;
   filters: InboxFilters;
@@ -180,15 +116,8 @@ export function InboxConversationList({
     onEvent: () => load()
   });
 
-  /* Use demo data when no real conversations */
-  const displayList =
-    conversations.length > 0
-      ? conversations
-      : (demoConversations as unknown as Conversation[]);
-  const openCount =
-    conversations.length > 0
-      ? conversations.filter((c) => c.status === 'active').length
-      : demoConversations.length;
+  const displayList = conversations;
+  const openCount = conversations.filter((c) => c.status === 'active').length;
 
   const filtered = search
     ? displayList.filter(

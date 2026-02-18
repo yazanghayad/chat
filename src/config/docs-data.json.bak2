@@ -1,0 +1,1490 @@
+[
+  {
+    "slug": "getting-started",
+    "title": "Kom igång",
+    "icon": "arrowRight",
+    "description": "Skapa konto, konfigurera workspace och anslut din första kanal.",
+    "articles": [
+      {
+        "slug": "introduction",
+        "title": "Introduktion till SWEO AI",
+        "description": "En överblick av plattformen och hur du snabbt kommer igång.",
+        "sections": [
+          {
+            "id": "overview",
+            "title": "Översikt",
+            "content": "<p>SWEO AI är en kundsupportplattform som använder AI-teknologi för att automatiskt svara på kundsupportärenden. Plattformen stödjer flera kanaler, inklusive webbchatt, e-post, WhatsApp, SMS och telefoni. Med SWEO AI kan du enkelt hantera dina kundsupportärenden på ett effektivt och automatiserat sätt.</p>"
+          },
+          {
+            "id": "flywheel",
+            "title": "Flywheel-modellen",
+            "content": "<p>SWEO AI bygger på en så kallad Flywheel-modell, som består av fyra steg: Train, Test, Deploy och Analyze. Denna modell möjliggör en kontinuerlig förbättring av plattformens AI-modell, vilket säkerställer att kundsupportärenden hanteras på bästa möjliga sätt. Genom att följa denna modell kan du säkerställa att din kundsupport är effektiv och av hög kvalitet.</p>"
+          },
+          {
+            "id": "core-concepts",
+            "title": "Grundläggande koncept",
+            "content": "<p>Det finns flera grundläggande koncept som är viktiga att förstå när du använder SWEO AI. Dessa inkluderar Knowledge Base, som är en samling av information och kunskap som AI-modellen använder för att svara på kundsupportärenden. Det finns också Policies, som är regler som AI-modellen följer när den hanterar ärenden, och Procedures, som är multi-stegsarbetsflöden som kan automatisera vanliga uppgifter.</p>"
+          },
+          {
+            "id": "quick-start",
+            "title": "Snabbstart",
+            "content": "<p>För att komma igång med SWEO AI snabbt kan du följa dessa steg: <ul><li>Skapa ett konto och logga in på plattformen</li><li>Konfigurera dina kanaler och anslutningar</li><li>Skapa en Knowledge Base och lägg till innehåll</li><li>Konfigurera dina Policies och Procedures</li></ul> Genom att följa dessa steg kan du enkelt komma igång med SWEO AI och börja hantera dina kundsupportärenden på ett effektivt sätt.</p>"
+          },
+          {
+            "id": "architecture",
+            "title": "Teknisk arkitektur",
+            "content": "<p>SWEO AI är byggd med en modern och skalbar arkitektur, som inkluderar teknologier som Next.js, Appwrite, Pinecone och OpenAI. Plattformen är också multi-tenant, vilket innebär att varje organisation har sitt eget isolerade arbetsyta. Detta säkerställer att data och konfigurationer är säkra och separerade för varje organisation.</p>"
+          },
+          {
+            "id": "next-steps",
+            "title": "Nästa steg",
+            "content": "<p>Nu när du har en överblick av SWEO AI och hur du kan komma igång, är det dags att ta nästa steg. <blockquote><strong>Tips:</strong> Utforska plattformens funktioner och konfigurationer, och titta på de olika guider och resurser som finns tillgängliga för att hjälpa dig att komma igång.</blockquote> Genom att följa dessa tips kan du enkelt börja använda SWEO AI för att förbättra din kundsupport och öka din effektivitet.</p>"
+          }
+        ]
+      },
+      {
+        "slug": "account-setup",
+        "title": "Skapa ditt konto & workspace",
+        "description": "Steg-för-steg guide för att registrera dig, bjuda in team och konfigurera workspace.",
+        "sections": [
+          {
+            "id": "create-account",
+            "title": "Skapa konto",
+            "content": "<p>För att komma igång med SWEO AI måste du skapa ett konto. Gå till vår webbplats och klicka på knappen \"Skapa konto\". Fyll i formuläret med din e-postadress, lösenord och annan relevant information. När du har skapat ditt konto kommer du att få ett bekräftelsemejl. Klicka på länken i mejlet för att aktivera ditt konto.</p><ul><li>Ange en giltig e-postadress som du har tillgång till.</li><li>Välj ett säkert lösenord som uppfyller våra krav.</li><li>Fyll i alla obligatoriska fält i formuläret.</li></ul>"
+          },
+          {
+            "id": "create-workspace",
+            "title": "Skapa ett workspace",
+            "content": "<p>När du har skapat ditt konto kan du skapa ett nytt workspace. Ett workspace är en isolerad miljö där du kan konfigurera och hantera dina kundsupportärenden. Klicka på knappen \"Skapa workspace\" och ange ett namn för din workspace. Du kan också lägga till en beskrivning och välja en språkinställning för din workspace.</p><blockquote><strong>Tips:</strong> Välj ett namn som är lätt att komma ihåg och som beskriver syftet med din workspace.</blockquote>"
+          },
+          {
+            "id": "invite-team",
+            "title": "Bjud in teammedlemmar",
+            "content": "<p>För att lägga till teammedlemmar i din workspace klickar du på knappen \"Bjud in teammedlemmar\". Ange deras e-postadresser och välj vilken roll de ska ha i din workspace. Du kan också lägga till en personlig meddelande till inbjudan. När du har skickat inbjudan kommer teammedlemmarna att få ett mejl med en länk för att gå med i din workspace.</p><ul><li>Se till att ange giltiga e-postadresser för dina teammedlemmar.</li><li>Välj rätt roll för varje teammedlem baserat på deras behörigheter.</li></ul>"
+          },
+          {
+            "id": "roles-permissions",
+            "title": "Roller & behörigheter",
+            "content": "<p>I SWEO AI kan du tilldela olika roller till dina teammedlemmar. Varje roll har specifika behörigheter som avgör vad teammedlemmen kan göra i din workspace. Du kan välja mellan roller som \"Admin\", \"Agent\" och \"Observer\". Admin-rollen har fullständig kontroll över workspacen, medan Agent-rollen kan hantera kundsupportärenden och Observer-rollen kan bara visa ärenden.</p><table><thead><tr><th>Roll</th><th>Behörigheter</th></tr></thead><tbody><tr><td>Admin</td><td>Fullständig kontroll över workspacen</td></tr><tr><td>Agent</td><td>Hantera kundsupportärenden</td></tr><tr><td>Observer</td><td>Visa kundsupportärenden</td></tr></tbody></table>"
+          },
+          {
+            "id": "basic-settings",
+            "title": "Grundinställningar",
+            "content": "<p>För att konfigurera grundinställningarna för din workspace klickar du på knappen \"Inställningar\". Här kan du ange allmän information om din workspace, såsom namn, beskrivning och språk. Du kan också konfigurera inställningar för kundsupportärenden, såsom vilken kanal som ska användas för att ta emot ärenden.</p><blockquote><strong>Tips:</strong> Se till att ange korrekt information om din workspace för att säkerställa att dina kunder får rätt hjälp.</blockquote>"
+          },
+          {
+            "id": "first-channel",
+            "title": "Anslut din första kanal",
+            "content": "<p>För att ansluta din första kanal klickar du på knappen \"Lägg till kanal\". Välj den kanal du vill ansluta, såsom webbchat, e-post eller WhatsApp. Följ sedan instruktionerna för att konfigurera kanalen. När du har anslutit din kanal kan du börja ta emot kundsupportärenden.</p><ul><li>Välj den kanal som passar bäst för dina kunder.</li><li>Följ instruktionerna för att konfigurera kanalen korrekt.</li></ul>"
+          }
+        ]
+      },
+      {
+        "slug": "first-ai-agent",
+        "title": "Din första AI-agent på 10 minuter",
+        "description": "Hands-on guide för att snabbt få igång en fungerande AI-agent.",
+        "sections": [
+          {
+            "id": "prerequisites",
+            "title": "Förutsättningar",
+            "content": "<p>För att komma igång med din första AI-agent behöver du ha ett konto på SWEO AI-plattformen. Om du inte har ett konto än, vänligen registrera dig på vår webbplats. Dessutom bör du ha en grundläggande förståelse för hur AI-drivna kundsupportsystem fungerar. <strong>Förutsättningar:</strong> en stabil internetanslutning, en modern webbläsare och tillgång till din e-post för eventuella bekräftelser.</p>"
+          },
+          {
+            "id": "add-knowledge",
+            "title": "Steg 1: Lägg till kunskap",
+            "content": "<p>Steg 1: Lägg till kunskap. För att din AI-agent ska kunna svara på kundfrågor behöver den tillgång till relevant information. Detta kan du åstadkomma genom att lägga till innehåll i din <strong>Knowledge Base</strong>. Du kan antingen crawla en URL, ladda upp en fil eller skapa innehåll manuellt. <blockquote><strong>Tips:</strong> Se till att ditt innehåll är korrekt, uppdaterat och relevant för din kundsupport.</blockquote></p>"
+          },
+          {
+            "id": "set-policies",
+            "title": "Steg 2: Ställ in policies",
+            "content": "<p>Steg 2: Ställ in policies. <strong>Policies</strong> är regler i naturligt språk som din AI-agent följer. Dessa regler hjälper till att säkerställa att agenten svarar korrekt och i linje med dina företagspolicys. Du kan skapa och redigera policies i <strong>Policies</strong>-sektionen av din SWEO AI-plattform. <ul><li>Definiera tydliga regler för hur din AI-agent ska hantera känsliga ämnen.</li><li>Ange specifika svarsalternativ för vanliga kundfrågor.</li></ul></p>"
+          },
+          {
+            "id": "test-agent",
+            "title": "Steg 3: Testa agenten",
+            "content": "<p>Steg 3: Testa agenten. Innan du publicerar din AI-agent är det viktigt att testa den för att säkerställa att den fungerar som förväntat. Du kan testa din agent genom att skicka exempelfrågor och granska svaren. <blockquote><strong>Tips:</strong> Använd <strong>Inbox</strong>-funktionen för att hantera ärenden manuellt och justera agentens svar vid behov.</blockquote></p>"
+          },
+          {
+            "id": "deploy-widget",
+            "title": "Steg 4: Publicera widget",
+            "content": "<p>Steg 4: Publicera widget. När du är nöjd med din AI-agents prestanda kan du publicera den som en <strong>web chat widget</strong> på din webbplats. Detta gör det möjligt för kunder att interagera med din AI-agent direkt. Följ instruktionerna i <strong>Deploy</strong>-sektionen för att integrera widgeten på din webbplats. <strong>Viktig:</strong> Se till att widgeten är korrekt konfigurerad för att säkerställa en smidig kundupplevelse.</p>"
+          },
+          {
+            "id": "monitor-results",
+            "title": "Steg 5: Övervaka resultat",
+            "content": "<p>Innehåll genereras...</p>"
+          }
+        ]
+      },
+      {
+        "slug": "migration-guide",
+        "title": "Migrera från annan plattform",
+        "description": "Flytta din befintliga kundsupport till SWEO AI från Zendesk, Intercom eller Freshdesk.",
+        "sections": [
+          {
+            "id": "migration-overview",
+            "title": "Migreringsöversikt",
+            "content": "<p>Migreringsöversikt är en viktig del av att flytta din befintliga kundsupport till SWEO AI. Det första steget är att identifiera vilken plattform du för närvarande använder, exempelvis Zendesk, Intercom eller Freshdesk. Därefter kan du följa specifika instruktioner för att migrera dina data och konfigurationer till SWEO AI. Det är viktigt att planera och förbereda migreringen noggrant för att undvika avbrott i din kundsupport.</p><ul><li>Identifiera din nuvarande plattform och data</li><li>Förbered dina data för migrering</li><li>Följ specifika instruktioner för din plattform</li></ul>"
+          },
+          {
+            "id": "from-zendesk",
+            "title": "Migrera från Zendesk",
+            "content": "<p>Om du migrerar från Zendesk börjar du med att exportera dina data från Zendesk. Detta inkluderar kundinformation, ärenden och konfigurationer. Därefter kan du använda SWEO AI:s importfunktion för att överföra dina data till plattformen. Det är viktigt att mappa dina data korrekt för att säkerställa en smidig övergång.</p><blockquote><strong>Tips:</strong> Se till att du har alla nödvändiga behörigheter för att exportera data från Zendesk och importera dem till SWEO AI.</blockquote>"
+          },
+          {
+            "id": "from-intercom",
+            "title": "Migrera från Intercom",
+            "content": "<p>Om du migrerar från Intercom börjar du med att exportera dina data från Intercom. Detta inkluderar kundinformation, samtal och konfigurationer. Därefter kan du använda SWEO AI:s importfunktion för att överföra dina data till plattformen. Det är viktigt att mappa dina data korrekt för att säkerställa en smidig övergång.</p><ul><li>Exportera kundinformation och samtal</li><li>Exportera konfigurationer och inställningar</li><li>Använd SWEO AI:s importfunktion</li></ul>"
+          },
+          {
+            "id": "from-freshdesk",
+            "title": "Migrera från Freshdesk",
+            "content": "<p>Om du migrerar från Freshdesk börjar du med att exportera dina data från Freshdesk. Detta inkluderar kundinformation, ärenden och konfigurationer. Därefter kan du använda SWEO AI:s importfunktion för att överföra dina data till plattformen. Det är viktigt att mappa dina data korrekt för att säkerställa en smidig övergång.</p><blockquote><strong>Tips:</strong> Se till att du har alla nödvändiga behörigheter för att exportera data från Freshdesk och importera dem till SWEO AI.</blockquote>"
+          },
+          {
+            "id": "data-mapping",
+            "title": "Datamappning & import",
+            "content": "<p>Datamappning är en viktig del av migreringsprocessen. Det innebär att mappa dina data från den gamla plattformen till SWEO AI:s datastruktur. Detta kan inkludera kundinformation, ärenden, konfigurationer och annan relevant data. Det är viktigt att mappa dina data korrekt för att säkerställa en smidig övergång.</p><table><thead><tr><th>Kolumnnamn</th><th>Beskrivning</th></tr></thead><tbody><tr><td>Kundnamn</td><td>Namn på kunden</td></tr><tr><td>Ärendenummer</td><td>Unikt nummer för ärendet</td></tr></tbody></table>"
+          },
+          {
+            "id": "go-live-checklist",
+            "title": "Go-live checklista",
+            "content": "<p>Innan du går live med SWEO AI är det viktigt att du har kontrollerat att allt fungerar som det ska. Detta inkluderar att testa importen av dina data, konfigurationer och annan relevant funktion. Det är också viktigt att du har utbildat ditt team på den nya plattformen och att du har en plan för att hantera eventuella problem som kan uppstå.</p><ul><li>Testa importen av dina data</li><li>Testa konfigurationer och funktion</li><li>Utbilda ditt team på den nya plattformen</li><li>Ha en plan för att hantera eventuella problem</li></ul><blockquote><strong>Tips:</strong> Se till att du har en tydlig plan för att hantera eventuella problem som kan uppstå under migreringsprocessen.</blockquote>"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "knowledge",
+    "title": "Knowledge Base",
+    "icon": "knowledge",
+    "description": "Kunskapskällor, policies och regler för din AI-agent.",
+    "articles": [
+      {
+        "slug": "knowledge-sources",
+        "title": "Hantera kunskapskällor",
+        "description": "Ladda upp dokument, crawla URL:er och hantera AI-agentens kunskapsinnehåll.",
+        "sections": [
+          {
+            "id": "source-types",
+            "title": "Typer av kunskapskällor",
+            "content": "<p>SWEO AI:s Knowledge Base stödjer flera typer av kunskapskällor, inklusive URL-crawling, filuppladdning och manuellt innehåll. Dessa källor kan användas för att mata AI-agenten med relevant information för att förbättra dess svar på kundsupportärenden. Det är viktigt att välja rätt typ av kunskapskälla beroende på organisationens specifika behov och krav.</p>"
+          },
+          {
+            "id": "url-crawling",
+            "title": "URL-crawling i detalj",
+            "content": "<p>URL-crawling är en funktion som tillåter SWEO AI att automatiskt hämta och indexera innehåll från specifika webbadresser. Denna funktion kan användas för att hålla kunskapsbasen uppdaterad med den senaste informationen från organisationens webbplats eller andra relevanta källor. För att konfigurera URL-crawling, ange den önskade URL:en och välj hur ofta innehållet ska uppdateras.</p>"
+          },
+          {
+            "id": "file-upload",
+            "title": "Filuppladdning",
+            "content": "<p>Filuppladdning är en funktion som tillåter användare att ladda upp dokument och andra filer till SWEO AI:s Knowledge Base. Denna funktion kan användas för att mata AI-agenten med information som inte finns tillgänglig på webben eller som behöver skyddas med extra säkerhetsåtgärder. Stödda filformat inkluderar PDF, DOCX och TXT.</p>"
+          },
+          {
+            "id": "manual-content",
+            "title": "Manuellt innehåll",
+            "content": "<p>Manuellt innehåll kan läggas till i SWEO AI:s Knowledge Base genom att skriva eller klistra in text direkt i gränssnittet. Denna funktion kan användas för att skapa anpassat innehåll som inte finns tillgänglig via andra källor eller för att uppdatera befintligt innehåll. Det är viktigt att se till att allt manuellt innehåll är korrekt och uppdaterat för att säkerställa att AI-agenten ger precisa svar.</p>"
+          },
+          {
+            "id": "versioning",
+            "title": "Versionshantering",
+            "content": "<p>SWEO AI:s Knowledge Base har en inbyggd versionshantering som tillåter användare att spåra ändringar och uppdateringar av innehållet över tid. Denna funktion kan användas för att se vilka ändringar som har gjorts, vem som har gjort dem och när de har gjorts. Detta hjälper till att säkerställa att allt innehåll är korrekt och uppdaterat.</p>"
+          },
+          {
+            "id": "chunking-embeddings",
+            "title": "Chunking & Embeddings",
+            "content": "<p>Chunking och embeddings är två avancerade funktioner i SWEO AI:s Knowledge Base som hjälper till att förbättra AI-agentens förståelse och sökning av innehåll. Chunking delar upp stora mängder text i mindre, hanterbara delar, medan embeddings konverterar text till numeriska vektorer som kan användas för avancerad sökning och analys. Dessa funktioner kan användas för att förbättra precisionen och effektiviteten i AI-agentens svar.</p>"
+          },
+          {
+            "id": "sync-status",
+            "title": "Synkstatus",
+            "content": "<p>Synkstatus är en funktion i SWEO AI:s Knowledge Base som visar statusen för synkroniseringen av innehållet mellan olika källor. Denna funktion kan användas för att se om innehållet är uppdaterat och synkroniserat korrekt, eller om det finns problem som behöver åtgärdas. Det är viktigt att övervaka synkstatusen regelbundet för att säkerställa att allt innehåll är korrekt och uppdaterat.</p>"
+          },
+          {
+            "id": "best-practices",
+            "title": "Tips & best practices",
+            "content": "<p><blockquote><strong>Tips:</strong> För att få ut mest möjligt av SWEO AI:s Knowledge Base, se till att hålla innehållet uppdaterat och korrekt, använd rätt typ av kunskapskälla för organisationens behov, och övervaka synkstatusen regelbundet. Det är också viktigt att utbilda AI-agenten kontinuerligt med nytt innehåll och uppdateringar för att säkerställa att den ger precisa och relevanta svar på kundsupportärenden.</blockquote></p>"
+          }
+        ]
+      },
+      {
+        "slug": "policies",
+        "title": "Policies & Regler",
+        "description": "Ställ in regler som styr hur AI-agenten beter sig och svarar.",
+        "sections": [
+          {
+            "id": "what-is-policy",
+            "title": "Vad är en policy?",
+            "content": "<p>En policy är en uppsättning regler som styr hur AI-agenten beter sig och svarar på kundsupportärenden. Policys kan användas för att säkerställa att AI-agenten följer företagets riktlinjer och principer, samt för att förbättra kvaliteten på svaren.</p><ul><li>Definiera vilka ärenden som ska hanteras av AI-agenten</li><li>Anges vilka svar som ska ges på vanliga frågor</li><li>Konfigurerar hur AI-agenten ska bete sig i specifika situationer</li></ul>"
+          },
+          {
+            "id": "create-policy",
+            "title": "Skapa en policy",
+            "content": "<p>För att skapa en policy, gå till avsnittet Policies i SWEO AI-plattformen och klicka på knappen Skapa ny policy.</p><ul><li>Ange ett namn och en beskrivning för policyn</li><li>Definiera reglerna för policyn med hjälp av naturligt språk</li><li>Konfigurerar vilka ärenden som policyn ska gälla för</li></ul><blockquote><strong>Tips:</strong> Se till att policyn är tydlig och lätt att förstå, så att AI-agenten kan tolka den korrekt.</blockquote>"
+          },
+          {
+            "id": "policy-examples",
+            "title": "Exempelpolicies",
+            "content": "<p>Här är några exempel på policies som kan skapas i SWEO AI-plattformen:</p><ul><li>Policyn för att hantera vanliga frågor om produkter och tjänster</li><li>Policyn för att hantera klagomål och negativa ärenden</li><li>Policyn för att hantera ärenden som kräver personlig hantering</li></ul><p>Exempel på en policy: Om kunden frågar om en produkt, ska AI-agenten svara med en länk till produktsidan.</p>"
+          },
+          {
+            "id": "priority",
+            "title": "Policyprioritet & konflikter",
+            "content": "<p>Policyprioritet och konflikter är viktiga aspekter att ta i beaktande när man skapar och hanterar policies.</p><ul><li>Policys kan ha olika prioritet, där högprioriterade policies har företräde framför lågprioriterade</li><li>Konflikter kan uppstå när flera policies gäller för samma ärende, i sådana fall ska den högprioriterade policyn ha företräde</li></ul><blockquote><strong>Tips:</strong> Se till att policys är tydligt prioriterade och att konflikter hanteras på ett korrekt sätt.</blockquote>"
+          },
+          {
+            "id": "test-policies",
+            "title": "Testa policies",
+            "content": "<p>För att säkerställa att policies fungerar korrekt, är det viktigt att testa dem.</p><ul><li>Testa policies med hjälp av exempelärenden</li><li>Verifiera att AI-agenten svarar korrekt enligt policyn</li><li>Gör justeringar och uppdateringar av policyn om det behövs</li></ul><blockquote><strong>Tips:</strong> Testa policies regelbundet för att säkerställa att de fortfarande är relevanta och fungerar korrekt.</blockquote>"
+          },
+          {
+            "id": "gdpr-compliance",
+            "title": "GDPR & compliance-policies",
+            "content": "<p>SWEO AI-plattformen är utformad för att vara GDPR-kompatibel, och policies kan skapas för att säkerställa att AI-agenten hanterar personuppgifter på ett korrekt sätt.</p><ul><li>Policys kan skapas för att hantera personuppgifter och säkerställa att de inte delas med obehöriga</li><li>Policys kan också skapas för att hantera ärenden som kräver samtycke från kunden</li></ul><blockquote><strong>Tips:</strong> Se till att policies är utformade för att säkerställa GDPR-kompatibilitet och att personuppgifter hanteras på ett korrekt sätt.</blockquote>"
+          }
+        ]
+      },
+      {
+        "slug": "content-optimization",
+        "title": "Optimera kunskapsinnehåll",
+        "description": "Förbättra AI-agentens svarsträffsäkerhet genom att strukturera och optimera kunskapskällor.",
+        "sections": [
+          {
+            "id": "content-quality",
+            "title": "Innehållskvalitet",
+            "content": "<p>Innehållskvalitet är avgörande för att förbättra AI-agentens svarsträffsäkerhet. Det är viktigt att se till att allt innehåll är korrekt, uppdaterat och relevant för att ge användarna de bästa möjliga svaren. En bra strategi är att regelbundet granska och uppdatera innehållet för att säkerställa att det fortfarande är aktuellt och korrekt. <strong>Tips:</strong> Använd en tydlig och koncis skrivstil, undvik jargong och tekniska termer som kan vara svåra för användarna att förstå.</p>"
+          },
+          {
+            "id": "writing-for-ai",
+            "title": "Skriv för AI-sökning",
+            "content": "<p>När du skriver innehåll för AI-sökning är det viktigt att tänka på hur AI-algoritmen kommer att tolka texten. Använd tydliga och precisa rubriker, och se till att innehållet är strukturerat och lätt att följa. <ul><li>Använd en tydlig och koncis skrivstil</li><li>Undvik jargong och tekniska termer</li><li>Använd relevanta nyckelord och fraseringar</li></ul> <blockquote><strong>Tips:</strong> Använd en tydlig och koncis skrivstil, och se till att innehållet är strukturerat och lätt att följa.</blockquote></p>"
+          },
+          {
+            "id": "faq-structure",
+            "title": "FAQ-strukturering",
+            "content": "<p>En välstrukturerad FAQ-sektion kan hjälpa AI-agenten att hitta rätt svar snabbare. Organisera dina FAQ-frågor i kategorier och underkategorier, och se till att varje fråga har ett tydligt och koncist svar. <ul><li>Organisera FAQ-frågor i kategorier och underkategorier</li><li>Använd tydliga och precisa rubriker</li><li>Se till att varje fråga har ett tydligt och koncist svar</li></ul> <blockquote><strong>Tips:</strong> Använd en tydlig och koncis skrivstil, och se till att FAQ-sektionen är lätt att navigera.</blockquote></p>"
+          },
+          {
+            "id": "tagging-categories",
+            "title": "Taggning & kategorier",
+            "content": "<p>Taggning och kategorisering av innehåll kan hjälpa AI-agenten att förstå sammanhang och relationer mellan olika ämnen. Använd relevanta nyckelord och fraseringar för att tagga ditt innehåll, och se till att kategorisera det på ett sätt som är logiskt och lätt att följa. <ul><li>Använd relevanta nyckelord och fraseringar för att tagga innehåll</li><li>Kategorisera innehåll på ett sätt som är logiskt och lätt att följa</li><li>Använd tydliga och precisa rubriker</li></ul> <blockquote><strong>Tips:</strong> Använd en tydlig och koncis skrivstil, och se till att taggning och kategorisering är konsekvent och logisk.</blockquote></p>"
+          },
+          {
+            "id": "multilingual",
+            "title": "Flerspråkigt innehåll",
+            "content": "<p>Om du har användare som talar olika språk är det viktigt att tillhandahålla innehåll på flera språk. Se till att översätta ditt innehåll på ett sätt som är korrekt och kulturellt anpassat, och använd relevanta nyckelord och fraseringar för att säkerställa att AI-agenten kan förstå och tolka innehållet på rätt sätt. <ul><li>Översätt innehåll på ett sätt som är korrekt och kulturellt anpassat</li><li>Använd relevanta nyckelord och fraseringar för att säkerställa att AI-agenten kan förstå och tolka innehållet</li><li>Se till att innehållet är strukturerat och lätt att följa</li></ul> <blockquote><strong>Tips:</strong> Använd en tydlig och koncis skrivstil, och se till att översättningarna är korrekta och kulturellt anpassade.</blockquote></p>"
+          },
+          {
+            "id": "audit-review",
+            "title": "Granska & underhåll",
+            "content": "<p>Regelbunden granskning och underhåll av ditt innehåll är avgörande för att säkerställa att det fortfarande är aktuellt och korrekt. Se till att granska ditt innehåll regelbundet, och uppdatera det om det behövs. <ul><li>Granska ditt innehåll regelbundet</li><li>Uppdatera innehåll om det behövs</li><li>Använd en tydlig och koncis skrivstil</li></ul> <blockquote><strong>Tips:</strong> Använd en tydlig och koncis skrivstil, och se till att granskning och underhåll är regelbundet och konsekvent.</blockquote></p>"
+          }
+        ]
+      },
+      {
+        "slug": "snippets-templates",
+        "title": "Snippets & Mallar",
+        "description": "Skapa återanvändbara svarsmallar och snippets för agenter och AI.",
+        "sections": [
+          {
+            "id": "what-are-snippets",
+            "title": "Vad är snippets?",
+            "content": "<p>Snippets är återanvändbara textblock som kan användas för att svara på vanliga kundsupportärenden. De kan innehålla allt från enkla svar till komplexa instruktioner och kan anpassas för att passa specifika situationer. Genom att använda snippets kan agenter och AI svara på ärenden snabbare och mer effektivt, samtidigt som de säkerställer att svaren är korrekta och konsekventa.</p>"
+          },
+          {
+            "id": "create-snippet",
+            "title": "Skapa en snippet",
+            "content": "<p> För att skapa en snippet, gå till Knowledge Base-sektionen i SWEO AI och klicka på knappen <strong>Skapa ny snippet</strong>. Ange sedan ett namn och en beskrivning för snippeten, och skriv in texten som du vill använda. Du kan också lägga till dynamiska variabler och formatering för att göra snippeten mer anpassningsbar. När du är klar, klicka på <strong>Spara</strong> för att spara snippeten.</p>"
+          },
+          {
+            "id": "dynamic-variables",
+            "title": "Dynamiska variabler",
+            "content": "<p>Dynamiska variabler är platshållare som kan användas i snippets för att infoga dynamiskt innehåll. Till exempel kan du använda en variabel för att infoga kundens namn eller ordernumret. För att använda dynamiska variabler, skriv in variabelnamnet omgivet av klammer, t.ex. <code>{{kundnamn}}</code>. SWEO AI kommer sedan att ersätta variabeln med det faktiska värdet när snippeten används.</p>"
+          },
+          {
+            "id": "snippet-categories",
+            "title": "Organisera snippets",
+            "content": "<p> För att organisera dina snippets, kan du skapa kategorier och underkategorier. Detta hjälper dig att snabbt hitta och återanvända relevanta snippets. För att skapa en kategori, gå till Knowledge Base-sektionen och klicka på knappen <strong>Skapa ny kategori</strong>. Ange sedan ett namn för kategorin och välj de snippets som du vill inkludera. Du kan också flytta snippets mellan kategorier genom att dra och släppa dem.</p>"
+          },
+          {
+            "id": "ai-usage",
+            "title": "Hur AI använder snippets",
+            "content": "<p>SWEO AI kan använda snippets för att svara på kundsupportärenden automatiskt. När en kund skickar in en fråga, analyserar AI:n frågan och letar efter en matchande snippet. Om en matchande snippet hittas, använder AI:n den för att svara på frågan. Du kan också konfigurera AI:n för att använda specifika snippets för specifika typer av ärenden eller kunder. <blockquote><strong>Tips:</strong> Se till att dina snippets är tydliga och koncisa, och att de täcker de vanligaste ärendetyperna.</blockquote></p>"
+          },
+          {
+            "id": "import-export",
+            "title": "Importera & exportera",
+            "content": "<p>För att importera eller exportera snippets, gå till Knowledge Base-sektionen och klicka på knappen <strong>Importera/Exportera</strong>. Du kan sedan välja att importera snippets från en CSV-fil eller exportera dina befintliga snippets till en CSV-fil. Detta kan vara användbart om du vill flytta dina snippets till en annan instans av SWEO AI eller dela dem med andra teammedlemmar. <blockquote><strong>Tips:</strong> Se till att du har tillräckliga behörigheter för att importera och exportera snippets.</blockquote></p>"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "ai-automation",
+    "title": "AI & Automation",
+    "icon": "sparkles",
+    "description": "Konfigurera AI-agenten, bygg procedurer och testa innan lansering.",
+    "articles": [
+      {
+        "slug": "procedures",
+        "title": "Procedures – Automatiska workflows",
+        "description": "Bygg multi-step procedurer som AI:n utför automatiskt.",
+        "sections": [
+          {
+            "id": "what-is-procedure",
+            "title": "Vad är en Procedure?",
+            "content": "<p>En Procedure är en multi-step arbetsflöde som AI:n kan utföra automatiskt i SWEO AI. Detta möjliggör automatisering av vanliga uppgifter och processer, vilket kan spara tid och resurser. En Procedure består av ett antal steg som utförs i en viss ordning, och varje steg kan ha sina egna villkor och triggers.</p>"
+          },
+          {
+            "id": "step-types",
+            "title": "Steg-typer",
+            "content": "<p>Det finns flera typer av steg som kan användas i en Procedure, inklusive <strong>skicka e-post</strong>, <strong>skapa ärende</strong>, <strong>uppdatera kundinformation</strong> och <strong>utföra API-anrop</strong>. Varje steg kan konfigureras med specifika parametrar och villkor för att säkerställa att Proceduren utförs korrekt.</p>"
+          },
+          {
+            "id": "triggers",
+            "title": "Triggers & villkor",
+            "content": "<p>Triggers är händelser som utlöser en Procedure. Exempel på triggers kan vara <strong>inkommande e-post</strong>, <strong>nytt ärende</strong> eller <strong>ändring i kundinformation</strong>. Villkor kan också användas för att ytterligare specificera när en Procedure ska utföras. Till exempel kan en Procedure bara utföras om en viss kund har en viss status.</p>"
+          },
+          {
+            "id": "variables",
+            "title": "Variabler & kontext",
+            "content": "<p>Variabler och kontext är viktiga komponenter i en Procedure. Variabler kan användas för att lagra och hämta information under Procedurens utförande, medan kontexten bestämmer vilken information som är tillgänglig för Proceduren. Detta möjliggör att Proceduren kan anpassas till specifika situationer och kunder.</p>"
+          },
+          {
+            "id": "example-return",
+            "title": "Exempel: Returhantering",
+            "content": "<p>Ett exempel på en Procedure kan vara en returhanteringsprocess. När en kund begär en retur, kan Proceduren <strong>skicka en bekräftelse</strong>, <strong>skapa ett returärende</strong> och <strong>uppdatera kundens orderstatus</strong>. Proceduren kan också <strong>skicka en returetikett</strong> till kunden och <strong>meddela lagret</strong> om returen.</p>"
+          },
+          {
+            "id": "example-order-status",
+            "title": "Exempel: Orderstatus-check",
+            "content": "<p>Ett annat exempel på en Procedure kan vara en orderstatus-check. När en order är färdig för leverans, kan Proceduren <strong>skicka en leveransbekräftelse</strong> till kunden, <strong>uppdatera orderstatusen</strong> och <strong>meddela lagret</strong> om leveransen. Proceduren kan också <strong>skicka en påminnelse</strong> till kunden om att leveransen är på väg.</p>"
+          },
+          {
+            "id": "create-procedure",
+            "title": "Skapa en procedure steg-för-steg",
+            "content": "<p>För att skapa en Procedure, gå till <strong>Procedures</strong>-sidan i SWEO AI och klicka på <strong>Skapa ny Procedure</strong>. Välj sedan <strong>steg-typ</strong> och <strong>triggers</strong> för Proceduren, och konfigurera <strong>variabler</strong> och <strong>kontext</strong> som behövs. Proceduren kan sedan <strong>testas</strong> och <strong>publiceras</strong> för att börja utföras automatiskt.</p>"
+          },
+          {
+            "id": "debugging",
+            "title": "Felsökning & loggning",
+            "content": "<p>När en Procedure inte fungerar som förväntat, kan <strong>felsökning</strong> och <strong>loggning</strong> användas för att identifiera problemet. SWEO AI tillhandahåller <strong>loggning</strong> och <strong>felsökningsverktyg</strong> för att hjälpa till att diagnostisera och lösa problem med Proceduren. <blockquote><strong>Tips:</strong> Använd <strong>loggning</strong> och <strong>felsökningsverktyg</strong> för att identifiera problem med Proceduren, och <strong>testa</strong> Proceduren innan den publiceras för att säkerställa att den fungerar korrekt.</blockquote></p>"
+          }
+        ]
+      },
+      {
+        "slug": "ai-settings",
+        "title": "AI-agentens inställningar",
+        "description": "Konfigurera tonalitet, confidence-trösklar, eskalering och modellval.",
+        "sections": [
+          {
+            "id": "tone",
+            "title": "Tonalitet & personlighet",
+            "content": "<p>AI-agentens tonalitet och personlighet kan konfigureras för att passa din organisations varumärke och kommunikationsstrategi. Du kan välja mellan olika förinställda tonaliteter, såsom formell, informell, vänlig eller professionell. Dessutom kan du anpassa agentens språk och uttryck för att skapa en unik personlighet som reflekterar din organisation.</p><ul><li>Välj en förinställd tonalitet som passar din organisation</li><li>Anpassa agentens språk och uttryck för att skapa en unik personlighet</li></ul><blockquote><strong>Tips:</strong> Se till att agentens tonalitet och personlighet är konsekvent över alla kanaler och ärenden för att skapa en enhetlig kundupplevelse.</blockquote>"
+          },
+          {
+            "id": "confidence",
+            "title": "Confidence-tröskel",
+            "content": "<p>Confidence-tröskeln är den lägsta nivå av säkerhet som AI-agenten måste ha för att svara på ett ärende. Du kan justera denna tröskel för att balansera mellan automatiserade svar och manuell hantering. En högre tröskel innebär att agenten är mer försiktig och eskalerar ärenden till manuell hantering oftare, medan en lägre tröskel innebär att agenten är mer självsäker och svarar på ärenden utan manuell inblandning.</p><ul><li>Justera confidence-tröskeln för att balansera mellan automatiserade svar och manuell hantering</li><li>Övervaka och anpassa tröskeln baserat på ärendehistorik och kundfeedback</li></ul><blockquote><strong>Tips:</strong> Börja med en högre tröskel och justera nedåt allteftersom du blir mer bekant med agentens prestanda och kundbehov.</blockquote>"
+          },
+          {
+            "id": "escalation",
+            "title": "Eskaleringsregler",
+            "content": "<p>Eskaleringsregler kan konfigureras för att automatiskt eskalera ärenden till manuell hantering när vissa villkor är uppfyllda. Du kan ställa in regler baserat på ärendets karaktär, kundens betydelse, eller agentens confidence-nivå. När ett ärende eskalerats, kommer det att visas i inboxen för manuell hantering av en kundsupportagent.</p><ul><li>Ställ in eskaleringsregler baserat på ärendets karaktär, kundens betydelse eller agentens confidence-nivå</li><li>Övervaka och anpassa eskaleringsregler baserat på ärendehistorik och kundfeedback</li></ul><blockquote><strong>Tips:</strong> Se till att eskaleringsregler är tydliga och konsekventa för att undvika förvirring och onödig manuell hantering.</blockquote>"
+          },
+          {
+            "id": "language",
+            "title": "Språkhantering",
+            "content": "<p>Språkhantering är en viktig aspekt av AI-agentens konfiguration. Du kan välja vilka språk som agenten ska stödja och anpassa språkinställningarna för att säkerställa att agenten kan förstå och svara på kundförfrågningar på ett korrekt sätt. Dessutom kan du lägga till anpassade språkmodeller för att förbättra agentens språkförståelse.</p><ul><li>Välj vilka språk som agenten ska stödja</li><li>Anpassa språkinställningarna för att säkerställa korrekt språkförståelse</li></ul><blockquote><strong>Tips:</strong> Se till att språkinställningarna är korrekta och uppdaterade för att undvika missförstånd och felaktiga svar.</blockquote>"
+          },
+          {
+            "id": "model-selection",
+            "title": "Modellval & prestanda",
+            "content": "<p>Modellvalet är en kritisk aspekt av AI-agentens prestanda. Du kan välja mellan olika modeller, såsom GPT-4o, för att optimera agentens språkförståelse och svarsgenenering. Dessutom kan du anpassa modellens parametrar för att förbättra prestandan och anpassa den till din organisations specifika behov.</p><ul><li>Välj en lämplig modell för din organisation</li><li>Anpassa modellens parametrar för att förbättra prestandan</li></ul><blockquote><strong>Tips:</strong> Se till att modellen är korrekt konfigurerad och underhållen för att säkerställa optimal prestanda.</blockquote>"
+          },
+          {
+            "id": "response-format",
+            "title": "Svarsformattering",
+            "content": "<p>Svarsformattering är en viktig aspekt av AI-agentens utdata. Du kan anpassa svarsformattering för att säkerställa att agenten svarar på kundförfrågningar på ett tydligt och koncist sätt. Dessutom kan du lägga till anpassade svarsformat för att förbättra kundupplevelsen.</p><ul><li>Anpassa svarsformattering för att säkerställa tydliga och koncisa svar</li><li>Lägg till anpassade svarsformat för att förbättra kundupplevelsen</li></ul><blockquote><strong>Tips:</strong> Se till att svarsformattering är konsekvent och tydlig för att undvika förvirring och missförstånd.</blockquote>"
+          },
+          {
+            "id": "fallback",
+            "title": "Fallback-beteende",
+            "content": "<p>Fallback-beteende är en viktig aspekt av AI-agentens konfiguration. Du kan ställa in fallback-regler för att hantera situationer där agenten inte kan svara på en kundförfrågan. Dessutom kan du anpassa fallback-beteendet för att säkerställa att kunden får en tydlig och hjälpsam respons.</p><ul><li>Ställ in fallback-regler för att hantera situationer där agenten inte kan svara</li><li>Anpassa fallback-beteendet för att säkerställa tydliga och hjälpsamma svar</li></ul><blockquote><strong>Tips:</strong> Se till att fallback-beteendet är tydligt och konsekvent för att undvika förvirring och missförstånd.</blockquote>"
+          }
+        ]
+      },
+      {
+        "slug": "testing",
+        "title": "Testa din AI-agent",
+        "description": "Kör simulerade konversationer för att verifiera AI:n innan lansering.",
+        "sections": [
+          {
+            "id": "simulation-runner",
+            "title": "Simulation Runner",
+            "content": "<p>Simulation Runner är ett verktyg i SWEO AI som möjliggör simulerade konversationer för att testa och verifiera AI-agentens prestanda innan den lanseras. Detta verktyg tillåter dig att skapa och köra simulerade konversationer för att se hur AI-agenten svarar på olika frågor och scenarier.</p><ul><li>Skapa en ny simulering genom att klicka på \"Skapa ny simulering\" och välj sedan det scenario du vill testa.</li><li>Välj den AI-agent du vill testa och konfigurera eventuella specifika inställningar.</li><li>Kör simuleringen och granska resultaten för att se hur AI-agenten presterade.</li></ul>"
+          },
+          {
+            "id": "create-scenario",
+            "title": "Skapa testscenarier",
+            "content": "<p>För att skapa testscenarier i Simulation Runner måste du definiera de specifika situationer och frågor du vill att AI-agenten ska hantera. Detta kan inkludera vanliga kundfrågor, komplexa problem eller specifika edge-cases.</p><ul><li>Identifiera de vanligaste kundfrågorna och skapa scenarier som täcker dessa.</li><li>Använd verkliga data och exempel för att göra scenarierna så realistiska som möjligt.</li><li>Se till att scenarierna är tydligt definierade och lätta att reproducera för att säkerställa tillförlitliga testresultat.</li></ul>"
+          },
+          {
+            "id": "batch-testing",
+            "title": "Batch-testning",
+            "content": "<p>Batch-testning är en funktion i Simulation Runner som tillåter dig att köra flera simulerade konversationer samtidigt. Detta kan spara tid och ge en mer omfattande förståelse av AI-agentens prestanda.</p><ul><li>Välj de scenarier du vill testa och lägg till dem i en batch.</li><li>Konfigurera eventuella specifika inställningar för batchen, såsom antalet iterationer eller svarsgränser.</li><li>Kör batchen och granska resultaten för att identifiera mönster eller trender i AI-agentens prestanda.</li></ul>"
+          },
+          {
+            "id": "result-analysis",
+            "title": "Resultatanalys",
+            "content": "<p>När du har kört simulerade konversationer med Simulation Runner är det viktigt att analysera resultaten för att förstå AI-agentens prestanda. Detta kan inkludera att granska svarstider, svarsnoggrannhet och övergripande kundnöjdhet.</p><ul><li>Granska resultaten för varje scenario och identifiera områden där AI-agenten presterade bra eller dåligt.</li><li>Använd insikterna från resultatanalysen för att justera och förbättra AI-agentens utbildning och konfiguration.</li><li><blockquote><strong>Tips:</strong> Använd resultatanalysen för att identifiera mönster och trender i AI-agentens prestanda, och använd dessa insikter för att förbättra dess prestanda över tid.</blockquote></li></ul>"
+          },
+          {
+            "id": "regression-testing",
+            "title": "Regressionstester",
+            "content": "<p>Regressionstester är en typ av testning som syftar till att säkerställa att ändringar i AI-agentens utbildning eller konfiguration inte påverkar dess prestanda negativt. Detta kan inkludera att köra simulerade konversationer före och efter en ändring för att jämföra resultaten.</p><ul><li>Skapa en baseline för AI-agentens prestanda genom att köra simulerade konversationer innan en ändring.</li><li>Gör den planerade ändringen och kör simulerade konversationer igen för att jämföra resultaten.</li><li>Jämför resultaten för att säkerställa att ändringen inte påverkade AI-agentens prestanda negativt.</li></ul>"
+          },
+          {
+            "id": "testing-tips",
+            "title": "Best practices",
+            "content": "<p>För att få ut mest möjligt av Simulation Runner och säkerställa att AI-agenten presterar bra, följ dessa bästa praxis:</p><ul><li><blockquote><strong>Tips:</strong> Använd verkliga data och exempel för att göra simulerade konversationer så realistiska som möjligt.</blockquote></li><li>Använd batch-testning för att spara tid och få en mer omfattande förståelse av AI-agentens prestanda.</li><li>Granska och analysera resultaten från simulerade konversationer för att identifiera områden för förbättring.</li><li><blockquote><strong>Tips:</strong> Använd resultatanalysen för att justera och förbättra AI-agentens utbildning och konfiguration över tid.</blockquote></li></ul>"
+          }
+        ]
+      },
+      {
+        "slug": "ai-copilot",
+        "title": "AI Copilot för agenter",
+        "description": "Hur mänskliga agenter kan använda AI Copilot för att svara snabbare och bättre.",
+        "sections": [
+          {
+            "id": "copilot-overview",
+            "title": "Vad är AI Copilot?",
+            "content": "<p>AI Copilot är en funktion i SWEO AI som hjälper mänskliga agenter att svara snabbare och bättre på kundsupportärenden genom att tillhandahålla förslag på svar, sammanfattningar av konversationer och möjlighet att omformulera tonalitet.</p><ul><li>AI Copilot använder avancerad AI-teknik för att analysera konversationer och föreslå relevanta svar.</li><li>Funktionen kan anpassas efter organisationens specifika behov och krav.</li></ul>"
+          },
+          {
+            "id": "suggested-replies",
+            "title": "Föreslagna svar",
+            "content": "<p>Förslagna svar är en av de mest användbara funktionerna i AI Copilot. När en agent skriver ett svar på ett kundsupportärende, föreslår AI Copilot relevanta svar baserat på konversationens sammanhang.</p><ul><li>Agenten kan välja att acceptera eller avvisa förslaget.</li><li>Förslagen baseras på en kombination av naturlig språkbehandling och maskinlärning.</li></ul><blockquote><strong>Tips:</strong> Använd förslagna svar för att spara tid och öka effektiviteten i kundsupporten.</blockquote>"
+          },
+          {
+            "id": "summarize",
+            "title": "Sammanfatta konversationer",
+            "content": "<p>Sammanfatta konversationer är en annan viktig funktion i AI Copilot. Funktionen sammanfattar konversationen och ger agenten en snabb överblick över ärendets historia.</p><ul><li>Sammanfattningen baseras på en analys av konversationens innehåll och kontext.</li><li>Agenten kan använda sammanfattningen för att snabbt förstå ärendets bakgrund och ge ett mer informerat svar.</li></ul>"
+          },
+          {
+            "id": "tone-rewrite",
+            "title": "Omformulera tonalitet",
+            "content": "<p>Omformulera tonalitet är en funktion i AI Copilot som tillåter agenter att omformulera tonaliteten i sitt svar för att bättre matcha kundens ton och språk.</p><ul><li>Funktionen använder avancerad naturlig språkbehandling för att analysera kundens ton och språk.</li><li>Agenten kan välja att acceptera eller avvisa det omformulerade svaret.</li></ul><blockquote><strong>Tips:</strong> Använd omformulera tonalitet för att skapa en mer personlig och anpassad kundupplevelse.</blockquote>"
+          },
+          {
+            "id": "knowledge-lookup",
+            "title": "Kunskapssökning i realtid",
+            "content": "<p>Kunskapssökning i realtid är en funktion i AI Copilot som tillåter agenter att söka efter relevant information i organisationens kunskapsbas i realtid.</p><ul><li>Funktionen använder avancerad sökteknik för att hitta relevant information.</li><li>Agenten kan använda funktionen för att snabbt hitta svar på vanliga frågor och ärenden.</li></ul>"
+          },
+          {
+            "id": "copilot-settings",
+            "title": "Inställningar & anpassning",
+            "content": "<p>Inställningar och anpassning är viktiga aspekter av AI Copilot. Organisationen kan anpassa funktionen efter sina specifika behov och krav.</p><ul><li>Inställningarna kan konfigureras för att matcha organisationens ton och språk.</li><li>Funktionen kan också anpassas för att integrera med andra verktyg och system.</li></ul><blockquote><strong>Tips:</strong> Använd inställningarna och anpassningen för att skapa en mer anpassad och effektiv kundsupportupplevelse.</blockquote>"
+          }
+        ]
+      },
+      {
+        "slug": "handoff-escalation",
+        "title": "Handoff & Eskalering",
+        "description": "Konfigurera när och hur AI:n lämnar över till mänskliga agenter.",
+        "sections": [
+          {
+            "id": "escalation-triggers",
+            "title": "Eskaleringstriggers",
+            "content": "<p>Eskaleringstriggers är viktiga för att avgöra när AI:n ska lämna över till mänskliga agenter. Det finns flera typer av triggers som kan konfigureras, såsom tidsbaserade triggers, svårighetsbaserade triggers och triggers baserade på kundens beteende. <strong>Tidsbaserade triggers</strong> kan exempelvis konfigureras för att eskalera ärenden som inte har besvarats inom en viss tid. <strong>Svårighetsbaserade triggers</strong> kan konfigureras för att eskalera ärenden som kräver en högre nivå av expertis. <blockquote><strong>Tips:</strong> Se till att konfigurera eskaleringstriggers som är anpassade till er organisations specifika behov och processer.</blockquote></p>"
+          },
+          {
+            "id": "routing-rules",
+            "title": "Routingregler",
+            "content": "<p>Routingregler används för att bestämma vilken agent eller team som ska ta emot ett eskalerat ärende. Reglerna kan baseras på en mängd olika faktorer, såsom ärendets typ, kundens prioritetsnivå och agentens tillgänglighet. <ul><li>Ärendets typ: Regler kan konfigureras för att skicka ärenden av en viss typ till ett specifikt team eller agent.</li><li>Kundens prioritetsnivå: Regler kan konfigureras för att skicka ärenden från högprioriterade kunder till en specifik agent eller team.</li><li>Agentens tillgänglighet: Regler kan konfigureras för att skicka ärenden till agenter som är tillgängliga och har den nödvändiga expertisen.</li></ul> <blockquote><strong>Tips:</strong> Se till att konfigurera routingregler som är tydliga och lättförståeliga för att undvika förvirring och fel.</blockquote></p>"
+          },
+          {
+            "id": "team-assignment",
+            "title": "Teamtilldelning",
+            "content": "<p>Teamtilldelning är en viktig del av handoff- och eskaleringsprocessen. När ett ärende har eskalerats måste det tilldelas ett team eller en agent som kan hantera det. <strong>Automatisk teamtilldelning</strong> kan konfigureras för att automatiskt tilldela ärenden till ett team eller en agent baserat på fördefinierade regler. <strong>Manuell teamtilldelning</strong> kan också användas för att tilldela ärenden till ett team eller en agent manuellt. <blockquote><strong>Tips:</strong> Se till att konfigurera teamtilldelning som är flexibel och anpassad till er organisations specifika behov och processer.</blockquote></p>"
+          },
+          {
+            "id": "sla-management",
+            "title": "SLA-hantering",
+            "content": "<p>SLA-hantering är en viktig del av handoff- och eskaleringsprocessen. SLA (Service Level Agreement) är ett avtal som definierar den servicenivå som kunderna kan förvänta sig. <strong>SLA-triggers</strong> kan konfigureras för att eskalera ärenden som inte uppfyller SLA-kraven. <strong>SLA-rapportering</strong> kan också användas för att övervaka och rapportera om SLA-prestanda. <blockquote><strong>Tips:</strong> Se till att konfigurera SLA-hantering som är tydlig och lättförståelig för att undvika förvirring och fel.</blockquote></p>"
+          },
+          {
+            "id": "warm-handoff",
+            "title": "Varm handoff med kontext",
+            "content": "<p>Varm handoff med kontext är en viktig del av handoff- och eskaleringsprocessen. När ett ärende har eskalerats måste det överlämnas till en agent eller ett team som har den nödvändiga kontexten och informationen för att hantera det. <strong>Kontextöverföring</strong> kan konfigureras för att automatiskt överföra relevanta data och information till den agent eller det team som tar emot ärendet. <blockquote><strong>Tips:</strong> Se till att konfigurera varm handoff med kontext som är tydlig och lättförståelig för att undvika förvirring och fel.</blockquote></p>"
+          },
+          {
+            "id": "after-hours",
+            "title": "Utanför arbetstid",
+            "content": "<p>Utanför arbetstid är en viktig del av handoff- och eskaleringsprocessen. När ett ärende har eskalerats utanför arbetstid måste det hanteras på ett sätt som säkerställer att kunden får den hjälp som behövs. <strong>Automatisk svarsgenerering</strong> kan konfigureras för att automatiskt generera svar till kunder som kontaktar supporten utanför arbetstid. <strong>Manuell hantering</strong> kan också användas för att hantera ärenden som kräver en högre nivå av expertis. <blockquote><strong>Tips:</strong> Se till att konfigurera hantering av ärenden utanför arbetstid som är tydlig och lättförståelig för att undvika förvirring och fel.</blockquote></p>"
+          }
+        ]
+      },
+      {
+        "slug": "prompt-engineering",
+        "title": "Prompt Engineering för support",
+        "description": "Avancerade tekniker för att finslipa AI-agentens beteende med prompts.",
+        "sections": [
+          {
+            "id": "system-prompt",
+            "title": "System-prompt design",
+            "content": "<p>System-prompt design är en viktig aspekt av att finslipa AI-agentens beteende med prompts. Det handlar om att skapa en tydlig och koncist prompt som ger AI-agenten tillräckligt med information för att svara korrekt på en given fråga eller ärende. En väl designad system-prompt bör innehålla alla nödvändiga detaljer, såsom kontext, syfte och förväntat svar. <strong>Tips:</strong> Använd en tydlig och koncist språkstil och undvik förvirrande eller tvetydiga uttryck.</p>"
+          },
+          {
+            "id": "few-shot-examples",
+            "title": "Few-shot-exempel",
+            "content": "<p>Few-shot-exempel är en teknik som används för att träna AI-agenten med ett litet antal exempel på hur den ska svara på en given fråga eller ärende. Detta kan vara särskilt användbart när det gäller att hantera ovanliga eller komplexa ärenden. <ul><li>Använd ett litet antal exempel som representerar olika typer av ärenden</li><li>Säkerställ att exempelen är tydliga och koncisa</li><li>Använd few-shot-exempel i kombination med andra tekniker för att förbättra AI-agentens prestanda</li></ul></p>"
+          },
+          {
+            "id": "guardrails",
+            "title": "Guardrails & begränsningar",
+            "content": "<p>Guardrails och begränsningar är viktiga för att säkerställa att AI-agenten inte producerar oönskade eller skadliga svar. Detta kan inkludera begränsningar på vilka typer av ärenden som AI-agenten kan hantera, eller vilka typer av svar som den kan producera. <blockquote><strong>Tips:</strong> Använd tydliga och koncisa regler för att definiera vad som är tillåtet och inte tillåtet för AI-agenten.</blockquote></p>"
+          },
+          {
+            "id": "persona-design",
+            "title": "Persona-design",
+            "content": "<p>Persona-design är en teknik som används för att skapa en personlig och anpassad upplevelse för kunderna. Detta kan inkludera att skapa en persona för AI-agenten, som representerar dess ton, språk och beteende. <ul><li>Använd en tydlig och koncist persona för att definiera AI-agentens beteende</li><li>Säkerställ att personan är anpassad till kundernas behov och förväntningar</li><li>Använd persona-design i kombination med andra tekniker för att förbättra AI-agentens prestanda</li></ul></p>"
+          },
+          {
+            "id": "edge-cases",
+            "title": "Hantera edge cases",
+            "content": "<p>Hantera edge cases är en viktig aspekt av att säkerställa att AI-agenten kan hantera ovanliga eller komplexa ärenden. Detta kan inkludera att identifiera och hantera undantag, eller att skapa specialiserade flöden för att hantera specifika typer av ärenden. <blockquote><strong>Tips:</strong> Använd en tydlig och koncist strategi för att hantera edge cases, och säkerställ att AI-agenten är utbildad för att hantera dessa typer av ärenden.</blockquote></p>"
+          },
+          {
+            "id": "prompt-versioning",
+            "title": "Versionera prompts",
+            "content": "<p>Versionera prompts är en teknik som används för att spåra och hantera olika versioner av prompts. Detta kan vara särskilt användbart när det gäller att testa och förbättra AI-agentens prestanda. <ul><li>Använd en tydlig och koncist strategi för att versionera prompts</li><li>Säkerställ att alla versioner av prompts är tydligt dokumenterade och spårbara</li><li>Använd versionering i kombination med andra tekniker för att förbättra AI-agentens prestanda</li></ul></p>"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "channels",
+    "title": "Kanaler & Deploy",
+    "icon": "settings",
+    "description": "Chat-widget, e-post, WhatsApp, SMS och telefoni.",
+    "articles": [
+      {
+        "slug": "web-messenger",
+        "title": "Web Messenger (Chat Widget)",
+        "description": "Installera och anpassa din chattwidget på din webbplats.",
+        "sections": [
+          {
+            "id": "installation",
+            "title": "Installation",
+            "content": "<p>Installera webbchattwidgeten på din webbplats genom att följa dessa steg: <ol><li>Kopiera koden för chattwidgeten från SWEO AI-plattformen</li><li>Klistra in koden i din webbplats HTML-kod, vanligtvis i footern eller sidfoten</li><li>Se till att koden är korrekt placerad och att widgeten fungerar som förväntat</li></ol></p>"
+          },
+          {
+            "id": "customize",
+            "title": "Anpassa utseende",
+            "content": "<p>Anpassa utseendet på din chattwidget genom att ändra färger, teckensnitt och layout: <ul><li>Ändra färgschemat för att matcha din webbplats varumärke</li><li>Välj ett teckensnitt som passar din webbplats design</li><li>Justera layouten för att passa din webbplats struktur</li></ul><blockquote><strong>Tips:</strong> Använd SWEO AI:s fördefinierade teman för att snabbt anpassa utseendet på din chattwidget</blockquote></p>"
+          },
+          {
+            "id": "behavior",
+            "title": "Beteendeinställningar",
+            "content": "<p>Konfigurera beteendeinställningar för din chattwidget: <ul><li>Ställ in när chattwidgeten ska visas, t.ex. när en användare har varit inaktiv i en viss tid</li><li>Konfigurera hur chattwidgeten ska bete sig när en användare interagerar med den, t.ex. om den ska stängas eller förbli öppen</li><li>Ställ in vilka typer av meddelanden som ska skickas till användare, t.ex. automatiska svar eller proaktiva meddelanden</li></ul></p>"
+          },
+          {
+            "id": "proactive-messages",
+            "title": "Proaktiva meddelanden",
+            "content": "<p>Skicka proaktiva meddelanden till dina användare: <ul><li>Skapa meddelanden som ska skickas automatiskt när en användare utför en viss åtgärd, t.ex. när de lägger till en produkt i varukorgen</li><li>Konfigurera när och hur meddelandena ska skickas, t.ex. omedelbart eller efter en viss tid</li><li>Använd SWEO AI:s fördefinierade mallar för att skapa proaktiva meddelanden</li></ul><blockquote><strong>Tips:</strong> Använd proaktiva meddelanden för att erbjuda personlig service och förbättra användarupplevelsen</blockquote></p>"
+          },
+          {
+            "id": "features",
+            "title": "Funktioner",
+            "content": "<p>Utforska funktionerna i din chattwidget: <ul><li>Stöd för flera språk</li><li>Integrering med andra kanaler, t.ex. e-post och telefon</li><li>Möjlighet att skicka filer och media</li><li>Stöd för automatiserade svar och chatbots</li></ul><blockquote><strong>Tips:</strong> Använd funktionerna i din chattwidget för att erbjuda en omfattande och personlig service till dina användare</blockquote></p>"
+          },
+          {
+            "id": "troubleshooting",
+            "title": "Felsökning",
+            "content": "<p>Felsök vanliga problem med din chattwidget: <ul><li>Kontrollera att koden är korrekt installerad och konfigurerad</li><li>Se till att widgeten fungerar som förväntat i olika webbläsare och enheter</li><li>Kontakta SWEO AI:s support om du behöver hjälp med att felsöka eller konfigurera din chattwidget</li></ul><blockquote><strong>Tips:</strong> Använd SWEO AI:s dokumentation och supportresurser för att snabbt lösa problem med din chattwidget</blockquote></p>"
+          }
+        ]
+      },
+      {
+        "slug": "email-channel",
+        "title": "E-post",
+        "description": "Koppla din support-email och låt AI:n svara automatiskt.",
+        "sections": [
+          {
+            "id": "connect-email",
+            "title": "Koppla din support-e-post",
+            "content": "<p>Koppla din support-e-post till SWEO AI för att låta AI:n svara automatiskt på kundsupportärenden. Detta görs genom att ange din e-postadress och lösenord i inställningarna för e-postkanalen. Du kan också välja att använda en anpassad domän för att skicka e-postmeddelanden från din egen domän.</p><ul><li>Logga in på din SWEO AI-konto</li><li>Gå till inställningarna för e-postkanalen</li><li>Ange din e-postadress och lösenord</li><li>Välj att använda en anpassad domän om du vill</li></ul>"
+          },
+          {
+            "id": "how-it-works",
+            "title": "Hur det fungerar",
+            "content": "<p>När en kund skickar en e-post till din support-e-post, tas meddelandet emot av SWEO AI och bearbetas av AI:n. AI:n analyserar meddelandet och genererar ett svar baserat på den information som finns i din Knowledge Base. Svaret skickas sedan tillbaka till kunden.</p><p>Processen sker automatiskt och kräver ingen manuell inblandning. Du kan dock alltid granska och redigera svaren innan de skickas om du vill.</p>"
+          },
+          {
+            "id": "auto-reply",
+            "title": "Auto-reply inställningar",
+            "content": "<p>Auto-reply är en funktion som gör att du kan skicka ett automatiskt svar till kunder som skickar e-post till din support-e-post. Detta kan vara användbart om du vill meddela kunderna att deras meddelande har mottagits och att du kommer att besvara dem så snart som möjligt.</p><ul><li>Skapa ett auto-reply-meddelande i inställningarna för e-postkanalen</li><li>Ange den text som du vill att kunderna ska se</li><li>Välj om du vill att auto-reply-meddelandet ska skickas till alla kunder eller bara till de som skickar e-post för första gången</li></ul>"
+          },
+          {
+            "id": "email-templates",
+            "title": "E-postmallar",
+            "content": "<p>E-postmallar är fördefinierade mallar som du kan använda för att skapa professionella och enhetliga e-postmeddelanden. Du kan skapa egna e-postmallar i SWEO AI och använda dem för att svara på vanliga kundsupportärenden.</p><blockquote><strong>Tips:</strong> Använd e-postmallar för att spara tid och förbättra kundupplevelsen. Du kan också använda e-postmallar för att skicka automatiska meddelanden till kunder.</blockquote><ul><li>Skapa en ny e-postmall i inställningarna för e-postkanalen</li><li>Ange den text och de fält som du vill att mallen ska innehålla</li><li>Spara mallen och använd den för att svara på kundsupportärenden</li></ul>"
+          },
+          {
+            "id": "dkim-spf",
+            "title": "DKIM, SPF & leveransbarhet",
+            "content": "<p>DKIM (DomainKeys Identified Mail) och SPF (Sender Policy Framework) är tekniker som hjälper till att förhindra e-postbedrägeri och förbättra leveransbarheten för dina e-postmeddelanden. Du kan konfigurera DKIM och SPF i SWEO AI för att säkerställa att dina e-postmeddelanden levereras korrekt.</p><ul><li>Konfigurera DKIM och SPF i inställningarna för e-postkanalen</li><li>Ange den domän som du vill att DKIM och SPF ska gälla för</li><li>Spara inställningarna och testa att allt fungerar korrekt</li></ul>"
+          },
+          {
+            "id": "troubleshooting",
+            "title": "Felsökning",
+            "content": "<p>Om du upplever problem med din e-postkanal i SWEO AI kan du följa dessa steg för att felsöka:</p><ul><li>Kontrollera att din e-postadress och lösenord är korrekt angivna</li><li>Kontrollera att din e-postkanal är korrekt konfigurerad</li><li>Kontrollera att dina e-postmallar är korrekt skapade och sparade</li><li>Kontakta SWEO AI:s support om du fortfarande har problem</li></ul>"
+          }
+        ]
+      },
+      {
+        "slug": "messaging-channels",
+        "title": "WhatsApp, SMS & Telefoni",
+        "description": "Aktivera WhatsApp Business, SMS och röstkanal via Twilio.",
+        "sections": [
+          {
+            "id": "whatsapp",
+            "title": "WhatsApp Business",
+            "content": "<p> För att aktivera WhatsApp Business i SWEO AI måste du först skapa ett konto hos Meta for Business och sedan länka det till din Twilio-konto. Därefter kan du i SWEO AI gå till inställningarna för kanaler och välja WhatsApp som en av dina kanaler. Följ instruktionerna på skärmen för att slutföra konfigurationen.</p><ul><li>Skapa ett Meta for Business-konto och ett Twilio-konto om du inte redan har det.</li><li>Länka ditt Meta for Business-konto till ditt Twilio-konto.</li><li>I SWEO AI, gå till inställningarna för kanaler och välj WhatsApp.</li><li>Följ instruktionerna på skärmen för att slutföra konfigurationen.</li></ul>"
+          },
+          {
+            "id": "whatsapp-templates",
+            "title": "WhatsApp-meddelanden & mallar",
+            "content": "<p>WhatsApp-meddelanden och mallar kan användas för att skapa standardiserade svar på vanliga kundförfrågningar. I SWEO AI kan du skapa och hantera dessa mallar i avsnittet för Knowledge Base. Du kan också använda Policies och Procedures för att automatisera svar baserat på specifika villkor.</p><blockquote><strong>Tips:</strong> Använd variabler i dina mallar för att göra dem mer dynamiska och anpassade till varje kunds specifika situation.</blockquote>"
+          },
+          {
+            "id": "sms",
+            "title": "SMS-kanal",
+            "content": "<p>För att aktivera SMS-kanalen i SWEO AI måste du ha ett Twilio-konto och en telefonnummer som är konfigurerad för att ta emot och skicka SMS. I SWEO AI kan du gå till inställningarna för kanaler och välja SMS som en av dina kanaler. Följ sedan instruktionerna på skärmen för att slutföra konfigurationen.</p><ul><li>Se till att du har ett Twilio-konto och ett telefonnummer som stöder SMS.</li><li>I SWEO AI, gå till inställningarna för kanaler och välj SMS.</li><li>Följ instruktionerna på skärmen för att slutföra konfigurationen.</li></ul>"
+          },
+          {
+            "id": "voice",
+            "title": "Telefoni (Voice)",
+            "content": "<p>Telefonikanalen (Voice) i SWEO AI möjliggör hantering av inkommande och utgående samtal via Twilio. För att aktivera denna kanal måste du ha ett Twilio-konto och en telefonnummer som är konfigurerad för att ta emot och ringa samtal. I SWEO AI kan du gå till inställningarna för kanaler och välja Telefoni som en av dina kanaler.</p><ul><li>Se till att du har ett Twilio-konto och ett telefonnummer som stöder samtal.</li><li>I SWEO AI, gå till inställningarna för kanaler och välj Telefoni.</li><li>Följ instruktionerna på skärmen för att slutföra konfigurationen.</li></ul>"
+          },
+          {
+            "id": "shared-settings",
+            "title": "Gemensamma inställningar",
+            "content": "<p>Gemensamma inställningar för WhatsApp, SMS och Telefoni kan hittas i SWEO AI under avsnittet för kanaler. Här kan du konfigurera allmänna inställningar som gäller för alla kanaler, såsom svarstider och meddelandeformat. Du kan också hantera dina Twilio-konton och telefonnummer från detta avsnitt.</p><ul><li>Gå till avsnittet för kanaler i SWEO AI.</li><li>Välj den kanal du vill konfigurera.</li><li>Redigera de gemensamma inställningarna efter behov.</li></ul>"
+          },
+          {
+            "id": "channel-routing",
+            "title": "Kanaldirigering",
+            "content": "<p>Kanaldirigering i SWEO AI möjliggör att du kan dirigera inkommande ärenden från olika källor (som WhatsApp, SMS och Telefoni) till specifika agenter eller grupper baserat på fördefinierade regler. Detta kan konfigureras under avsnittet för Policies och Procedures, där du kan skapa regler för att dirigera ärenden baserat på specifika villkor.</p><blockquote><strong>Tips:</strong> Använd kanaldirigering för att säkerställa att rätt agent eller grupp hanterar varje ärende, baserat på deras expertis och tillgänglighet.</blockquote>"
+          }
+        ]
+      },
+      {
+        "slug": "social-media",
+        "title": "Sociala medier",
+        "description": "Koppla Instagram DM, Facebook Messenger och andra sociala kanaler.",
+        "sections": [
+          {
+            "id": "instagram-dm",
+            "title": "Instagram DM",
+            "content": "<p> För att koppla Instagram DM till SWEO AI, följ dessa steg: <ol><li>Gå till Instagrams utvecklarportal och skapa en ny app</li><li>Kopiera app-id och app-hemlighet</li><li>Gå till SWEO AI och klicka på <strong>Kanaler</strong></li><li>Välj <strong>Instagram DM</strong> och klistra in app-id och app-hemlighet</li></ol><blockquote><strong>Tips:</strong> Se till att du har rätt behörigheter för att koppla Instagram DM till SWEO AI</blockquote></p>"
+          },
+          {
+            "id": "facebook-messenger",
+            "title": "Facebook Messenger",
+            "content": "<p> För att koppla Facebook Messenger till SWEO AI, följ dessa steg: <ol><li>Gå till Facebooks utvecklarportal och skapa en ny app</li><li>Kopiera app-id och app-hemlighet</li><li>Gå till SWEO AI och klicka på <strong>Kanaler</strong></li><li>Välj <strong>Facebook Messenger</strong> och klistra in app-id och app-hemlighet</li></ol><blockquote><strong>Tips:</strong> Se till att du har rätt behörigheter för att koppla Facebook Messenger till SWEO AI</blockquote></p>"
+          },
+          {
+            "id": "slack-communities",
+            "title": "Slack Communities",
+            "content": "<p> För att koppla Slack Communities till SWEO AI, följ dessa steg: <ol><li>Gå till Slack och skapa en ny app</li><li>Kopiera app-id och app-hemlighet</li><li>Gå till SWEO AI och klicka på <strong>Kanaler</strong></li><li>Välj <strong>Slack Communities</strong> och klistra in app-id och app-hemlighet</li></ol><blockquote><strong>Tips:</strong> Se till att du har rätt behörigheter för att koppla Slack Communities till SWEO AI</blockquote></p>"
+          },
+          {
+            "id": "meta-setup",
+            "title": "Meta Business Suite-setup",
+            "content": "<p> För att konfigurera Meta Business Suite, följ dessa steg: <ol><li>Gå till Meta Business Suite och logga in</li><li>Klicka på <strong>Inställningar</strong> och välj <strong>Kanaler</strong></li><li>Välj <strong>SWEO AI</strong> och följ instruktionerna för att koppla kontot</li></ol><blockquote><strong>Tips:</strong> Se till att du har rätt behörigheter för att konfigurera Meta Business Suite</blockquote></p>"
+          },
+          {
+            "id": "social-routing",
+            "title": "Kanaldirigering för sociala medier",
+            "content": "<p> För att konfigurera kanaldirigering för sociala medier, följ dessa steg: <ol><li>Gå till SWEO AI och klicka på <strong>Kanaler</strong></li><li>Välj <strong>Kanaldirigering</strong> och konfigurera reglerna för varje kanal</li><li>Se till att du har rätt behörigheter för att konfigurera kanaldirigering</li></ol><blockquote><strong>Tips:</strong> Använd kanaldirigering för att skicka ärenden till rätt team eller agent</blockquote></p>"
+          },
+          {
+            "id": "social-best-practices",
+            "title": "Best practices",
+            "content": "<p> För att få ut mest möjligt av sociala medier i SWEO AI, följ dessa bästa praxis: <ul><li>Använd rätt kanaler för rätt ärenden</li><li>Se till att du har rätt behörigheter för att hantera ärenden</li><li>Använd kanaldirigering för att skicka ärenden till rätt team eller agent</li></ul><blockquote><strong>Tips:</strong> Använd SWEO AI:s analytik för att spåra och förbättra din sociala medie-strategi</blockquote></p>"
+          }
+        ]
+      },
+      {
+        "slug": "widget-customization",
+        "title": "Avancerad widget-anpassning",
+        "description": "CSS-themes, JavaScript API och avancerade konfigurationer för chattwidgeten.",
+        "sections": [
+          {
+            "id": "css-theming",
+            "title": "CSS-theming",
+            "content": "<p>CSS-theming är en viktig del av att anpassa chattwidgeten till din webbplats utseende. Du kan enkelt ändra färgschemat, typsnitt och layout genom att använda CSS-klasser. För att göra detta, lägg till en CSS-fil i ditt webbprojekt och definiera dina egna CSS-regler för widgeten. Du kan också använda vår fördefinierade CSS-teman för att snabbt ändra utseendet på widgeten.</p><ul><li>Använd CSS-klasser för att ändra färgschemat och typsnittet</li><li>Definiera egna CSS-regler för widgeten</li><li>Använd fördefinierade CSS-teman för att snabbt ändra utseendet</li></ul><blockquote><strong>Tips:</strong> Använd vår CSS-tema-guide för att lära dig mer om hur du kan anpassa widgeten till din webbplats utseende.</blockquote>"
+          },
+          {
+            "id": "js-api",
+            "title": "JavaScript API",
+            "content": "<p>JavaScript API:n ger dig möjlighet att programmatically kontrollera och anpassa chattwidgeten. Du kan använda API:n för att skicka meddelanden, hämta historik och mycket mer. För att komma åt API:n, måste du först inkludera vår JavaScript-fil i ditt webbprojekt och sedan skapa en instans av widgeten.</p><ul><li>Inkludera JavaScript-filen i ditt webbprojekt</li><li>Skapa en instans av widgeten</li><li>Använd API:n för att skicka meddelanden och hämta historik</li></ul><blockquote><strong>Tips:</strong> Använd vår JavaScript API-guide för att lära dig mer om hur du kan använda API:n för att anpassa widgeten.</blockquote>"
+          },
+          {
+            "id": "events",
+            "title": "Events & callbacks",
+            "content": "<p>Events och callbacks är viktiga delar av att integrera chattwidgeten med din webbplats. Du kan använda events för att lyssna på specifika händelser, såsom när en användare skickar ett meddelande eller när en ny användare ansluter. Callbacks kan användas för att utföra specifika åtgärder när en händelse inträffar.</p><ul><li>Använd events för att lyssna på specifika händelser</li><li>Använd callbacks för att utföra specifika åtgärder</li><li>Definiera egna events och callbacks för att anpassa widgeten</li></ul><blockquote><strong>Tips:</strong> Använd vår events- och callbacks-guide för att lära dig mer om hur du kan använda events och callbacks för att anpassa widgeten.</blockquote>"
+          },
+          {
+            "id": "user-identity",
+            "title": "Identifiera användare",
+            "content": "<p>Identifiera användare är en viktig del av att spåra och analysera användaraktivitet i chattwidgeten. Du kan använda vår API för att skicka användarinformation, såsom namn och e-postadress, till vår server. Denna information kan sedan användas för att spåra och analysera användaraktivitet.</p><ul><li>Använd vår API för att skicka användarinformation</li><li>Skicka namn och e-postadress för att identifiera användare</li><li>Använd denna information för att spåra och analysera användaraktivitet</li></ul><blockquote><strong>Tips:</strong> Använd vår användaridentifieringsguide för att lära dig mer om hur du kan identifiera användare i chattwidgeten.</blockquote>"
+          },
+          {
+            "id": "custom-data",
+            "title": "Skicka custom metadata",
+            "content": "<p>Skicka custom metadata är en viktig del av att anpassa chattwidgeten till din webbplats specifika behov. Du kan använda vår API för att skicka custom metadata, såsom användarpreferenser eller köphistorik, till vår server. Denna information kan sedan användas för att anpassa widgeten till användarens specifika behov.</p><ul><li>Använd vår API för att skicka custom metadata</li><li>Skicka användarpreferenser eller köphistorik för att anpassa widgeten</li><li>Använd denna information för att anpassa widgeten till användarens specifika behov</li></ul><blockquote><strong>Tips:</strong> Använd vår custom metadata-guide för att lära dig mer om hur du kan skicka custom metadata till vår server.</blockquote>"
+          },
+          {
+            "id": "spa-integration",
+            "title": "SPA-integration (React, Vue, Angular)",
+            "content": "<p>SPA-integration (React, Vue, Angular) är en viktig del av att integrera chattwidgeten med din Single-Page Application (SPA). Du kan använda vår API för att integrera widgeten med din SPA och anpassa den till din specifika användning. För att göra detta, måste du först inkludera vår JavaScript-fil i ditt SPA-projekt och sedan skapa en instans av widgeten.</p><ul><li>Inkludera JavaScript-filen i ditt SPA-projekt</li><li>Skapa en instans av widgeten</li><li>Använd vår API för att anpassa widgeten till din specifika användning</li></ul><blockquote><strong>Tips:</strong> Använd vår SPA-integrationsguide för att lära dig mer om hur du kan integrera chattwidgeten med din SPA.</blockquote>"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "integrations",
+    "title": "Integrationer & CRM",
+    "icon": "connectors",
+    "description": "Shopify, Stripe, Salesforce och andra datakällor.",
+    "articles": [
+      {
+        "slug": "data-connectors",
+        "title": "Koppla Data Connectors",
+        "description": "Anslut tredjeparter så AI:n kan hämta och agera på kunddata.",
+        "sections": [
+          {
+            "id": "available-connectors",
+            "title": "Tillgängliga connectors",
+            "content": "<p>SWEO AI erbjuder en rad Data Connectors för att ansluta till tredjepartstjänster, vilket möjliggör för AI:n att hämta och agera på kunddata. Tillgängliga connectors inkluderar Shopify, Stripe, Salesforce, HubSpot och Custom API. Dessa connectors möjliggör en smidig integration med befintliga system och tillåter AI:n att få tillgång till relevant kundinformation.</p>"
+          },
+          {
+            "id": "connect-steps",
+            "title": "Koppla en connector",
+            "content": "<p>För att koppla en connector följer du följande steg: <ol><li>Välj den connector du vill ansluta i listan över tillgängliga connectors.</li><li>Klicka på knappen \"Lägg till\" för att initiera anslutningsprocessen.</li><li>Följ instruktionerna på skärmen för att autentisera och auktorisera åtkomst till den valda tjänsten.</li><li>När anslutningen är etablerad kan du konfigurera specifika inställningar och mappningar för att säkerställa en korrekt dataöverföring.</li></ol></p>"
+          },
+          {
+            "id": "shopify-deep",
+            "title": "Shopify-integration i detalj",
+            "content": "<p>Shopify-integrationen i SWEO AI möjliggör en djup anslutning till din Shopify-butik, vilket gör det möjligt för AI:n att hämta orderinformation, kunddata och produktdetaljer. Genom att ansluta Shopify kan du automatisera kundsupportprocesser och tillhandahålla personaliserad support baserat på kundens köphistorik och preferenser. <blockquote><strong>Tips:</strong> Se till att du har rätt behörigheter och API-nycklar för att slutföra anslutningsprocessen.</blockquote></p>"
+          },
+          {
+            "id": "stripe-deep",
+            "title": "Stripe-integration i detalj",
+            "content": "<p>Stripe-integrationen i SWEO AI tillåter en smidig anslutning till ditt Stripe-konto, vilket möjliggör för AI:n att hämta betalningsinformation och transaktionsdata. Med denna integration kan du automatisera supportärenden relaterade till betalningar och abonnemang. <blockquote><strong>Tips:</strong> Kontrollera att du har korrekt konfigurerat Stripe-webhooks för att få realtidsuppdateringar om betalningshändelser.</blockquote></p>"
+          },
+          {
+            "id": "custom-api",
+            "title": "Custom API Connector",
+            "content": "<p>Custom API Connector möjliggör anslutning till vilken API som helst, vilket ger dig full flexibilitet att integrera SWEO AI med dina unika system och tjänster. Genom att skapa en anpassad API-anslutning kan du hämta och skicka data till och från AI-plattformen, vilket möjliggör en hög grad av anpassning och automatisering. <blockquote><strong>Tips:</strong> Se till att du har tillräcklig dokumentation och API-nycklar för att slutföra anslutningsprocessen.</blockquote></p>"
+          },
+          {
+            "id": "webhooks",
+            "title": "Webhooks",
+            "content": "<p>SWEO AI stödjer webhooks för att ta emot realtidsuppdateringar från anslutna tjänster. Genom att konfigurera webhooks kan du säkerställa att AI:n alltid har tillgång till den senaste informationen och kan agera därefter. Webhooks kan användas för att meddela AI:n om händelser som betalningar, orderuppdateringar och kundinteraktioner.</p>"
+          },
+          {
+            "id": "security",
+            "title": "Säkerhet & kryptografi",
+            "content": "<p>Säkerhet och kryptografi är av högsta prioritet i SWEO AI. Alla data som överförs mellan AI-plattformen och anslutna tjänster krypteras med avancerad kryptografi, och alla autentiseringsprocesser hanteras med robusta säkerhetsprotokoll. Dessutom följer SWEO AI alla relevanta dataskyddsregler och -lagar för att säkerställa att kunddata hanteras på ett ansvarsfullt och säkert sätt. <blockquote><strong>Tips:</strong> Se till att du regelbundet granskar och uppdaterar dina säkerhetsinställningar för att säkerställa maximal säkerhet.</blockquote></p>"
+          }
+        ]
+      },
+      {
+        "slug": "crm-integration",
+        "title": "CRM-integration",
+        "description": "Synka kontakter, ärenden och historik med ditt CRM-system.",
+        "sections": [
+          {
+            "id": "why-crm",
+            "title": "Varför CRM-integration?",
+            "content": "<p>En CRM-integration (Customer Relationship Management) är en avgörande komponent för att effektivisera kundsupportprocessen och förbättra kundupplevelsen. Genom att synka kontakter, ärenden och historik med ditt CRM-system kan du få en helhetsbild av dina kunder och tillhandahålla mer personlig och effektiv support. Detta leder till ökad kundnöjdhet, förbättrad lojalitet och i slutändan, ökad försäljning.</p><ul><li>Förbättrad kundinsikt: Med en CRM-integration kan du samla all relevant kundinformation på ett ställe, vilket gör det lättare att förstå kundens behov och preferenser.</li><li>Effektivare support: Genom att ha tillgång till kundens ärendehistorik och kontakinformation kan supportteamet tillhandahålla mer personlig och effektiv support.</li><li>Ökad produktivitet: Automatiserad synkning av data mellan systemen minskar manuellt arbete och minskar risken för fel.</li></ul>"
+          },
+          {
+            "id": "connect-salesforce",
+            "title": "Koppla Salesforce",
+            "content": "<p>För att koppla Salesforce till SWEO AI följer du dessa steg: <ol><li>Gå till ditt Salesforce-konto och skapa en ny API-nyckel.</li><li>I SWEO AI, gå till Inställningar > Integrationer och klicka på \"Lägg till integration\" bredvid Salesforce.</li><li>Angiv din Salesforce-API-nyckel och klicka på \"Anslut\" för att autentisera.</li><li>Välj de objekt och fält du vill synka och konfigurera fältmappningen enligt dina behov.</li></ol><blockquote><strong>Tips:</strong> Se till att du har rätt behörigheter i Salesforce för att skapa API-nycklar och konfigurera integrationen.</blockquote>"
+          },
+          {
+            "id": "connect-hubspot",
+            "title": "Koppla HubSpot",
+            "content": "<p>För att koppla HubSpot till SWEO AI följer du dessa steg: <ol><li>Gå till ditt HubSpot-konto och skapa en ny API-nyckel.</li><li>I SWEO AI, gå till Inställningar > Integrationer och klicka på \"Lägg till integration\" bredvid HubSpot.</li><li>Angiv din HubSpot-API-nyckel och klicka på \"Anslut\" för att autentisera.</li><li>Välj de objekt och fält du vill synka och konfigurera fältmappningen enligt dina behov.</li></ol><blockquote><strong>Tips:</strong> Kontrollera att du har rätt behörigheter i HubSpot för att skapa API-nycklar och konfigurera integrationen.</blockquote>"
+          },
+          {
+            "id": "field-mapping",
+            "title": "Fältmappning",
+            "content": "<p>Fältmappning är en viktig del av CRM-integrationen, eftersom det tillåter dig att definiera hur data från ditt CRM-system ska mappas till SWEO AI. Detta kan inkludera mappning av kontaktfält, ärendefält och annan relevant information. <ul><li>Kontaktfält: Mappa CRM-kontaktfält till SWEO AI-kontaktfält, såsom namn, e-post och telefonnummer.</li><li>Ärendefält: Mappa CRM-ärendefält till SWEO AI-ärendefält, såsom ärendetitel, beskrivning och status.</li></ul><blockquote><strong>Tips:</strong> Se till att du mappar fälten korrekt för att undvika dataförlust eller inkonsekvens.</blockquote>"
+          },
+          {
+            "id": "sync-settings",
+            "title": "Synkinställningar",
+            "content": "<p>Synkinställningarna avgör hur ofta data synkas mellan ditt CRM-system och SWEO AI. Du kan vanligtvis välja mellan olika synkfrekvenser, såsom <ul><li>Real-tid: Data synkas direkt när en ändring görs.</li><li>Schema: Data synkas enligt ett fördefinierat schema, såsom varje timme eller varje dag.</li></ul><blockquote><strong>Tips:</strong> Välj en synkfrekvens som passar dina affärsbehov och undviker onödig belastning på systemen.</blockquote>"
+          },
+          {
+            "id": "crm-in-inbox",
+            "title": "CRM-data i Inbox",
+            "content": "<p>När du har konfigurerat CRM-integrationen kan du se CRM-data direkt i SWEO AI:s Inbox. Detta inkluderar <ul><li>Kontaktinformation: Se kontaktdetaljer, såsom namn, e-post och telefonnummer.</li><li>Ärendehistorik: Se ärendehistorik, inklusive tidigare ärenden och kommunikation.</li></ul><blockquote><strong>Tips:</strong> Använd CRM-data i Inbox för att tillhandahålla mer personlig och effektiv support till dina kunder.</blockquote>"
+          }
+        ]
+      },
+      {
+        "slug": "webhooks-api",
+        "title": "Webhooks & REST API",
+        "description": "Bygg egna integrationer med SWEO AI:s webhook- och API-system.",
+        "sections": [
+          {
+            "id": "api-overview",
+            "title": "API-översikt",
+            "content": "<p>SWEO AI:s API-system möjliggör integration med externa system och tillhandahåller en omfattande uppsättning av API-endpoints för att hantera data och funktioner. Med API:et kan du skapa anpassade integrationer, automatisera arbetsflöden och utöka plattformens funktionalitet. API:et är byggt med standardiserade REST-principer och stödjer JSON-dataformat.</p>"
+          },
+          {
+            "id": "authentication",
+            "title": "Autentisering & API-nycklar",
+            "content": "<p>För att använda SWEO AI:s API måste du autentisera dina begäranden med en giltig API-nyckel. Du kan skapa och hantera API-nycklar i din SWEO AI-kontrollpanel. Varje API-nyckel har en unik nyckel och en associerad beskrivning. När du gör en API-begäran måste du inkludera API-nyckeln i rubriken som en Bearer-token.</p>"
+          },
+          {
+            "id": "webhook-events",
+            "title": "Webhook-events",
+            "content": "<p>SWEO AI:s webhook-system tillåter dig att prenumerera på specifika händelser som inträffar inom plattformen, såsom när ett nytt ärende skapas eller när en kund svarar på ett meddelande. När en händelse inträffar skickar SWEO AI en HTTP-begäran till den angivna webhook-URL:en med relevant data i JSON-format.</p>"
+          },
+          {
+            "id": "webhook-setup",
+            "title": "Konfigurera webhooks",
+            "content": "<p>För att konfigurera en webhook i SWEO AI måste du ange en giltig URL som kan ta emot HTTP-begäranden. Du kan också ange en specifik händelse som utlöser webhooken och välja vilka data som ska skickas med begäran. Du kan hantera dina webhooks i SWEO AI-kontrollpanelen, där du kan lägga till, redigera och ta bort webhooks.</p>"
+          },
+          {
+            "id": "api-endpoints",
+            "title": "Viktiga API-endpoints",
+            "content": "<p>SWEO AI:s API tillhandahåller en mängd olika endpoints för att hantera data och funktioner, inklusive ärendehantering, kundinformation och analytik. Några exempel på API-endpoints är <code>GET /tickets</code> för att hämta en lista över ärenden, <code>POST /tickets</code> för att skapa ett nytt ärende och <code>GET /customers</code> för att hämta information om en kund.</p>"
+          },
+          {
+            "id": "rate-limits",
+            "title": "Rate limits & best practices",
+            "content": "<p>SWEO AI:s API har rate limits för att förhindra missbruk och säkerställa att plattformen förblir stabil. Rate limits baseras på antalet begäranden per timme och varierar beroende på API-endpoint och din SWEO AI-plan. Om du når rate limiten kommer du att få ett felmeddelande med en <code>429 Too Many Requests</code>-statuskod. <blockquote><strong>Tips:</strong> För att undvika att nå rate limiten, se till att du bara gör nödvändiga begäranden och implementerar lämplig cachning och retry-logik i din applikation.</blockquote></p>"
+          },
+          {
+            "id": "api-examples",
+            "title": "Kodexempel",
+            "content": "<p>Här är ett exempel på hur du kan använda SWEO AI:s API för att skapa ett nytt ärende: <pre><code>curl -X POST \\https://api.swseo.ai/tickets \\-H 'Authorization: Bearer YOUR_API_KEY' \\-H 'Content-Type: application/json' \\-d '{\"subject\": \"Exempelärende\", \"description\": \"Detta är ett exempelärende"
+          }
+        ]
+      },
+      {
+        "slug": "ecommerce",
+        "title": "E-handelsintegrationer",
+        "description": "Optimera AI-support för e-handelsflöden: orderstatus, returer, betalningar.",
+        "sections": [
+          {
+            "id": "ecommerce-overview",
+            "title": "Översikt e-handel",
+            "content": "<p>SWEO AI erbjuder en rad e-handelsintegrationer för att optimera AI-supporten för e-handelsflöden. Genom att ansluta din e-handelsplattform till SWEO AI kan du automatisera svar på vanliga kundfrågor, såsom orderstatus, returer och betalningar. Våra integrationer stödjer flera populära e-handelsplattformar, inklusive Shopify och Stripe.</p>"
+          },
+          {
+            "id": "order-tracking",
+            "title": "Orderstatus & spårning",
+            "content": "<p>Med SWEO AI kan du enkelt integrera orderstatus och spårning i ditt kundsupportflöde. När en kund frågar efter orderstatusen kan AI:n automatiskt hämta informationen från din e-handelsplattform och tillhandahålla den till kunden. Detta sparar tid och minskar antalet manuella ärenden som behöver hanteras av ditt kundsupportteam. <blockquote><strong>Tips:</strong> Se till att konfigurera dina orderstatus och spårningsinställningar i SWEO AI för att säkerställa att AI:n kan hämta korrekt information från din e-handelsplattform.</blockquote>"
+          },
+          {
+            "id": "returns-refunds",
+            "title": "Returer & återbetalningar",
+            "content": "<p>SWEO AI kan också hantera returer och återbetalningar genom att automatisera svar på vanliga kundfrågor. När en kund vill returnera en vara eller begära en återbetalning kan AI:n tillhandahålla information om retur- och återbetalningsprocessen och även hjälpa till att initiera processen. Detta minskar antalet manuella ärenden som behöver hanteras av ditt kundsupportteam och förbättrar kundupplevelsen.</p>"
+          },
+          {
+            "id": "product-recommendations",
+            "title": "Produktrekommendationer",
+            "content": "<p>Genom att integrera din e-handelsplattform med SWEO AI kan du också tillhandahålla personliga produktrekommendationer till dina kunder. När en kund frågar efter produktrekommendationer kan AI:n analysera kundens köphistorik och preferenser och tillhandahålla relevanta rekommendationer. Detta kan öka försäljningen och förbättra kundupplevelsen. <blockquote><strong>Tips:</strong> Se till att konfigurera dina produktrekommendationsinställningar i SWEO AI för att säkerställa att AI:n kan tillhandahålla relevanta rekommendationer till dina kunder.</blockquote>"
+          },
+          {
+            "id": "cart-abandonment",
+            "title": "Övergivna varukorgar",
+            "content": "<p>SWEO AI kan också hjälpa till att minska antalet övergivna varukorgar genom att skicka automatiska påminnelser till kunder som har lämnat varor i sin varukorg. När en kund lämnar varor i sin varukorg kan AI:n skicka en påminnelse till kunden med information om de varor som har lämnats i varukorgen och en länk till varukorgen. Detta kan öka försäljningen och minska antalet övergivna varukorgar.</p>"
+          },
+          {
+            "id": "payment-issues",
+            "title": "Betalningsproblem",
+            "content": "<p>SLutligen kan SWEO AI också hjälpa till att hantera betalningsproblem genom att automatisera svar på vanliga kundfrågor. När en kund upplever betalningsproblem kan AI:n tillhandahålla information om hur man kan lösa problemet och även hjälpa till att initiera en ny betalning. Detta minskar antalet manuella ärenden som behöver hanteras av ditt kundsupportteam och förbättrar kundupplevelsen. <blockquote><strong>Tips:</strong> Se till att konfigurera dina betalningsinställningar i SWEO AI för att säkerställa att AI:n kan hantera betalningsproblem på ett effektivt sätt.</blockquote>"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "inbox",
+    "title": "Inbox & Konversationer",
+    "icon": "conversations",
+    "description": "Hantera ärenden, tilldela agenter och följ upp konversationer.",
+    "articles": [
+      {
+        "slug": "inbox-workflow",
+        "title": "Arbeta i Inbox",
+        "description": "Hantera ärenden, tilldela agenter och använd AI Copilot.",
+        "sections": [
+          {
+            "id": "inbox-layout",
+            "title": "Inbox-vy & layout",
+            "content": "<p>Inbox-vyn i SWEO AI är utformad för att ge en tydlig överblick över alla ärenden och konversationer. Layouten är anpassad för att underlätta hanteringen av ärenden, med tydliga och lättillgängliga funktioner för att tilldela agenter, använda AI Copilot och hantera konversationer.</p><ul><li>Ärendelista: En lista över alla ärenden, med information om ärendestatus, kundnamn och senaste aktivitet.</li><li>Ärendedetaljer: När du väljer ett ärende, visas detaljerad information om ärendet, inklusive konversationshistorik och tilldelad agent.</li><li>Verktygsfält: Ett verktygsfält med funktioner för att hantera ärenden, såsom tilldela agent, använda AI Copilot och skicka meddelanden.</li></ul>"
+          },
+          {
+            "id": "status-flow",
+            "title": "Ärendestatus & flöde",
+            "content": "<p>Ärendestatus i SWEO AI representerar de olika stegen i hanteringsprocessen för ett ärende. Statusen kan vara till exempel 'Ny', 'Pågående', 'Löst' eller 'Eskalerad'. Varje status har en specifik betydelse och påverkar hur ärendet hanteras i systemet.</p><ul><li>Ny: Ärendet har just skapats och väntar på att tilldelas en agent.</li><li>Pågående: Ärendet har tilldelats en agent och hanteras för närvarande.</li><li>Löst: Ärendet har hanterats och avslutats.</li><li>Eskalerad: Ärendet har eskalerats till en högre nivå av hantering på grund av dess komplexitet eller brådskande natur.</li></ul>"
+          },
+          {
+            "id": "filters-views",
+            "title": "Filter & vyer",
+            "content": "<p>Filter och vyer i SWEO AI möjliggör en anpassad vy av ärendena, baserat på specifika kriterier. Detta underlättar hanteringen av ärenden genom att tillåta agenter att fokusera på specifika ärendetyper eller status.</p><ul><li>Filter: Tillåter agenter att filtrera ärenden baserat på kriterier som ärendestatus, kundnamn, eller skapad datum.</li><li>Vyer: Möjliggör att agenter kan skapa anpassade vyer av ärendena, baserat på specifika filterkriterier.</li></ul><blockquote><strong>Tips:</strong> Använd filter och vyer för att skapa en effektiv hanteringsprocess för ärenden, och förbättra agenternas produktivitet.</blockquote>"
+          },
+          {
+            "id": "assign",
+            "title": "Tilldela ärenden",
+            "content": "<p>Tilldela ärenden i SWEO AI är en viktig del av hanteringsprocessen. Agenterna kan tilldelas ärenden manuellt eller automatiskt, baserat på specifika regler eller kriterier.</p><ul><li>Manuell tilldelning: Agenterna kan tilldelas ärenden manuellt av en administratör eller teamledare.</li><li>Automatisk tilldelning: Ärenden kan tilldelas automatiskt till agenter baserat på specifika regler eller kriterier, såsom ärendestatus eller kundnamn.</li></ul>"
+          },
+          {
+            "id": "copilot",
+            "title": "AI Copilot för agenter",
+            "content": "<p>AI Copilot i SWEO AI är en avancerad funktion som hjälper agenter att hantera ärenden mer effektivt. AI Copilot kan förse agenter med förslag på svar, hjälpa till med att kategorisera ärenden och ge rekommendationer för hantering.</p><ul><li>Förslag på svar: AI Copilot kan ge förslag på svar till kunder, baserat på ärendets innehåll och kontext.</li><li>Kategorisering: AI Copilot kan hjälpa till att kategorisera ärenden, baserat på deras innehåll och relevans.</li><li>Rekommendationer: AI Copilot kan ge rekommendationer för hantering av ärenden, baserat på historiska data och erfarenheter.</li></ul>"
+          },
+          {
+            "id": "macros",
+            "title": "Macros & snabbsvar",
+            "content": "<p>Macros och snabbsvar i SWEO AI är funktioner som möjliggör att agenter kan skapa och använda fördefinierade svar och åtgärder för vanliga ärendetyper.</p><ul><li>Macros: Tillåter agenter att skapa och använda fördefinierade åtgärder för vanliga ärendetyper.</li><li>Snabbsvar: Tillåter agenter att skapa och använda fördefinierade svar för vanliga frågor eller ärendetyper.</li></ul><blockquote><strong>Tips:</strong> Använd macros och snabbsvar för att förbättra agenternas produktivitet och effektivitet i hanteringen av ärenden.</blockquote>"
+          },
+          {
+            "id": "shortcuts",
+            "title": "Tangentbordsgenvägar",
+            "content": "<p>Tangentbordsgenvägar i SWEO AI är en funktion som möjliggör att agenter kan använda tangentbordsgenvägar för att utföra vanliga åtgärder och hantera ärenden mer effektivt.</p><ul><li>Tangentbordsgenvägar: Tillåter agenter att använda tangentbordsgenvägar för att utföra vanliga åtgärder, såsom att skicka meddelanden eller tilldela ärenden.</li></ul>"
+          },
+          {
+            "id": "bulk-actions",
+            "title": "Masshantering",
+            "content": "<p>Masshantering i SWEO AI är en funktion som möjliggör att agenter kan hantera flera ärenden samtidigt, vilket underlättar hanteringen av stora mängder ärenden.</p><ul><li>Masshantering: Tillåter agenter att hantera flera ärenden samtidigt, vilket underlättar hanteringen av stora mängder ärenden.</li></ul><blockquote><strong>Tips:</strong> Använd masshantering för att förbättra agenternas produktivitet och effektivitet i hanteringen av ärenden.</blockquote>"
+          }
+        ]
+      },
+      {
+        "slug": "contacts-management",
+        "title": "Kontakthantering",
+        "description": "Hantera kundprofiler, taggar, segment och konversationshistorik.",
+        "sections": [
+          {
+            "id": "contact-profiles",
+            "title": "Kundprofiler",
+            "content": "<p>Kundprofiler är en central del av SWEO AI:s kontakthantering. Varje kundprofil innehåller information om kundens namn, e-postadress, telefonnummer och annan relevant information. Du kan också lägga till anpassade attribut till varje kundprofil för att spara ytterligare information. Kundprofiler kan också kopplas till specifika konversationer och ärenden, vilket gör det enkelt att följa upp och hantera kundens historik.</p><ul><li>Skapa och redigera kundprofiler direkt i SWEO AI</li><li>Lägg till anpassade attribut för att spara ytterligare information</li><li>Koppla kundprofiler till specifika konversationer och ärenden</li></ul><blockquote><strong>Tips:</strong> Använd kundprofiler för att skapa en komplett bild av dina kunder och deras behov.</blockquote>"
+          },
+          {
+            "id": "tags-segments",
+            "title": "Taggar & segment",
+            "content": "<p>Taggar och segment är verktyg som hjälper dig att organisera och kategorisera dina kundprofiler. Du kan skapa taggar för att markera specifika egenskaper eller beteenden hos dina kunder, och sedan använda dessa taggar för att skapa segment. Segment kan användas för att skicka riktade meddelanden eller kampanjer till specifika grupper av kunder.</p><ul><li>Skapa och hantera taggar för att markera specifika egenskaper eller beteenden</li><li>Använd taggar för att skapa segment och rikta meddelanden eller kampanjer</li><li>Anpassa dina segment för att möta dina specifika affärsbehov</li></ul><blockquote><strong>Tips:</strong> Använd taggar och segment för att skapa en mer personlig och riktad upplevelse för dina kunder.</blockquote>"
+          },
+          {
+            "id": "conversation-history",
+            "title": "Konversationshistorik",
+            "content": "<p>Konversationshistorik är en viktig del av SWEO AI:s kontakthantering. Varje konversation sparas och kan ses i kundens profil, vilket gör det enkelt att följa upp och hantera kundens historik. Du kan också använda konversationshistoriken för att analysera och förbättra din kundservice.</p><ul><li>Se och hantera konversationshistorik för varje kund</li><li>Använd konversationshistoriken för att analysera och förbättra din kundservice</li><li>Sök och filtrera konversationer för att hitta specifik information</li></ul><blockquote><strong>Tips:</strong> Använd konversationshistoriken för att förbättra din kundservice och öka kundnöjdheten.</blockquote>"
+          },
+          {
+            "id": "custom-attributes",
+            "title": "Egna attribut",
+            "content": "<p>Egna attribut är anpassade fält som du kan lägga till i dina kundprofiler för att spara ytterligare information. Du kan skapa egna attribut för att spara information som är specifik för din verksamhet eller dina kunder. Egna attribut kan också användas för att skapa anpassade rapporter och analyser.</p><ul><li>Skapa och hantera egna attribut för att spara ytterligare information</li><li>Använd egna attribut för att skapa anpassade rapporter och analyser</li><li>Anpassa dina egna attribut för att möta dina specifika affärsbehov</li></ul><blockquote><strong>Tips:</strong> Använd egna attribut för att skapa en mer komplett bild av dina kunder och deras behov.</blockquote>"
+          },
+          {
+            "id": "import-contacts",
+            "title": "Importera kontakter",
+            "content": "<p>Importera kontakter är en funktion som gör det möjligt för dig att överföra dina befintliga kundprofiler till SWEO AI. Du kan importera kontakter från en CSV-fil eller från en annan källa. Funktionen för importera kontakter är enkel och snabb, och den hjälper dig att komma igång med din kontakthantering på nolltid.</p><ul><li>Importera kontakter från en CSV-fil eller från en annan källa</li><li>Använd funktionen för importera kontakter för att komma igång med din kontakthantering på nolltid</li><li>Validera och rensa dina importerade kontakter för att säkerställa kvalitet</li></ul><blockquote><strong>Tips:</strong> Använd funktionen för importera kontakter för att spara tid och öka effektiviteten i din kontakthantering.</blockquote>"
+          },
+          {
+            "id": "gdpr-data",
+            "title": "GDPR & datahantering",
+            "content": "<p>GDPR och datahantering är viktiga aspekter av SWEO AI:s kontakthantering. Vi tar dataskydd och säkerhet på största allvar, och vi har implementerat alla nödvändiga åtgärder för att säkerställa att dina kundprofiler och konversationsdata hanteras i enlighet med GDPR. Du kan också använda SWEO AI:s funktioner för att hantera dina kunders samtycke och rättigheter enligt GDPR.</p><ul><li>Säkerställ att dina kundprofiler och konversationsdata hanteras i enlighet med GDPR</li><li>Använd SWEO AI:s funktioner för att hantera dina kunders samtycke och rättigheter enligt GDPR</li><li>Se till att du har en tydlig och transparent dataskyddspolicy</li></ul><blockquote><strong>Tips:</strong> Använd SWEO AI:s funktioner för att säkerställa att du hanterar dina kunders data i enlighet med GDPR och andra dataskyddslagar.</blockquote>"
+          }
+        ]
+      },
+      {
+        "slug": "csat-feedback",
+        "title": "CSAT & Kundfeedback",
+        "description": "Samla in och analysera kundnöjdhet efter konversationer.",
+        "sections": [
+          {
+            "id": "csat-overview",
+            "title": "Vad är CSAT?",
+            "content": "<p>CSAT (Customer Satisfaction) är ett mått på hur nöjda kunder är med den service de får. Det är ett viktigt verktyg för att förstå kundernas behov och förbättra kundsupporten. Genom att samla in och analysera kundnöjdhet efter konversationer kan företag identifiera områden för förbättring och öka kundnöjdheten.</p>"
+          },
+          {
+            "id": "enable-surveys",
+            "title": "Aktivera nöjdhetsenkäter",
+            "content": "<p>För att aktivera nöjdhetsenkäter i SWEO AI, gå till <strong>Inbox</strong>-inställningar och klicka på <strong>Nöjdhetsenkät</strong>. Välj sedan den kanal som du vill aktivera enkäten för, till exempel <strong>Web chat widget</strong> eller <strong>e-post</strong>. Du kan också anpassa enkätens utseende och innehåll för att matcha ditt varumärke.</p>"
+          },
+          {
+            "id": "survey-customization",
+            "title": "Anpassa enkäten",
+            "content": "<p>Det är möjligt att anpassa enkäten för att passa ditt företags specifika behov. Du kan lägga till eller ta bort frågor, ändra svaren och anpassa enkätens utseende. För att anpassa enkäten, gå till <strong>Nöjdhetsenkät</strong>-inställningar och klicka på <strong>Anpassa enkät</strong>. <blockquote><strong>Tips:</strong> Använd enkätens anpassningsfunktioner för att ställa specifika frågor som är relevanta för ditt företag och dina kunder.</blockquote></p>"
+          },
+          {
+            "id": "csat-analytics",
+            "title": "Analysera CSAT-data",
+            "content": "<p>För att analysera CSAT-data, gå till <strong>Analytics</strong>-dashboarden och klicka på <strong>CSAT</strong>. Här kan du se en översikt av kundnöjdheten, inklusive genomsnittligt CSAT-värde och antal svar. Du kan också filtrera data efter kanal, datum och annan relevant information. <blockquote><strong>Tips:</strong> Använd CSAT-data för att identifiera mönster och trenden i kundnöjdheten och förbättra kundsupporten.</blockquote></p>"
+          },
+          {
+            "id": "negative-feedback",
+            "title": "Hantera negativ feedback",
+            "content": "<p>När du får negativ feedback från kunder är det viktigt att hantera den på ett professionellt och effektivt sätt. Gå till <strong>Inbox</strong> och leta reda på konversationen med den negativa feedbacken. Svara sedan på kundens kommentar och försök att lösa problemet. <blockquote><strong>Tips:</strong> Använd negativ feedback som en möjlighet att förbättra kundsupporten och öka kundnöjdheten.</blockquote></p>"
+          },
+          {
+            "id": "nps-integration",
+            "title": "NPS-integration",
+            "content": "<p>SWEO AI har stöd för NPS-integration (Net Promoter Score), som är ett mått på kundernas lojalitet och tillfredsställelse. För att aktivera NPS-integration, gå till <strong>Inställningar</strong> och klicka på <strong>NPS</strong>. Här kan du konfigurera NPS-inställningarna och se NPS-värdet för ditt företag. <blockquote><strong>Tips:</strong> Använd NPS-integration för att få en mer komplett bild av kundnöjdheten och lojaliteten.</blockquote></p>"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "analytics",
+    "title": "Analytics & Rapporter",
+    "icon": "analytics",
+    "description": "Resolution rate, responstid, content gaps och rapporter.",
+    "articles": [
+      {
+        "slug": "analytics-dashboard",
+        "title": "Dashboard & KPI:er",
+        "description": "Förstå AI-agentens prestanda med realtidsdata och grafer.",
+        "sections": [
+          {
+            "id": "kpis",
+            "title": "KPI:er & nyckeltal",
+            "content": "<p>KPI:er (Key Performance Indicators) är viktiga mätvärden som hjälper dig att förstå AI-agentens prestanda. I SWEO AI kan du se KPI:er som svarshastighet, svarsnoggrannhet och kundnöjdhet. Dessa mätvärden hjälper dig att identifiera områden där AI-agenten behöver förbättras.</p><ul><li>Svarshastighet: Hur snabbt AI-agenten svarar på kundförfrågningar.</li><li>Svarsnoggrannhet: Hur exakta AI-agentens svar är i förhållande till kundens förfrågning.</li><li>Kundnöjdhet: Hur nöjda kunderna är med AI-agentens svar.</li></ul>"
+          },
+          {
+            "id": "charts",
+            "title": "Grafer & visualiseringar",
+            "content": "<p>Grafer och visualiseringar hjälper dig att förstå AI-agentens prestanda på ett ögonblick. I SWEO AI kan du se grafer som visar svarshastighet, svarsnoggrannhet och kundnöjdhet över tid. Dessa grafer hjälper dig att identifiera trender och mönster i AI-agentens prestanda.</p><blockquote><strong>Tips:</strong> Använd graferna för att identifiera områden där AI-agenten behöver förbättras och justera din strategi därefter.</blockquote>"
+          },
+          {
+            "id": "content-gaps",
+            "title": "Content Gaps & AI-förslag",
+            "content": "<p>Content Gaps & AI-förslag hjälper dig att identifiera områden där AI-agenten saknar kunskap eller behöver förbättras. I SWEO AI kan du se en lista över områden där AI-agenten har svårt att svara på kundförfrågningar. Dessa områden kan sedan användas för att förbättra AI-agentens kunskap och prestanda.</p><ul><li>Identifiera områden där AI-agenten saknar kunskap.</li><li>Förbättra AI-agentens kunskap genom att lägga till nytt innehåll.</li><li>Se till att AI-agenten har tillräckligt med data för att svara korrekt på kundförfrågningar.</li></ul>"
+          },
+          {
+            "id": "filter-data",
+            "title": "Filtrera & segmentera data",
+            "content": "<p>Filtrera & segmentera data hjälper dig att se specifika delar av AI-agentens prestanda. I SWEO AI kan du filtrera data efter kundsegment, tid och andra parametrar. Denna funktion hjälper dig att identifiera specifika områden där AI-agenten behöver förbättras.</p><blockquote><strong>Tips:</strong> Använd filtreringsfunktionen för att se hur AI-agenten presterar i specifika situationer och justera din strategi därefter.</blockquote>"
+          },
+          {
+            "id": "benchmarks",
+            "title": "Benchmarks & mål",
+            "content": "<p>Benchmarks & mål hjälper dig att sätta mål för AI-agentens prestanda och jämföra den med andra organisationer. I SWEO AI kan du se benchmarks för svarshastighet, svarsnoggrannhet och kundnöjdhet. Dessa benchmarks hjälper dig att identifiera områden där AI-agenten behöver förbättras och sätta realistiska mål för förbättring.</p><ul><li>Sätt mål för AI-agentens prestanda baserat på benchmarks.</li><li>Jämför AI-agentens prestanda med andra organisationer.</li><li>Justera din strategi för att uppnå målen.</li></ul>"
+          },
+          {
+            "id": "alerts",
+            "title": "Notifieringar & tröskelvärden",
+            "content": "<p>Notifieringar & tröskelvärden hjälper dig att få meddelanden när AI-agentens prestanda inte uppfyller dina förväntningar. I SWEO AI kan du ställa in tröskelvärden för svarshastighet, svarsnoggrannhet och kundnöjdhet. När AI-agentens prestanda inte uppfyller dessa tröskelvärden får du en notifiering som varnar dig för att något behöver åtgärdas.</p><blockquote><strong>Tips:</strong> Använd notifieringsfunktionen för att få meddelanden när AI-agentens prestanda behöver förbättras och åtgärda problemen direkt.</blockquote>"
+          }
+        ]
+      },
+      {
+        "slug": "reports",
+        "title": "Rapporter & Export",
+        "description": "Generera rapporter och exportera data för vidare analys.",
+        "sections": [
+          {
+            "id": "report-types",
+            "title": "Tillgängliga rapporter",
+            "content": "<p>SWEO AI erbjuder ett antal fördefinierade rapporter som hjälper dig att analysera dina kundsupportdata. Dessa rapporter inkluderar exempelvis <strong>Ärendestatistik</strong>, <strong>Kundnöjdhetsindex</strong> och <strong>Agentprestation</strong>. Du kan nå dessa rapporter via Analytics-dashboarden, där du också kan filtrera och sortera data för att få en bättre översikt över dina kundsupportprocesser.</p><ul><li>Ärendestatistik: Visar antalet ärenden, genomsnittlig handläggningstid och andra nyckeltal.</li><li>Kundnöjdhetsindex: Mäter kundnöjdheten baserat på feedback och betyg.</li><li>Agentprestation: Visar prestationen för varje agent, inklusive handläggningstid och ärendegenomströmning.</li></ul>"
+          },
+          {
+            "id": "custom-reports",
+            "title": "Bygg egna rapporter",
+            "content": "<p>Om du behöver mer anpassade rapporter kan du bygga egna rapporter med hjälp av SWEO AI:s rapportbyggare. Du kan välja vilka fält och data som ska inkluderas, samt anpassa layouten och formatet för att passa dina specifika behov. <blockquote><strong>Tips:</strong> Använd rapportbyggaren för att skapa anpassade rapporter som hjälper dig att följa upp specifika KPI:er eller mål.</blockquote> Du kan också dela dina anpassade rapporter med andra användare inom organisationen.</p>"
+          },
+          {
+            "id": "schedule-reports",
+            "title": "Schemalägg rapporter",
+            "content": "<p>Med SWEO AI kan du schemalägga rapporter för att automatiskt skicka dem till dig eller dina kollegor vid specifika tidpunkter. Detta kan vara användbart för att få regelbundna uppdateringar om dina kundsupportprocesser, eller för att förbereda dig inför möten eller presentationer. Du kan välja mellan olika schemaläggningsalternativ, inklusive daglig, veckovis eller månadsvis.</p><ul><li>Daglig: Skicka rapporter varje dag vid en specifik tid.</li><li>Veckovis: Skicka rapporter varje vecka på en specifik dag och tid.</li><li>Månadsvis: Skicka rapporter den första dagen i varje månad.</li></ul>"
+          },
+          {
+            "id": "export-formats",
+            "title": "Exportformat",
+            "content": "<p>När du behöver exportera data från SWEO AI kan du välja mellan olika format, inklusive CSV, Excel och JSON. Detta gör det enkelt att importera data till andra system eller verktyg för vidare analys. <blockquote><strong>Tips:</strong> Använd CSV-formatet för att enkelt importera data till Excel eller andra kalkylprogram.</blockquote> Du kan också välja att exportera data för specifika tidsperioder eller för vissa typer av ärenden.</p>"
+          },
+          {
+            "id": "api-access",
+            "title": "API-åtkomst till data",
+            "content": "<p>Om du behöver direkt åtkomst till dina kundsupportdata kan du använda SWEO AI:s API. Detta ger dig möjlighet att hämta data programmatiskt och integrera dem med andra system eller verktyg. <strong>API-dokumentationen</strong> innehåller information om tillgängliga API-endpoints, parametrar och exempelkod. Du kan också kontakta vår support för att få hjälp med att komma igång med API:t.</p><ul><li>API-endpoints: Lista över tillgängliga API-endpoints för att hämta data.</li><li>Parametrar: Information om parametrar som kan användas för att filtrera och sortera data.</li><li>Exempelkod: Kodexempel i olika programmeringsspråk för att hjälpa dig komma igång.</li></ul>"
+          }
+        ]
+      },
+      {
+        "slug": "ai-insights",
+        "title": "AI-insikter & Flywheel",
+        "description": "Automatiska förbättringsförslag och content gap-analys.",
+        "sections": [
+          {
+            "id": "flywheel-loop",
+            "title": "Flywheel-loopen i praktiken",
+            "content": "<p>Flywheel-loopen är en kontinuerlig process som består av fyra faser: Train, Test, Deploy och Analyze. I Train-fasen tränas AI-modellen på befintlig data, i Test-fasen testas modellens prestanda, i Deploy-fasen distribueras modellen till produktion och i Analyze-fasen analyseras resultaten och identifieras områden för förbättring. Denna loop är viktig för att säkerställa att AI-modellen kontinuerligt förbättras och anpassas till verksamhetens behov.</p>"
+          },
+          {
+            "id": "content-gaps",
+            "title": "Content Gap-detektion",
+            "content": "<p>Content Gap-detektion är en funktion som identifierar områden där det saknas innehåll eller där innehållet är ofullständigt. Detta kan exempelvis vara frågor som kunder ofta ställer men som inte har något tydligt svar i knowledge basen. Funktionen använder AI för att analysera data och identifiera mönster och trender som kan indikera behov av nytt eller uppdaterat innehåll. <blockquote><strong>Tips:</strong> Använd Content Gap-detektion för att identifiera områden där du kan förbättra din knowledge base och förbättra kundupplevelsen.</blockquote></p>"
+          },
+          {
+            "id": "auto-suggestions",
+            "title": "AI-genererade artikelförslag",
+            "content": "<p>AI-genererade artikelförslag är en funktion som föreslår nya artiklar eller uppdateringar av befintliga artiklar baserat på data och analyser. Funktionen använder AI för att identifiera områden där det saknas innehåll eller där innehållet är ofullständigt och föreslår sedan nya artiklar eller uppdateringar som kan fylla dessa luckor. <blockquote><strong>Tips:</strong> Använd AI-genererade artikelförslag för att snabbt och enkelt identifiera områden där du kan förbättra din knowledge base.</blockquote></p>"
+          },
+          {
+            "id": "approve-workflow",
+            "title": "Granska & godkänn förslag",
+            "content": "<p>Granska och godkänn förslag är en process som säkerställer att alla förslag som genereras av AI-modellen granskas och godkänns innan de publiceras. Denna process är viktig för att säkerställa att allt innehåll är korrekt och relevant. Funktionen tillåter dig att granska och godkänna förslag innan de publiceras, vilket säkerställer att din knowledge base alltid är uppdaterad och korrekt.</p>"
+          },
+          {
+            "id": "trend-analysis",
+            "title": "Trendanalys",
+            "content": "<p>Trendanalys är en funktion som analyserar data och identifierar mönster och trender som kan indikera förändringar i kundernas beteende eller behov. Funktionen använder AI för att analysera data och identifiera områden där det finns potential för förbättring. <blockquote><strong>Tips:</strong> Använd trendanalys för att identifiera områden där du kan förbättra din knowledge base och förbättra kundupplevelsen.</blockquote></p>"
+          },
+          {
+            "id": "continuous-improvement",
+            "title": "Kontinuerlig förbättring",
+            "content": "<p>Innehåll genereras...</p>"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "team-management",
+    "title": "Team & Administration",
+    "icon": "users",
+    "description": "Hantera team, roller, arbetstider och organisationsinställningar.",
+    "articles": [
+      {
+        "slug": "team-setup",
+        "title": "Team & Roller",
+        "description": "Konfigurera team, roller och behörigheter för din organisation.",
+        "sections": [
+          {
+            "id": "team-structure",
+            "title": "Teamstruktur",
+            "content": "<p>Teamstruktur är en viktig del av att konfigurera din organisation i SWEO AI. Här kan du skapa och hantera team, tilldela roller och behörigheter, samt övervaka agenternas prestationer. En tydlig teamstruktur är avgörande för att säkerställa att dina kundsupportärenden hanteras effektivt och professionellt. Du kan skapa flera team och tilldela specifika roller och behörigheter till varje team, vilket möjliggör en flexibel och anpassningsbar konfiguration.</p>"
+          },
+          {
+            "id": "roles-overview",
+            "title": "Roller & behörigheter",
+            "content": "<p>Roller och behörigheter är grundläggande komponenter i SWEO AI. Systemet kommer med fördefinierade roller, såsom administratör, agent och gäst, men du kan också skapa egna anpassade roller. Varje roll har specifika behörigheter, som avgör vad användaren kan göra i systemet. Du kan till exempel tilldela en agent rollen att hantera kundsupportärenden, men inte ha behörighet att komma åt känsliga data. Detta säkerställer att varje användare har rätt nivå av åtkomst och kontroll.</p>"
+          },
+          {
+            "id": "custom-roles",
+            "title": "Skapa egna roller",
+            "content": "<p>Skapa egna roller i SWEO AI för att anpassa systemet efter dina specifika behov. Du kan skapa en ny roll genom att klicka på knappen för att skapa en ny roll och sedan ange rollens namn och beskrivning. Därefter kan du tilldela specifika behörigheter till rollen, såsom åtkomst till vissa funktioner eller data. Detta möjliggör en hög grad av flexibilitet och anpassningsförmåga, så att du kan skapa en rollstruktur som passar din organisation. <blockquote><strong>Tips:</strong> Se till att dokumentera dina anpassade roller och deras behörigheter för att underlätta framtida underhåll och ändringar.</blockquote></p>"
+          },
+          {
+            "id": "agent-skills",
+            "title": "Agentskills & specialiseringar",
+            "content": "<p>Agentskills och specialiseringar är viktiga aspekter att överväga när du konfigurerar dina agenter i SWEO AI. Du kan tilldela specifika färdigheter och specialiseringar till varje agent, vilket avgör vilka typer av ärenden de kan hantera. Till exempel kan en agent ha specialistkunskaper inom en viss produkt eller tjänst, och därmed vara bättre lämpad att hantera ärenden relaterade till den produkten eller tjänsten. Detta säkerställer att ärendena hanteras av de mest kompetenta agenterna, vilket förbättrar kundnöjdheten och minskar hanteringstiden.</p>"
+          },
+          {
+            "id": "availability",
+            "title": "Tillgänglighet & arbetstider",
+            "content": "<p>Tillgänglighet och arbetstider är viktiga att konfigurera för dina agenter i SWEO AI. Du kan ange specifika arbetstider och tillgänglighetsperioder för varje agent, vilket avgör när de är tillgängliga för att hantera ärenden. Detta säkerställer att ärendena hanteras under de tider då dina agenter är mest tillgängliga och kan ge bästa möjliga service. Du kan också konfigurera systemet för att automatiskt dirigera ärenden till agenter som är tillgängliga och har rätt färdigheter för att hantera ärendet.</p>"
+          },
+          {
+            "id": "performance",
+            "title": "Agentprestation",
+            "content": "<p>Agentprestation är en viktig aspekt att övervaka i SWEO AI. Systemet tillhandahåller en mängd olika KPI:er och rapporter som hjälper dig att övervaka och analysera dina agenter prestationer. Du kan övervaka saker som hanteringstid, ärenden per agent, kundnöjdhet och mycket mer. Detta ger dig en tydlig bild av hur dina agenter presterar och var det finns utrymme för förbättring. <blockquote><strong>Tips:</strong> Använd de tillgängliga rapporterna och KPI:erna för att regelbundet utvärdera och förbättra dina agenter prestationer.</blockquote></p>"
+          }
+        ]
+      },
+      {
+        "slug": "workspace-settings",
+        "title": "Workspace-inställningar",
+        "description": "Globala inställningar för branding, språk, notifieringar och säkerhet.",
+        "sections": [
+          {
+            "id": "branding",
+            "title": "Branding & logotyp",
+            "content": "<p>Branding och logotyp är viktiga delar av er organisations identitet. I SWEO AI kan ni anpassa er branding genom att ladda upp er logotyp, välja en färgsättning och ange er organisations namn. För att göra detta, gå till <strong>Inställningar</strong> och klicka på <strong>Branding & logotyp</strong>. Här kan ni ladda upp er logotyp i PNG- eller SVG-format och välja en färgsättning som matchar er organisations varumärke. <blockquote><strong>Tips:</strong> Se till att er logotyp är i rätt storlek och format för att den ska se bra ut på alla enheter.</blockquote></p>"
+          },
+          {
+            "id": "language-settings",
+            "title": "Språkinställningar",
+            "content": "<p>Språkinställningar är viktiga för att säkerställa att er kundsupport fungerar smidigt för kunder med olika språk. I SWEO AI kan ni ställa in språkinställningar för er workspace genom att gå till <strong>Inställningar</strong> och klicka på <strong>Språkinställningar</strong>. Här kan ni välja det språk som ska användas för er kundsupport och även lägga till flera språk om ni behöver stödja kunder med olika språk. <ul><li>Välj det språk som ska användas som standard för er kundsupport</li><li>Lägg till flera språk om ni behöver stödja kunder med olika språk</li></ul></p>"
+          },
+          {
+            "id": "notifications",
+            "title": "Notifieringar",
+            "content": "<p>Notifieringar är viktiga för att hålla er informerade om vad som händer i er kundsupport. I SWEO AI kan ni ställa in notifieringar för er workspace genom att gå till <strong>Inställningar</strong> och klicka på <strong>Notifieringar</strong>. Här kan ni välja vilka typer av notifieringar ni vill ta emot, såsom nya ärenden, svar från kunder och uppdateringar om er kundsupport. <blockquote><strong>Tips:</strong> Se till att ni har rätt e-postadresser och telefonnummer angivna för att ni ska kunna ta emot notifieringar.</blockquote></p>"
+          },
+          {
+            "id": "security-settings",
+            "title": "Säkerhetsinställningar",
+            "content": "<p>Säkerhetsinställningar är viktiga för att skydda er kundsupport och kunddata. I SWEO AI kan ni ställa in säkerhetsinställningar för er workspace genom att gå till <strong>Inställningar</strong> och klicka på <strong>Säkerhetsinställningar</strong>. Här kan ni ställa in lösenordskrav, tvåfaktorsautentisering och andra säkerhetsfunktioner för att skydda er kundsupport. <ul><li>Ställ in lösenordskrav för er kundsupport</li><li>Aktivera tvåfaktorsautentisering för extra säkerhet</li></ul></p>"
+          },
+          {
+            "id": "billing-plans",
+            "title": "Fakturering & planer",
+            "content": "<p>Fakturering och planer är viktiga för att hantera er prenumeration på SWEO AI. I SWEO AI kan ni se er fakturering och planer genom att gå till <strong>Inställningar</strong> och klicka på <strong>Fakturering & planer</strong>. Här kan ni se er nuvarande plan, fakturering och betalningshistorik. <blockquote><strong>Tips:</strong> Se till att ni har rätt betalningsinformation angiven för att undvika avbrott i er kundsupport.</blockquote></p>"
+          },
+          {
+            "id": "audit-log",
+            "title": "Aktivitetslogg",
+            "content": "<p>Aktivitetslogg är en viktig funktion för att spåra alla ändringar och händelser i er kundsupport. I SWEO AI kan ni se er aktivitetslogg genom att gå till <strong>Inställningar</strong> och klicka på <strong>Aktivitetslogg</strong>. Här kan ni se alla ändringar och händelser som har skett i er kundsupport, inklusive vem som har gjort ändringarna och när de har skett. <ul><li>Se alla ändringar och händelser i er kundsupport</li><li>Filtrera aktivitetsloggen efter datum och användare</li></ul></p>"
+          }
+        ]
+      },
+      {
+        "slug": "automation-rules",
+        "title": "Automatiseringsregler",
+        "description": "Skapa regler som automatiserar tilldelning, taggning och notifieringar.",
+        "sections": [
+          {
+            "id": "rules-overview",
+            "title": "Vad är automatiseringsregler?",
+            "content": "<p>Automatiseringsregler är en funktion i SWEO AI som möjliggör skapandet av regler som automatiserar tilldelning, taggning och notifieringar för kundsupportärenden. Dessa regler kan konfigureras för att utföra specifika åtgärder baserat på fördefinierade villkor, vilket hjälper till att effektivisera och rationalisera supportprocessen.</p>"
+          },
+          {
+            "id": "trigger-conditions",
+            "title": "Trigger & villkor",
+            "content": "<p>Trigger och villkor är grunden för automatiseringsregler. En trigger är det som utlöser regeln, till exempel när ett nytt ärende skapas eller när en kund svarar på ett meddelande. Villkoren är de specifika kraven som måste uppfyllas för att regeln ska kunna utföras, till exempel ärendets prioritet eller kundens geografiska plats. Genom att kombinera triggers och villkor kan du skapa regler som är anpassade till dina specifika behov.</p>"
+          },
+          {
+            "id": "actions",
+            "title": "Tillgängliga åtgärder",
+            "content": "<p>Det finns flera tillgängliga åtgärder som kan utföras av automatiseringsregler, inklusive tilldelning av ärenden till specifika agenter, taggning av ärenden med specifika etiketter och skickande av notifieringar till agenter eller kunder. Dessa åtgärder kan konfigureras för att utföras automatiskt när en regel utlöses, vilket hjälper till att minska den manuella arbetsbördan och förbättra supportprocessen.</p>"
+          },
+          {
+            "id": "rule-examples",
+            "title": "Exempelregler",
+            "content": "<p>Här är några exempel på automatiseringsregler: skapa en regel som tilldelar alla ärenden med hög prioritet till en specifik agent, eller skapa en regel som skickar en notifiering till en kund när deras ärende har lösts. Du kan också skapa regler som taggar ärenden med specifika etiketter baserat på ärendets innehåll eller kundens beteende. <blockquote><strong>Tips:</strong> Använd exempelregler som utgångspunkt för att skapa dina egna anpassade regler.</blockquote></p>"
+          },
+          {
+            "id": "rule-priority",
+            "title": "Regelprioritet",
+            "content": "<p>Regelprioritet är viktigt för att säkerställa att reglerna utförs i rätt ordning. Du kan konfigurera prioriteten för varje regel för att bestämma i vilken ordning de ska utföras. Detta är särskilt viktigt om du har flera regler som kan utlösas av samma trigger. Genom att konfigurera prioriteten kan du säkerställa att de viktigaste reglerna utförs först.</p>"
+          },
+          {
+            "id": "troubleshooting",
+            "title": "Felsökning",
+            "content": "<p>När du felsöker automatiseringsregler är det viktigt att kontrollera att triggers och villkor är korrekt konfigurerade. Du bör också kontrollera att åtgärderna är korrekt definierade och att regelprioriteten är korrekt konfigurerad. Om en regel inte fungerar som förväntat kan du använda SWEO AI:s inbyggda felsökningsverktyg för att identifiera problemet och lösa det. <blockquote><strong>Tips:</strong> Använd SWEO AI:s loggningsfunktion för att spåra regelutförande och identifiera eventuella problem.</blockquote></p>"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "security-compliance",
+    "title": "Säkerhet & Compliance",
+    "icon": "shield",
+    "description": "GDPR, dataskydd, SSO, kryptering och säkerhetskonfiguration.",
+    "articles": [
+      {
+        "slug": "data-security",
+        "title": "Datasäkerhet & Kryptering",
+        "description": "Hur SWEO AI skyddar kunddata med kryptering, isolering och säkerhetsåtgärder.",
+        "sections": [
+          {
+            "id": "encryption",
+            "title": "Kryptering i vila & transit",
+            "content": "<p>SWEO AI använder avancerad kryptering för att skydda kunddata både i vila och transit. All data som lagras i vår plattform krypteras med hjälp av starka algoritmer, såsom AES-256, för att förhindra obehörig åtkomst. Dessutom används SSL/TLS-kryptering för alla kommunikationer mellan klienter och vår server, vilket säkerställer att all data som skickas eller tas emot är krypterad och skyddad. <strong>Tips:</strong> Se till att alla anslutningar till SWEO AI sker via HTTPS för att säkerställa krypterad kommunikation.</p>"
+          },
+          {
+            "id": "tenant-isolation",
+            "title": "Multi-tenant isolering",
+            "content": "<p>SWEO AI är en multi-tenant plattform, vilket innebär att varje organisations data är isolerad från andra organisationers data. Vi använder en kombination av tekniker, såsom virtuella nätverk och åtkomstkontroll, för att säkerställa att varje organisations data förblir konfidentiell och skyddad. Dessutom har varje organisation sin egen isolerade arbetsyta, vilket förhindrar obehörig åtkomst till andra organisationers data. <ul><li>Varje organisation har sin egen unika identifierare</li><li>Isolerad lagring och bearbetning av data</li><li>Åtkomstkontroll för att förhindra obehörig åtkomst</li></ul></p>"
+          },
+          {
+            "id": "data-residency",
+            "title": "Datalagring & residency",
+            "content": "<p>SWEO AI förstår vikten av datalagring och residency. Vi erbjuder flexibla lösningar för datalagring, vilket möjliggör för organisationer att välja var deras data ska lagras. Dessutom följer vi alla tillämpliga lagar och regleringar för dataskydd, såsom GDPR och CCPA. <blockquote><strong>Tips:</strong> Se till att du förstår vilka lagar och regleringar som gäller för din organisation och välj en datalagringslösning som uppfyller dessa krav.</blockquote></p>"
+          },
+          {
+            "id": "access-control",
+            "title": "Åtkomstkontroll",
+            "content": "<p>SWEO AI har en robust åtkomstkontroll som säkerställer att endast auktoriserade användare har tillgång till organisationens data. Vi använder en kombination av tekniker, såsom autentisering, auktorisering och rollbaserad åtkomstkontroll, för att förhindra obehörig åtkomst. Dessutom kan organisationer konfigurera sina egna åtkomstkontrollregler för att ytterligare säkerställa dataskydd. <ul><li>Auktorisering med hjälp av användarnamn och lösenord</li><li>Rollbaserad åtkomstkontroll för att begränsa åtkomst</li><li>Möjlighet att konfigurera egna åtkomstkontrollregler</li></ul></p>"
+          },
+          {
+            "id": "sso-saml",
+            "title": "SSO & SAML",
+            "content": "<p>SWEO AI stöder Single Sign-On (SSO) och SAML för att underlätta autentisering och auktorisering. Med SSO kan användare logga in på vår plattform med hjälp av sin befintliga identitet, vilket eliminerar behovet av ytterligare inloggningsuppgifter. Dessutom möjliggör SAML för organisationer att konfigurera sina egna identitetsleverantörer för att hantera autentisering och auktorisering. <blockquote><strong>Tips:</strong> Se till att du konfigurerar SSO och SAML korrekt för att säkerställa smidig autentisering och auktorisering.</blockquote></p>"
+          },
+          {
+            "id": "ip-whitelisting",
+            "title": "IP-whitelisting",
+            "content": "<p>SWEO AI erbjuder IP-whitelisting för att ytterligare säkerställa dataskydd. Med IP-whitelisting kan organisationer begränsa åtkomst till vår plattform till specifika IP-adresser, vilket förhindrar obehörig åtkomst från andra IP-adresser. Dessutom kan organisationer konfigurera sina egna IP-whitelisting-regler för att anpassa dataskyddet efter sina specifika behov. <ul><li>Begränsa åtkomst till specifika IP-adresser</li><li>Konfigurera egna IP-whitelisting-regler</li><li>Förhindra obehörig åtkomst från andra IP-adresser</li></ul></p>"
+          }
+        ]
+      },
+      {
+        "slug": "gdpr-compliance",
+        "title": "GDPR & Compliance",
+        "description": "Efterlev GDPR med rätt konfiguration, dataraderingsrutiner och DPA.",
+        "sections": [
+          {
+            "id": "gdpr-overview",
+            "title": "GDPR-översikt",
+            "content": "<p>GDPR (General Data Protection Regulation) är en europeisk dataskyddsförordning som syftar till att skydda enskilda personers personuppgifter. Den trädde i kraft den 25 maj 2018 och gäller för alla organisationer som hanterar personuppgifter från EU-medborgare. SWEO AI är designad för att hjälpa organisationer att efterleva GDPR genom att tillhandahålla en säker och kompatibel plattform för kundsupport. Organisationer kan konfigurera SWEO AI för att säkerställa att de följer GDPR:s principer, såsom transparens, dataminimering och säkerhet.</p>"
+          },
+          {
+            "id": "data-processing",
+            "title": "Databehandlingsavtal (DPA)",
+            "content": "<p>Databehandlingsavtal (DPA) är ett avtal mellan en personuppgiftsansvarig (organisationen) och en personuppgiftsbiträde (SWEO AI) som reglerar hur personuppgifter hanteras. SWEO AI tillhandahåller ett standard-DPA som organisationer kan använda för att säkerställa att de följer GDPR:s krav på databehandling. Organisationer kan också begära ett anpassat DPA om de har specifika krav eller behov. <strong>Tips:</strong> Se till att granska och godkänna DPA innan du börjar använda SWEO AI.</p>"
+          },
+          {
+            "id": "data-deletion",
+            "title": "Radera kunddata",
+            "content": "<p>Radering av kunddata är en viktig del av GDPR-efterlevnaden. SWEO AI tillhandahåller funktioner för att radera kunddata på ett säkert och effektivt sätt. Organisationer kan konfigurera SWEO AI för att automatiskt radera kunddata efter en viss tid eller vid en viss händelse. <blockquote><strong>Tips:</strong> Se till att ha en tydlig dataraderingspolicy och att informera kunderna om hur deras data hanteras och raderas.</blockquote></p>"
+          },
+          {
+            "id": "consent-management",
+            "title": "Samtyckehantering",
+            "content": "<p>Samtyckeshantering är en kritisk del av GDPR-efterlevnaden. SWEO AI tillhandahåller funktioner för att hantera samtycke från kunder, såsom att samla in och lagra samtycke för specifika ändamål. Organisationer kan konfigurera SWEO AI för att automatiskt begära samtycke från kunder och för att spåra och hantera samtycke över tid. <ul><li>Se till att ha en tydlig samtyckeshanteringpolicy</li><li>Informera kunderna om hur deras data hanteras och för vilka ändamål</li><li>Använd SWEO AI:s funktioner för att samla in och lagra samtycke</li></ul></p>"
+          },
+          {
+            "id": "data-export",
+            "title": "Exportera kunddata",
+            "content": "<p>Exportering av kunddata är en viktig del av GDPR-efterlevnaden. SWEO AI tillhandahåller funktioner för att exportera kunddata på ett säkert och effektivt sätt. Organisationer kan konfigurera SWEO AI för att exportera kunddata i olika format, såsom CSV eller JSON. <blockquote><strong>Tips:</strong> Se till att ha en tydlig dataportabilitetspolicy och att informera kunderna om hur deras data hanteras och exporteras.</blockquote></p>"
+          },
+          {
+            "id": "compliance-checklist",
+            "title": "Compliance-checklista",
+            "content": "<p>Compliance-checklistan är en viktig del av GDPR-efterlevnaden. SWEO AI tillhandahåller en compliance-checklista som organisationer kan använda för att säkerställa att de följer GDPR:s krav. Checklistan innehåller punkter såsom <ul><li>Dataraderingspolicy</li><li>Samtyckeshantering</li><li>Dataportabilitet</li><li>Säkerhet och tillgänglighet</li></ul> <strong>Tips:</strong> Se till att granska och uppdatera compliance-checklistan regelbundet för att säkerställa att du följer GDPR:s krav.</p>"
+          }
+        ]
+      },
+      {
+        "slug": "ai-safety",
+        "title": "AI-säkerhet & Guardrails",
+        "description": "Skydda mot hallucinations, prompt injection och olämpliga svar.",
+        "sections": [
+          {
+            "id": "hallucination-prevention",
+            "title": "Förhindra hallucinations",
+            "content": "<p>För att förhindra hallucinationer i vår AI-driven kundsupportplattform, SWEO AI, använder vi en kombination av tekniker. <strong>Trainingsdata</strong> är en viktig faktor, där vi ser till att träna vår AI-modell på en stor och varierad mängd data för att minimera risken för hallucinationer. Dessutom använder vi <strong>regelbaserad validering</strong> för att kontrollera svaren från AI-modellen och säkerställa att de är korrekta och relevanta. <blockquote><strong>Tips:</strong> Se till att träna din AI-modell på en stor och varierad mängd data för att minimera risken för hallucinationer.</blockquote></p>"
+          },
+          {
+            "id": "prompt-injection",
+            "title": "Skydd mot prompt injection",
+            "content": "<p>Skydd mot prompt injection är en viktig aspekt av AI-säkerheten i SWEO AI. <strong>Prompt injection</strong> är en typ av attack där en angripare försöker manipulera AI-modellens indata för att få den att producera önskade svar. För att skydda mot detta använder vi <strong>inmatningsvalidering</strong> och <strong>sanering</strong> av indata för att säkerställa att endast giltiga och säkra indata når AI-modellen. Dessutom använder vi <strong>AI-modellens interna säkerhetsfunktioner</strong> för att upptäcka och förhindra prompt injection-attacker.</p>"
+          },
+          {
+            "id": "content-filtering",
+            "title": "Innehållsfiltrering",
+            "content": "<p>Innehållsfiltrering är en viktig funktion i SWEO AI för att säkerställa att endast lämpligt innehåll når kunderna. Vi använder <strong>avancerade algoritmer</strong> för att analysera innehållet och <strong>filtrera bort</strong> olämpligt eller skadligt innehåll. Dessutom kan användarna <strong>konfigurera egna filterregler</strong> för att anpassa innehållsfiltreringen efter sina specifika behov. <blockquote><strong>Tips:</strong> Använd avancerade algoritmer för att analysera innehållet och filtrera bort olämpligt eller skadligt innehåll.</blockquote></p>"
+          },
+          {
+            "id": "pii-detection",
+            "title": "PII-detektion",
+            "content": "<p>PII-detektion (Personligt Identifierbar Information) är en viktig funktion i SWEO AI för att skydda kunders personliga data. Vi använder <strong>avancerade algoritmer</strong> för att upptäcka och <strong>maskera</strong> personligt identifierbar information i innehållet. Dessutom kan användarna <strong>konfigurera egna regler</strong> för att anpassa PII-detektionen efter sina specifika behov. <blockquote><strong>Tips:</strong> Använd avancerade algoritmer för att upptäcka och maskera personligt identifierbar information i innehållet.</blockquote></p>"
+          },
+          {
+            "id": "response-validation",
+            "title": "Svarsvalidering",
+            "content": "<p>Svarsvalidering är en viktig funktion i SWEO AI för att säkerställa att svaren från AI-modellen är korrekta och relevanta. Vi använder <strong>regelbaserad validering</strong> för att kontrollera svaren och <strong>verifiera</strong> att de uppfyller kraven. Dessutom kan användarna <strong>konfigurera egna valideringsregler</strong> för att anpassa svarsvalideringen efter sina specifika behov. <blockquote><strong>Tips:</strong> Använd regelbaserad validering för att kontrollera svaren och verifiera att de uppfyller kraven.</blockquote></p>"
+          },
+          {
+            "id": "incident-response",
+            "title": "Incidenthantering",
+            "content": "<p>Incidenthantering är en viktig aspekt av AI-säkerheten i SWEO AI. Vi har <strong>etablerat incidenthanteringsprocesser</strong> för att snabbt och effektivt hantera incidenter som kan uppstå. Dessutom har vi <strong>utbildat personal</strong> för att hantera incidenter och <strong>minimera skadorna</strong>. <blockquote><strong>Tips:</strong> Etablera incidenthanteringsprocesser för att snabbt och effektivt hantera incidenter som kan uppstå.</blockquote></p>"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "advanced",
+    "title": "Avancerat",
+    "icon": "code",
+    "description": "API-referens, custom integrationer, bulk-operationer och felsökning.",
+    "articles": [
+      {
+        "slug": "bulk-operations",
+        "title": "Bulk-operationer",
+        "description": "Massimportera innehåll, kontakter och konfigurationer.",
+        "sections": [
+          {
+            "id": "bulk-import",
+            "title": "Massimport av innehåll",
+            "content": "<p>Massimport av innehåll är en funktion som möjliggör import av stora mängder data till SWEO AI. Funktionen stödjer import av innehåll i form av text, bilder och andra mediefiler. För att genomföra en massimport, gå till <strong>Knowledge Base</strong> och klicka på <strong>Importera innehåll</strong>. Välj sedan filen som innehåller data som ska importeras och följ instruktionerna på skärmen.</p><ul><li>Välj rätt filformat för importen, till exempel CSV eller JSON.</li><li>Se till att filen är korrekt formaterad och innehåller alla nödvändiga fält.</li><li>Använd <strong>Importera innehåll</strong>-funktionen för att importera data till SWEO AI.</li></ul><blockquote><strong>Tips:</strong> Se till att du har tillräckliga rättigheter för att importera data till SWEO AI.</blockquote>"
+          },
+          {
+            "id": "csv-format",
+            "title": "CSV-format & krav",
+            "content": "<p>CSV-format (Comma Separated Values) är ett vanligt format för dataimport. För att importera data i CSV-format till SWEO AI, måste filen vara korrekt formaterad. Varje rad i filen ska representera en post och varje kolumn ska representera ett fält. Fälten ska separeras med kommatecken och textsträngar ska omges av citattecken. Exempel: <code>namn,email,telefon;John Doe,john.doe@example.com,123456789</code>. Se till att filen är korrekt kodad i UTF-8 för att undvika problem med tecken som inte är på engelska.</p><ul><li>Använd kommatecken som separatortecken.</li><li>Omgärda textsträngar med citattecken.</li><li>Se till att filen är korrekt kodad i UTF-8.</li></ul>"
+          },
+          {
+            "id": "bulk-contacts",
+            "title": "Massimport kontakter",
+            "content": "<p>Massimport av kontakter är en funktion som möjliggör import av stora mängder kontaktinformation till SWEO AI. Funktionen stödjer import av kontaktinformation i form av namn, e-postadresser, telefonnummer och annan relevant information. För att genomföra en massimport av kontakter, gå till <strong>Kontakter</strong> och klicka på <strong>Importera kontakter</strong>. Välj sedan filen som innehåller kontaktinformationen och följ instruktionerna på skärmen.</p><ul><li>Välj rätt filformat för importen, till exempel CSV eller JSON.</li><li>Se till att filen är korrekt formaterad och innehåller alla nödvändiga fält.</li><li>Använd <strong>Importera kontakter</strong>-funktionen för att importera kontaktinformation till SWEO AI.</li></ul><blockquote><strong>Tips:</strong> Se till att du har tillräckliga rättigheter för att importera kontaktinformation till SWEO AI.</blockquote>"
+          },
+          {
+            "id": "bulk-update",
+            "title": "Massuppdatera poster",
+            "content": "<p>Massuppdatering av poster är en funktion som möjliggör uppdatering av stora mängder data i SWEO AI. Funktionen stödjer uppdatering av data i form av text, bilder och andra mediefiler. För att genomföra en massuppdatering, gå till <strong>Knowledge Base</strong> och klicka på <strong>Uppdatera poster</strong>. Välj sedan de poster som ska uppdateras och följ instruktionerna på skärmen.</p><ul><li>Välj de poster som ska uppdateras.</li><li>Se till att du har tillräckliga rättigheter för att uppdatera data i SWEO AI.</li><li>Använd <strong>Uppdatera poster</strong>-funktionen för att uppdatera data i SWEO AI.</li></ul>"
+          },
+          {
+            "id": "scheduling-imports",
+            "title": "Schemalägg importer",
+            "content": "<p>Schemaläggning av importer är en funktion som möjliggör schemaläggning av importer av data till SWEO AI. Funktionen stödjer schemaläggning av importer i form av en gång, dagligen, veckovis eller månadsvis. För att schemalägga en import, gå till <strong>Importera innehåll</strong> och klicka på <strong>Schemalägg import</strong>. Välj sedan den tidpunkt då importen ska ske och följ instruktionerna på skärmen.</p><ul><li>Välj den tidpunkt då importen ska ske.</li><li>Se till att du har tillräckliga rättigheter för att schemalägga importer i SWEO AI.</li><li>Använd <strong>Schemalägg import</strong>-funktionen för att schemalägga importer i SWEO AI.</li></ul><blockquote><strong>Tips:</strong> Se till att du har tillräckliga rättigheter för att schemalägga importer i SWEO AI.</blockquote>"
+          },
+          {
+            "id": "error-handling",
+            "title": "Felhantering vid import",
+            "content": "<p>Felhantering vid import är en funktion som möjliggör hantering av fel som uppstår under importen av data till SWEO AI. Funktionen stödjer hantering av fel i form av loggning, e-postavisering och manuell granskning. För att hantera fel vid import, gå till <strong>Importera innehåll</strong> och klicka på <strong>Felhantering</strong>. Välj sedan den typ av felhantering som ska användas och följ instruktionerna på skärmen.</p><ul><li>Välj den typ av felhantering som ska användas.</li><li>Se till att du har tillräckliga rättigheter för att hantera fel i SWEO AI.</li><li>Använd <strong>Felhantering</strong>-funktionen för att hantera fel i SWEO AI.</li></ul>"
+          }
+        ]
+      },
+      {
+        "slug": "troubleshooting",
+        "title": "Felsökning",
+        "description": "Vanliga problem och lösningar för SWEO AI-plattformen.",
+        "sections": [
+          {
+            "id": "common-issues",
+            "title": "Vanliga problem",
+            "content": "<p>Vanliga problem med SWEO AI-plattformen kan uppstå på grund av olika orsaker. Det kan vara allt från felaktig konfiguration till tekniska problem med AI-modellen. För att lösa dessa problem är det viktigt att identifiera orsaken och sedan vidta lämpliga åtgärder. I denna sektion kommer vi att gå igenom några av de vanligaste problemen och hur man kan lösa dem.</p><ul><li>Felaktig konfiguration av kanaler och datakopplingar</li><li>Problem med AI-modellens prestanda</li><li>Integrationsfel med tredjepartsapplikationer</li></ul>"
+          },
+          {
+            "id": "ai-not-answering",
+            "title": "AI svarar inte korrekt",
+            "content": "<p>Om AI:n inte svarar korrekt kan det bero på flera saker. Det kan vara att AI-modellen inte har tillräckligt med träningsdata eller att den inte är korrekt konfigurerad. För att lösa detta problem kan man försöka med att <strong>träna om AI-modellen</strong> med mer data eller <strong>justera konfigurationen</strong> för att förbättra prestandan. Det är också viktigt att <strong>kontrollera loggarna</strong> för att se om det finns några felmeddelanden som kan ge en hint om vad som är fel.</p><blockquote><strong>Tips:</strong> Se till att AI-modellen har tillräckligt med träningsdata och att den är korrekt konfigurerad.</blockquote>"
+          },
+          {
+            "id": "channel-issues",
+            "title": "Kanalproblem",
+            "content": "<p>Kanalproblem kan uppstå när det gäller kommunikationen mellan SWEO AI-plattformen och kunderna. Det kan vara problem med webbchatt, e-post, WhatsApp, SMS eller telefoni. För att lösa dessa problem kan man försöka med att <strong>kontrollera kanalkonfigurationen</strong> och se till att allt är korrekt inställt. Man kan också <strong>testa kanalen</strong> för att se om det är något fel på den.</p><ul><li>Kontrollera kanalkonfigurationen</li><li>Testa kanalen</li><li>Kontakta supporten om problemet kvarstår</li></ul>"
+          },
+          {
+            "id": "integration-errors",
+            "title": "Integrationsfel",
+            "content": "<p>Integrationsfel kan uppstå när SWEO AI-plattformen inte kan kommunicera korrekt med tredjepartsapplikationer. Det kan vara problem med datakopplingar, API-nycklar eller autentisering. För att lösa dessa problem kan man försöka med att <strong>kontrollera API-nycklarna</strong> och se till att de är korrekt inställda. Man kan också <strong>testa integrationen</strong> för att se om det är något fel på den.</p><blockquote><strong>Tips:</strong> Se till att API-nycklarna är korrekt inställda och testa integrationen för att säkerställa att allt fungerar som det ska.</blockquote>"
+          },
+          {
+            "id": "performance",
+            "title": "Prestandaproblem",
+            "content": "<p>Prestandaproblem kan uppstå när SWEO AI-plattformen inte kan hantera den mängd data som den ska bearbeta. Det kan vara problem med <strong>datalagring</strong>, <strong>beräkningskraft</strong> eller <strong>nätverksanslutning</strong>. För att lösa dessa problem kan man försöka med att <strong>öka datalagringen</strong> eller <strong>uppgradera beräkningskraften</strong>. Man kan också <strong>kontrollera nätverksanslutningen</strong> för att se om det är något fel på den.</p><ul><li>Öka datalagringen</li><li>Uppgradera beräkningskraften</li><li>Kontrollera nätverksanslutningen</li></ul>"
+          },
+          {
+            "id": "contact-support",
+            "title": "Kontakta support",
+            "content": "<p>Om man inte kan lösa problemet på egen hand kan man alltid <strong>kontakta supporten</strong> för hjälp. Supporten kan hjälpa till att identifiera orsaken till problemet och ge råd om hur man kan lösa det. Det är viktigt att <strong>ge tydlig information</strong> om problemet och vad man har gjort för att försöka lösa det. På så sätt kan supporten ge den bästa möjliga hjälpen.</p><blockquote><strong>Tips:</strong> Ge tydlig information om problemet och vad du har gjort för att försöka lösa det, så att supporten kan ge den bästa möjliga hjälpen.</blockquote>"
+          }
+        ]
+      }
+    ]
+  }
